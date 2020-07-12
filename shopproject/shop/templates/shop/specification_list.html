@@ -1,0 +1,37 @@
+{% extends 'cms/base.html' %}
+{% load core %}
+
+{% block content %}
+
+<h2>{{page_title}}</h2>
+
+{% include 'cms/create_button.html' %}
+
+<div class="row py-2">
+  <div class="col">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in object_list %}
+        <tr>
+          <td>{{item.pk}}</td>
+          <td> <a href="{% get_url 'detail' item  %}">{{item.name}}</a></td>
+          <td>
+            {% include 'cms/update_delete_buttons.html' with item=item %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+{% endblock %}

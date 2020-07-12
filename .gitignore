@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+*.sqlite3
+*.bat
+settings_local.py
+public
+venv
+virtualenv
+env
+*.bat
+migrations

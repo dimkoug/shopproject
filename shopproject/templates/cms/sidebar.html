@@ -1,0 +1,72 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="sidebar-sticky pt-3">
+    <ul class="nav flex-column">
+      {% url 'manage' as manage_url %}
+      {% url 'index' as index_url %}
+      {% url 'shop:category-list' as category_url %}
+      {% url 'shop:supplier-list' as supplier_url %}
+      {% url 'shop:brand-list' as brand_url %}
+      {% url 'shop:specification-list' as specification_url %}
+      {% url 'shop:attribute-list' as attribute_url %}
+      {% url 'shop:tag-list' as tag_url %}
+      {% url 'shop:product-list' as product_url %}
+      {% url 'shop:hero-list' as hero_url %}
+      {% url 'shop:heroitem-list' as heroitem_url %}
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == index_url %}active {% endif %}" href="{{index_url}}" rel="noopener noreferrer" target="_blank">
+          View  Site
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == manage_url %}active {% endif %}" href="{{manage_url}}">
+          Manage
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == category_url %}active {% endif %}" href="{{category_url}}">
+          Categories
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == supplier_url %}active {% endif %}" href="{{supplier_url}}">
+          Suppliers
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == brand_url %}active {% endif %}" href="{{brand_url}}">
+          Brands
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == specification_url %}active {% endif %}" href="{{specification_url}}">
+          Specifications
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == attribute_url %}active {% endif %}" href="{{attribute_url}}">
+          Attributes
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == tag_url %}active {% endif %}" href="{{tag_url}}">
+          Tags
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == hero_url %}active {% endif %}" href="{{hero_url}}">
+          Hero
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == heroitem_url %}active {% endif %}" href="{{heroitem_url}}">
+          Hero Items
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == product_url %}active {% endif %}" href="{{product_url}}">
+          Products
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,87 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% load thumbnail %}
+{% block content %}
+
+<div class="container-fluid wrapper">
+  <div class="row">
+    <div class="col-12">
+      <div class="row py-2">
+        <div class="col">
+          <h1>{{object.name}}</h1>
+        </div>
+      </div>
+      <hr>
+      <div class="row py-2">
+        {% if object.image %}
+        <div class="col-2">
+            <img src="{{ object.image.url }}" class="img-fluid">
+        </div>
+        {% endif %}
+        <div class="col-8">
+          <div class="">
+            Brand : <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">{{object.brand}}</a>
+          </div>
+          <div class="">
+            Product Tags :
+            {% for tag in object.producttag_list %}
+                <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.tag.id}}">{{tag.tag.name}}</a>
+            {% endfor %}
+          </div>
+          <div class="">
+            Product Categories :
+            {% for category in object.productcategory_list %}
+                <a class="tag-link" href="{% url 'shop:catalog' %}?category={{category.category.id}}">{{category.category.name}}</a>
+            {% endfor %}
+          </div>
+          <div class="">
+            Product Description
+          </div>
+          <div class="">
+            {{object.description|safe}}
+          </div>
+        </div>
+        <div class="col-2">
+            <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-light float-right ajax_add_to_cart"><i class="bi bi-cart"></i>  &#128;{{object.price}}</a>
+        </div>
+      </div>
+      <hr>
+      <div class="row py-2">
+          <div class="col-6">
+            <div class="">
+              Product Images
+            </div>
+            <div class="cycle-slideshow" data-cycle-slides="li">
+              {% for media in object.productmedia_list %}
+              <li><a class="test-popup-link" href="{{media.image.url}}">
+                {% thumbnail media.image "500x500" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" class="product-image">
+                {% endthumbnail %}
+                </li>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="">
+              Product Attributes
+            </div>
+            <hr>
+            <div class="">
+              {% for attr in object.productattribute_list %}
+              <div class="">
+                <span style="font-weight:bold;">{{attr.attribute.specification}}</span> : {{attr.attribute.display_name}}
+              </div>
+              <hr>
+              {% endfor %}
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+{% endblock %}

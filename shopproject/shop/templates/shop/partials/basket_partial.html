@@ -1,0 +1,70 @@
+<div class="row py-2">
+  <div class="col basket-header">
+    Basket Items
+  </div>
+  <div class="col">
+    {% if ajax %}
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <i class="bi bi-x close text-danger" style="font-size: 2rem;"></i>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% if ajax %}
+<div class="row py-2">
+  <div class="col">
+    {% include 'messages.html' %}
+  </div>
+</div>
+{% endif %}
+<hr>
+<div class="row py-2">
+  <div class="col">
+      {% if items %}
+      <div class="row">
+        <div class="col-lg-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th></th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr>
+                <td>{{item.product}}</td>
+                <td>{{item.quantity}}</td>
+                <td>
+                  <a href="{% url 'shop:add_to_basket' item.product.id %}" class="btn btn-primary {% if ajax %} ajax_add {% endif %}"><i class="bi bi-plus"></i></a>
+                  <a href="{% url 'shop:remove_from_basket' item.product.id %}" class="btn btn-danger {% if ajax  %} ajax_delete {% endif %}"><i class="bi bi-x"></i></a>
+                </td>
+                <td>{{item.product.price}}</td>
+                <td><a href="{% url 'shop:remove_item_from_basket' item.product.id %}" class="btn btn-danger {% if ajax %} ajax_remove {% endif %}"><i class="bi bi-bag-x-fill"></i></a></td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="3">Sum</td>
+                <td>{{sum}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row py-2">
+        <div class="col">
+          <a href="{% url 'shop:clear-basket' %}" class="btn btn-warning float-right">Clear Basket</a>
+        </div>
+        <div class="col">
+          <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <a href="{% url 'shop:order' %}" class="btn btn-primary float-right">Order</a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>

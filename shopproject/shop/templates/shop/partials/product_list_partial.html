@@ -1,0 +1,55 @@
+{% load static %}
+{% load thumbnail %}
+<div class="results">
+    {% for product in product_list %}
+    <div class="row py-2">
+      <div class="col-2">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" class="card-img-top">
+        {% endif %}
+      </div>
+      <div class="col-8">
+        <div class="">
+          <a href="{% url 'shop:catalog-product-detail' product.slug %}" class="link">{{product.name}}</a>
+        </div>
+        <div class="">
+          Brand : <a href="{% url 'shop:catalog' %}?brand={{product.brand.pk}}" class="link">{{product.brand}}</a>
+        </div>
+        <div class="">
+          <p>{{product.description|safe}}</p>
+        </div>
+      </div>
+      <div class="col-2">
+        <a href="{% url 'shop:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> &#128;{{product.price}}</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="row py-2">
+    <div class="col">
+      {% if product_list.has_other_pages %}
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          {% if product_list.has_previous %}
+            <li class="page-item"><a class="page-link"  href="?page={{ product_list.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a></li>
+          {% endif %}
+          {% for i in product_list.paginator.page_range %}
+            {% if product_list.number == i %}
+              <li class="page-item active"><a class="page-link" href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link"  href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if product_list.has_next %}
+            <li class="page-item"><a class="page-link"  href="?page={{ product_list.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+      {% endif %}
+    </div>
+  </div>
+</div>

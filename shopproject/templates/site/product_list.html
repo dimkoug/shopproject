@@ -1,0 +1,22 @@
+{% extends "site/base.html" %}
+{% load static product_tag %}
+{% block content %}
+<div class="container wrapper">
+  <div class="row">
+    <div class="col-2">
+      {% include 'shop/partials/tags_partial.html' %}
+    </div>
+    <div class="col-8">
+      {% if specification_list %}
+      <div class="row">
+        <div class="col-12">
+          {% include 'shop/partials/filters_partial.html' %}
+        </div>
+        </div>
+      {% endif %}
+      {% include 'shop/partials/product_list_partial.html' with product_list=object_list %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
