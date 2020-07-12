@@ -1,0 +1,19 @@
+{% extends "site/base.html" %}
+{% load static product_tag %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-2">
+    {% include 'category_partial.html' %}
+  </div>
+  <div class="col-lg-8">
+    <div class="row">
+      {% include 'filters_partial.html' %}
+      </div>
+    <div class="row">
+        {% include 'product_list_partial.html' with product_list=product_list %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

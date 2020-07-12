@@ -1,0 +1,38 @@
+{% load static product_tag %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+  Filters
+</button>
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="" action="" method="get">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Search</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+          {% for feature in feature_list %}
+          <div class="form-group">
+            {{feature}}
+            {% for attr in feature.attributes.all %}
+            <div class="form-check">
+              {% is_checked attr as checked %}
+              <input type="checkbox" name="attrs" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+              <label class="form-check-label" for="exampleCheck1">{{attr}}</label>
+            </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <a href="{{request.path}}">Reset filters</a>
+        <input type="submit" class="btn btn-primary" name="submit" value="submit">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </form>
+  </div>
+  </div>
+</div>

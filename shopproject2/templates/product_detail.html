@@ -1,0 +1,16 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-2">
+    {% include 'category_partial.html' %}
+  </div>
+  <div class="col-lg-8">
+    <div class="row">
+      {{object.name}}
+      <a href="{% url 'add_to_basket' object.id %}" class="btn btn-primary">Add to basket</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "site/base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-2">
+    {% include 'category_partial.html' %}
+  </div>
+  <div class="col-lg-8">
+    {% if items %}
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>{{item.product}}</td>
+              <td>{{item.quantity}}</td>
+              <td>{{item.product.price}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+              <td colspan="2">Sum</td>
+              <td>{{sum}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <form  action="" method="post">
+          {% csrf_token %}
+          {{order_form.as_p}}
+          <input type="submit" name="order" value="order" class="btn btn-primary float-right">
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+
+{% endblock %}

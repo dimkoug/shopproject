@@ -1,0 +1,41 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-2">
+    {% include 'category_partial.html' %}
+  </div>
+  <div class="col-lg-8">
+    <div class="row">
+      <div class="col-lg-12">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Amount</th>
+              <th>Order Items</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr>
+              <td>{{obj.pk}}</td>
+              <td>{{obj.amount}}</td>
+              <td>
+                <ul>
+                  {% for item in obj.orderdetail_set.all %}
+                  <li><a href="{% url 'product-detail' item.product.slug %}">{{item.product}}</a></li>
+                  {% endfor %}
+                </ul>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

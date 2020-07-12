@@ -1,0 +1,51 @@
+{% extends "site/base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-2">
+    {% include 'category_partial.html' %}
+  </div>
+  <div class="col-lg-8">
+      {% if items %}
+      <div class="row">
+        <div class="col-lg-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th></th>
+              </tr>
+
+            </thead>
+            <tbody>
+              {% for item in items %}
+              <tr>
+                <td>{{item.product}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.product.price}}</td>
+                <td>
+                  <a href="{% url 'add_to_basket' item.product.id %}" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                  <a href="{% url 'remove_from_basket' item.product.id %}" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+              <tr>
+                <td colspan="2">Sum</td>
+                <td>{{sum}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <a href="{% url 'order' %}" class="btn btn-primary float-right">Order</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

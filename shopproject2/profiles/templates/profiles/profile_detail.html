@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{object}}
+<a href="{% url  'profile-update' object.pk %}">Update</a>
+{% endblock %}
