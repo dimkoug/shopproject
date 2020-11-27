@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import Category,Tag,Feature,Attribute,Product,ProductTag, ProductAttribute, Order, OrderDetail
-from .forms import (CategoryForm,TagForm,FeatureForm,AttributeForm,ProductForm,
-                    ProductTagForm, ProductAttributeForm, ProductTagFormSet,
-                    ProductAttributeFormSet)
-# Register your models here.
+from .models import (Category,Tag,Feature,Attribute,Product,ProductTag,
+                     ProductAttribute, Order, OrderDetail,Brand)
+from .forms import (CategoryForm,TagForm,BrandForm,FeatureForm,AttributeForm,
+                    ProductForm,ProductTagForm, ProductAttributeForm,
+                    ProductTagFormSet, ProductAttributeFormSet)
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -20,6 +20,11 @@ class CategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
     date_hierarchy = 'created'
     prepopulated_fields = {"slug": ("name",)}
+
+
+class BrandAdmin(admin.ModelAdmin):
+    model = Brand
+    form = BrandForm
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -58,6 +63,7 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
 
+admin.site.register(Brand, BrandAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderDetail, OrderDetailAdmin)
 admin.site.register(Category, CategoryAdmin)

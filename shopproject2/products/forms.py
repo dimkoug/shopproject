@@ -3,7 +3,7 @@ from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm
 from .models import (Category, Tag, Feature, Attribute,Product,ProductTag,
-                     ProductAttribute, Order)
+                     ProductAttribute, Order, Brand)
 
 def unique_field_formset(field_name):
     from django.forms.models import BaseInlineFormSet
@@ -41,6 +41,12 @@ class TagForm(BootstrapForm,forms.ModelForm):
         fields = ('name', 'is_published')
 
 
+class BrandForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = Brand
+        fields = ('name', 'is_published')
+
+
 class FeatureForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Feature
@@ -56,7 +62,7 @@ class AttributeForm(BootstrapForm,forms.ModelForm):
 class ProductForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'parent', 'category', 'slug','price',
+        fields = ('name', 'parent', 'brand', 'category', 'slug','price',
                   'meta_description', 'meta_keywords', 'is_published')
 
 class ProductTagForm(BootstrapForm,forms.ModelForm):

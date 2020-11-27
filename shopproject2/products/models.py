@@ -25,6 +25,18 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
         return self.name
 
 
+class Brand(Timestamped, Published):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        default_related_name = 'brands'
+        verbose_name = 'brand'
+        verbose_name_plural = 'brands'
+
+    def __str__(self):
+        return self.name
+
+
 class Feature(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -66,6 +78,7 @@ class Tag(Timestamped, Published):
 class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
