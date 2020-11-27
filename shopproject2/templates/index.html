@@ -6,11 +6,16 @@
     {% include 'category_partial.html' %}
   </div>
   <div class="col-lg-8">
+    {% if feature_list %}
     <div class="row">
-      {% include 'filters_partial.html' %}
+      <div class="col-lg-12">
+        {% include 'filters_partial.html' %}
       </div>
+      
+      </div>
+    {% endif %}
     <div class="row">
-        {% include 'product_list_partial.html' with product_list=product_list %}
+      {% include 'product_list_partial.html' with product_list=product_list %}
     </div>
   </div>
 </div>
