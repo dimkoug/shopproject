@@ -1,4 +1,4 @@
-from django.urls import Path
+from django.urls import path
 
 from .views import OrderListView, order,remove_from_basket,add_to_basket,basket
 

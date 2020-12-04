@@ -29,6 +29,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('profiles/', include('profiles.urls')),
     path('products/', include('products.urls')),
+    path('orders/', include('orders.urls')),
     path('api-token-auth/', api_views.obtain_auth_token, name='api-token'),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
