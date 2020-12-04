@@ -2,8 +2,8 @@ from django import forms
 from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm
-from .models import (Category, Tag, Feature, Attribute,Product,ProductTag,
-                     ProductAttribute, Order, Brand)
+from .models import (Category, Tag, Specification, Attribute,Product,ProductTag,
+                     ProductAttribute,ProductCategory, Order, Brand,Offer, OfferDetail)
 
 def unique_field_formset(field_name):
     from django.forms.models import BaseInlineFormSet
@@ -20,6 +20,18 @@ def unique_field_formset(field_name):
                         raise forms.ValidationError('Duplicate values for "%s" are not allowed.' % field_name)
                     values.add(value)
     return UniqueFieldFormSet
+
+
+class OfferForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = Offer
+        fields = ('name','start_date','end_date', 'is_published')
+
+
+class OfferDetailForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = OfferDetail
+        fields = ('offer', 'product')
 
 
 class OrderForm(BootstrapForm,forms.ModelForm):
@@ -47,23 +59,23 @@ class BrandForm(BootstrapForm,forms.ModelForm):
         fields = ('name', 'is_published')
 
 
-class FeatureForm(BootstrapForm,forms.ModelForm):
+class SpecificationForm(BootstrapForm,forms.ModelForm):
     class Meta:
-        model = Feature
+        model = Specification
         fields = ('name', 'category', 'is_published')
 
 
 class AttributeForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Attribute
-        fields = ('name', 'feature')
+        fields = ('name', 'specification')
 
 
 class ProductForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'parent', 'brand', 'category', 'slug','price',
-                  'meta_description', 'meta_keywords', 'is_published')
+        fields = ('name', 'parent', 'brand', 'slug','price',
+                  'meta_description', 'meta_keywords','featured', 'is_published')
 
 class ProductTagForm(BootstrapForm,forms.ModelForm):
     class Meta:
@@ -75,6 +87,17 @@ class ProductAttributeForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = ProductAttribute
         fields = ('product', 'attribute')
+
+class ProductCategoryForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ('product', 'category')
+
+
+
+ProductCategoryFormSet = inlineformset_factory(Product,ProductCategory,
+                                          formset=unique_field_formset('category'),
+                                          form=ProductCategoryForm)
 
 ProductTagFormSet = inlineformset_factory(Product,ProductTag,
                                           formset=unique_field_formset('tag'),

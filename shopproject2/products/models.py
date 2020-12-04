@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 # Create your models here.
@@ -25,6 +26,36 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
         return self.name
 
 
+class Offer(Timestamped, Published):
+    name = models.CharField(max_length=50, unique=True)
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        default_related_name = 'offers'
+        verbose_name = 'offer'
+        verbose_name_plural = 'offers'
+
+    def __str__(self):
+        return self.name
+
+
+class OfferDetail(Timestamped):
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+
+
+    class Meta:
+        default_related_name = 'offerdetails'
+        verbose_name = 'offer details'
+        verbose_name_plural = 'offer detail'
+
+    def __str__(self):
+        return f"offer for product{self.product.title}"
+
+
+
+
 class Brand(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
 
@@ -37,21 +68,21 @@ class Brand(Timestamped, Published):
         return self.name
 
 
-class Feature(Timestamped, Published):
+class Specification(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        default_related_name = 'features'
-        verbose_name = 'feature'
-        verbose_name_plural = 'features'
+        default_related_name = 'specifications'
+        verbose_name = 'specification'
+        verbose_name_plural = 'specifications'
 
     def __str__(self):
         return self.name
 
 
 class Attribute(Timestamped):
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    specification = models.ForeignKey(Specification, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, unique=True)
 
     class Meta:
@@ -78,8 +109,9 @@ class Tag(Timestamped, Published):
 class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    featured = models.BooleanField(default=False)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    categories = models.ManyToManyField(Category, through='ProductCategory')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
@@ -111,6 +143,20 @@ class ProductTag(Timestamped, Published):
 
     def __str__(self):
         return self.tag.name
+
+
+class ProductCategory(Timestamped, Published):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+
+    class Meta:
+        default_related_name = 'productcategories'
+        verbose_name = 'product category'
+        verbose_name_plural = 'product categories'
+
+    def __str__(self):
+        return self.category.name
 
 
 class ProductAttribute(Timestamped, Published):

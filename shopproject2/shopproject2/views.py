@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.db.models import Prefetch
 from core.mixins import ProtectedViewMixin
 
-from products.models import Product, Feature, Attribute
+from products.models import Product, Specification, Attribute
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -29,9 +29,9 @@ class HomeView(TemplateView):
             products = products.filter(attributes__in=attrs)
         context['attrs_checked'] = attrs
         context['product_list'] = products
-        context['feature_list'] = Feature.objects.prefetch_related(
+        context['specification_list'] = Specification.objects.prefetch_related(
             Prefetch('attributes', queryset=Attribute.objects.select_related(
-                'feature'))).all()
+                'specification'))).all()
         return context
 
 

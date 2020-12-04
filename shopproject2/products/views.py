@@ -7,9 +7,9 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 # Create your views here.
-from .models import (Category, Tag, Feature, Attribute, Product, ProductTag,
+from .models import (Category, Tag, Specification, Attribute, Product, ProductTag,
                      ProductAttribute, ShoppingCartItem, Order, OrderDetail)
-from .forms import (CategoryForm,TagForm,FeatureForm,AttributeForm,ProductForm,
+from .forms import (CategoryForm,TagForm,SpecificationForm,AttributeForm,ProductForm,
                     ProductTagForm, ProductAttributeForm, OrderForm)
 
 
@@ -48,10 +48,10 @@ class CategoryDetailView(DetailView):
             products = products.filter(attributes__in=attrs)
         context['attrs_checked'] = attrs
         context['product_list'] = products
-        context['feature_list'] = Feature.objects.select_related(
+        context['specification_list'] = Specification.objects.select_related(
             'category').prefetch_related(
                 Prefetch('attributes',
-                    queryset=Attribute.objects.select_related('feature__category')
+                    queryset=Attribute.objects.select_related('specification__category')
                 )).filter(category=self.get_object())
         return context
 
