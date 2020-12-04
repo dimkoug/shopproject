@@ -10,6 +10,7 @@ from profiles.models import Profile
 class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     hero = models.ImageField(upload_to='category/heroes', null=True, blank=True)
+    category_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
 
@@ -31,6 +32,7 @@ class Offer(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
+    offer_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
         default_related_name = 'offers'
@@ -60,6 +62,7 @@ class OfferDetail(Timestamped):
 class Brand(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     logo = models.ImageField(upload_to='brand/logos', null=True, blank=True)
+    brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
         default_related_name = 'brands'
@@ -73,6 +76,7 @@ class Brand(Timestamped, Published):
 class Specification(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    specification_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
         default_related_name = 'specifications'
@@ -98,6 +102,7 @@ class Attribute(Timestamped):
 
 class Tag(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
+    tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
         default_related_name = 'tags'
@@ -117,6 +122,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     categories = models.ManyToManyField(Category, through='ProductCategory')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
+    product_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
 
@@ -137,6 +143,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
 class ProductMedia(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     caption = models.CharField(max_length=50, blank=True)
+    media_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     image = models.ImageField(upload_to='productmedia/')
 
 
