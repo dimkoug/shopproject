@@ -45,7 +45,7 @@ class CategoryForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Category
         fields = ('name', 'parent', 'slug', 'meta_description',
-                  'meta_keywords', 'is_published')
+                  'meta_keywords', 'hero','is_published')
 
 class TagForm(BootstrapForm,forms.ModelForm):
     class Meta:
@@ -56,7 +56,7 @@ class TagForm(BootstrapForm,forms.ModelForm):
 class BrandForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Brand
-        fields = ('name', 'is_published')
+        fields = ('name','logo', 'is_published')
 
 
 class SpecificationForm(BootstrapForm,forms.ModelForm):
@@ -75,7 +75,7 @@ class ProductForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'parent', 'brand', 'slug','price',
-                  'meta_description', 'meta_keywords','featured', 'is_published')
+                  'meta_description', 'meta_keywords','hero', 'featured', 'is_published')
 
 class ProductTagForm(BootstrapForm,forms.ModelForm):
     class Meta:

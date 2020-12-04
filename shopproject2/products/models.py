@@ -9,6 +9,7 @@ from profiles.models import Profile
 
 class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
+    hero = models.ImageField(upload_to='category/heroes', null=True, blank=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
 
@@ -58,6 +59,7 @@ class OfferDetail(Timestamped):
 
 class Brand(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
+    logo = models.ImageField(upload_to='brand/logos', null=True, blank=True)
 
     class Meta:
         default_related_name = 'brands'
@@ -108,6 +110,7 @@ class Tag(Timestamped, Published):
 
 class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
+    hero = models.ImageField(upload_to='product/heroes', null=True, blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     featured = models.BooleanField(default=False)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
