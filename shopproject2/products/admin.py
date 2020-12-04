@@ -1,24 +1,15 @@
 from django.contrib import admin
 
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
-                     ProductAttribute,ProductCategory, Order, OrderDetail,
-                     Brand,Offer,OfferDetail,ProductMedia,
+                     ProductAttribute,ProductCategory,
+                     Brand,ProductMedia,
                      ProductShipment)
 from .forms import (CategoryForm,TagForm,BrandForm,
                     SpecificationForm,AttributeForm,
                     ProductShipmentForm,
                     ProductForm,ProductTagForm, ProductAttributeForm,
                     ProductTagFormSet,ProductCategoryFormSet,
-                    ProductAttributeFormSet,OfferForm,
-                    OfferDetailForm, ProductMediaForm)
-
-
-class OrderAdmin(admin.ModelAdmin):
-    model = Order
-
-
-class OrderDetailAdmin(admin.ModelAdmin):
-    model = OrderDetail
+                    ProductAttributeFormSet, ProductMediaForm)
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,16 +17,6 @@ class CategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
     date_hierarchy = 'created'
     prepopulated_fields = {"slug": ("name",)}
-
-
-class OfferAdmin(admin.ModelAdmin):
-    model = Offer
-    form = OfferForm
-
-
-class OfferDetailAdmin(admin.ModelAdmin):
-    model = OfferDetail
-    form = OfferDetailForm
 
 
 class BrandAdmin(admin.ModelAdmin):
@@ -93,11 +74,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ProductShipment, ProductShipmentAdmin)
-admin.site.register(Offer, OfferAdmin)
-admin.site.register(OfferDetail, OfferDetailAdmin)
 admin.site.register(Brand, BrandAdmin)
-admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderDetail, OrderDetailAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Specification, SpecificationAdmin)

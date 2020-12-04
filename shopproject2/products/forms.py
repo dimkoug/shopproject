@@ -3,9 +3,9 @@ from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm
 from .models import (Category, Tag, Specification, Attribute,Product,ProductTag,
-                    ProductShipment,
-                     ProductAttribute,ProductCategory, Order,
-                     Brand,Offer, OfferDetail,ProductMedia)
+                     ProductShipment,
+                     ProductAttribute,ProductCategory,
+                     Brand,ProductMedia)
 
 def unique_field_formset(field_name):
     from django.forms.models import BaseInlineFormSet
@@ -22,26 +22,6 @@ def unique_field_formset(field_name):
                         raise forms.ValidationError('Duplicate values for "%s" are not allowed.' % field_name)
                     values.add(value)
     return UniqueFieldFormSet
-
-
-class OfferForm(BootstrapForm,forms.ModelForm):
-    class Meta:
-        model = Offer
-        fields = ('name','start_date','end_date', 'is_published')
-
-
-class OfferDetailForm(BootstrapForm,forms.ModelForm):
-    class Meta:
-        model = OfferDetail
-        fields = ('offer', 'product','price')
-
-
-class OrderForm(BootstrapForm,forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = ('profile', 'amount')
-        widgets = {'amount': forms.HiddenInput(), 'profile': forms.HiddenInput()}
-
 
 class CategoryForm(BootstrapForm,forms.ModelForm):
     class Meta:
