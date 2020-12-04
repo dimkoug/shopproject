@@ -140,6 +140,21 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
         return self.name
 
 
+class ProductShipment(Timestamped, Published):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    stock = models.IntegerField(default=0)
+    shipment_date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        default_related_name = 'productshipment'
+        verbose_name = 'product shipments'
+        verbose_name_plural = 'product shipment'
+
+    def __str__(self):
+        return self.product.name
+
+
+
 class ProductMedia(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     caption = models.CharField(max_length=50, blank=True)

@@ -3,6 +3,7 @@ from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm
 from .models import (Category, Tag, Specification, Attribute,Product,ProductTag,
+                    ProductShipment,
                      ProductAttribute,ProductCategory, Order,
                      Brand,Offer, OfferDetail,ProductMedia)
 
@@ -58,6 +59,11 @@ class ProductMediaForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = ProductMedia
         fields = ('product', 'caption', 'image', 'is_published')
+
+class ProductShipmentForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = ProductShipment
+        fields = ('product', 'stock','shipment_date')
 
 
 class BrandForm(BootstrapForm,forms.ModelForm):

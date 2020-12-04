@@ -2,9 +2,11 @@ from django.contrib import admin
 
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
                      ProductAttribute,ProductCategory, Order, OrderDetail,
-                     Brand,Offer,OfferDetail,ProductMedia)
+                     Brand,Offer,OfferDetail,ProductMedia,
+                     ProductShipment)
 from .forms import (CategoryForm,TagForm,BrandForm,
                     SpecificationForm,AttributeForm,
+                    ProductShipmentForm,
                     ProductForm,ProductTagForm, ProductAttributeForm,
                     ProductTagFormSet,ProductCategoryFormSet,
                     ProductAttributeFormSet,OfferForm,
@@ -55,6 +57,12 @@ class AttributeAdmin(admin.ModelAdmin):
     model = Attribute
     form = AttributeForm
 
+
+class ProductShipmentAdmin(admin.ModelAdmin):
+    model = ProductShipment
+    form = ProductShipmentForm
+
+
 class ProductTagInline(admin.TabularInline):
     model = ProductTag
     formset = ProductTagFormSet
@@ -84,6 +92,7 @@ class ProductAdmin(admin.ModelAdmin):
     ]
 
 
+admin.site.register(ProductShipment, ProductShipmentAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(OfferDetail, OfferDetailAdmin)
 admin.site.register(Brand, BrandAdmin)
