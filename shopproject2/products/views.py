@@ -22,11 +22,11 @@ class CategoryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         attrs = self.request.GET.getlist('attrs')
         print(attrs)
-        products = Product.objects.select_related('category').filter(category=self.get_object())
+        productcategories = self.get_object().productcategories.all()
         if attrs:
-            products = products.filter(attributes__in=attrs)
+            productcategories = productcategories.filter(product__attributes__in=attrs)
         context['attrs_checked'] = attrs
-        context['product_list'] = products
+        context['productcategory_list'] = productcategories
         context['specification_list'] = Specification.objects.select_related(
             'category').prefetch_related(
                 Prefetch('attributes',

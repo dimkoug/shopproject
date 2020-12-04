@@ -68,6 +68,7 @@ class ProductForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Product
         fields = ('name', 'parent', 'brand', 'slug','price',
+                  'description',
                   'meta_description', 'meta_keywords','hero', 'featured', 'is_published')
 
 class ProductTagForm(BootstrapForm,forms.ModelForm):

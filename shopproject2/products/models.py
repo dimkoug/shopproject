@@ -85,6 +85,7 @@ class Tag(Timestamped, Published):
 class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     hero = models.ImageField(upload_to='product/heroes', null=True, blank=True)
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     featured = models.BooleanField(default=False)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)

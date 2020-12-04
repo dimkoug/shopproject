@@ -5,7 +5,7 @@
     <img src="{% static 'bootstrap4/default.jpg' %}" class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title"><a href="{% url 'product-detail' product.slug %}">{{product.name}}</a></h5>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <p class="card-text">{{product.description|safe}</p>
       <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary">Add to basket</a>
     </div>
   </div>

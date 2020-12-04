@@ -14,7 +14,18 @@
       </div>
     {% endif %}
     <div class="row">
-      {% include 'product_list_partial.html' with product_list=product_list %}
+      {% for productcategory in productcategory_list %}
+      <div class="col-lg-6">
+        <div class="card lg-6">
+          <img src="{% static 'bootstrap4/default.jpg' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{% url 'product-detail' productcategory.product.slug %}">{{productcategory.product.name}}</a></h5>
+            <p class="card-text">{{productcategory.product.description|safe}}</p>
+            <a href="{% url 'add_to_basket' productcategory.product.id %}" class="btn btn-primary">Add to basket</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </div>
