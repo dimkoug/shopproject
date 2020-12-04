@@ -46,7 +46,7 @@ class Offer(Timestamped, Published):
 class OfferDetail(Timestamped):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
-
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
     class Meta:
         default_related_name = 'offerdetails'

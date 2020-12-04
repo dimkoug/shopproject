@@ -32,7 +32,7 @@ class OfferForm(BootstrapForm,forms.ModelForm):
 class OfferDetailForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = OfferDetail
-        fields = ('offer', 'product')
+        fields = ('offer', 'product','price')
 
 
 class OrderForm(BootstrapForm,forms.ModelForm):
