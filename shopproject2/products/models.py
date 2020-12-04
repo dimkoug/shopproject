@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 from mptt.models import MPTTModel, TreeForeignKey
 from core.models import Timestamped, Seo, UUSlug, Published
+from core.managers import StatusManager
 from profiles.models import Profile
 
 
@@ -13,6 +14,7 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     category_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
+    status = StatusManager()
 
     slug_field = 'name'
 
@@ -32,6 +34,7 @@ class Brand(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     logo = models.ImageField(upload_to='brand/logos', null=True, blank=True)
     brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    status = StatusManager()
 
     class Meta:
         default_related_name = 'brands'
@@ -46,6 +49,8 @@ class Specification(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     specification_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    status = StatusManager()
+    objects = models.Manager()
 
     class Meta:
         default_related_name = 'specifications'
@@ -72,6 +77,7 @@ class Attribute(Timestamped):
 class Tag(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    status = StatusManager()
 
     class Meta:
         default_related_name = 'tags'
@@ -95,6 +101,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     product_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
+    status = StatusManager()
 
     slug_field = 'name'
 
@@ -114,6 +121,7 @@ class ProductShipment(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.IntegerField(default=0)
     shipment_date = models.DateTimeField(default=timezone.now)
+    status = StatusManager()
 
     class Meta:
         default_related_name = 'productshipment'
@@ -130,6 +138,7 @@ class ProductMedia(Timestamped, Published):
     caption = models.CharField(max_length=50, blank=True)
     media_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     image = models.ImageField(upload_to='productmedia/')
+    status = StatusManager()
 
 
     class Meta:
@@ -144,6 +153,7 @@ class ProductMedia(Timestamped, Published):
 class ProductTag(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    status = StatusManager()
 
 
     class Meta:
@@ -158,6 +168,7 @@ class ProductTag(Timestamped, Published):
 class ProductCategory(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    status = StatusManager()
 
 
     class Meta:
@@ -172,6 +183,7 @@ class ProductCategory(Timestamped, Published):
 class ProductAttribute(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+    status = StatusManager()
 
 
     class Meta:

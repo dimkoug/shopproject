@@ -6,8 +6,9 @@ from core.mixins import ProtectedViewMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+from products.models import ShoppingCartItem
 from .models import Order, OrderDetail
+
 from .forms import OrderForm
 
 

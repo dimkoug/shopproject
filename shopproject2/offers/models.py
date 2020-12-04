@@ -1,6 +1,7 @@
 from django.db import models
-from core.models import Timestamped, Seo, UUSlug, Published
 from django.utils import timezone
+from core.models import Timestamped, Seo, UUSlug, Published
+from core.managers import StatusManager
 from products.models import Product
 
 
@@ -9,6 +10,7 @@ class Offer(Timestamped, Published):
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(default=timezone.now)
     offer_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    status = StatusManager()
 
     class Meta:
         default_related_name = 'offers'

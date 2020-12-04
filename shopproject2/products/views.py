@@ -44,7 +44,7 @@ class TagDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product_list'] = Product.objects.select_related('category').filter(tags=self.get_object())
+        context['product_list'] = Product.objects.filter(tags=self.get_object())
         return context
 
 

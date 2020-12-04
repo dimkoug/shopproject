@@ -24,14 +24,14 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         attrs = self.request.GET.getlist('attrs')
         print(attrs)
-        products = Product.objects.all()
+        products = Product.status.published()
         if attrs:
             products = products.filter(attributes__in=attrs)
         context['attrs_checked'] = attrs
         context['product_list'] = products
         context['specification_list'] = Specification.objects.prefetch_related(
             Prefetch('attributes', queryset=Attribute.objects.select_related(
-                'specification'))).all()
+                'specification'))).filter(is_published=True)
         return context
 
 
