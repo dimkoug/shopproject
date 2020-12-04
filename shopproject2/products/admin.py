@@ -2,13 +2,13 @@ from django.contrib import admin
 
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
                      ProductAttribute,ProductCategory, Order, OrderDetail,
-                     Brand,Offer,OfferDetail)
+                     Brand,Offer,OfferDetail,ProductMedia)
 from .forms import (CategoryForm,TagForm,BrandForm,
                     SpecificationForm,AttributeForm,
                     ProductForm,ProductTagForm, ProductAttributeForm,
                     ProductTagFormSet,ProductCategoryFormSet,
                     ProductAttributeFormSet,OfferForm,
-                    OfferDetailForm)
+                    OfferDetailForm, ProductMediaForm)
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -67,6 +67,9 @@ class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
 
+class ProductMediaAdmin(admin.ModelAdmin):
+    model = ProductMedia
+    form = ProductMediaForm
 
 class ProductAdmin(admin.ModelAdmin):
     model = Product
@@ -90,4 +93,5 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Specification, SpecificationAdmin)
 admin.site.register(Attribute, AttributeAdmin)
+admin.site.register(ProductMedia, ProductMediaAdmin)
 admin.site.register(Product, ProductAdmin)
