@@ -22,6 +22,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class BrandAdmin(admin.ModelAdmin):
     model = Brand
     form = BrandForm
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class TagAdmin(admin.ModelAdmin):

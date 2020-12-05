@@ -11,8 +11,20 @@
       <li class="nav-item {% if request.path == home_url %}active {% endif %}">
         <a class="nav-link" href="{{home_url}}">Home<span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
-        <a class="nav-link" href="{{basket_url}}">Basket<span class="sr-only">(current)</span></a>
+      {% if basket_count > 0 %}
+        <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
+          <a class="nav-link" href="{{basket_url}}">Basket<span class="sr-only">(current)</span></a>
+        </li>
+      {% endif %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Brands
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          {% for brand in brands %}
+            <a class="dropdown-item" href="{% url 'brand-detail' brand.slug %}">{{brand.name}}</a>
+          {% endfor %}
+        </div>
       </li>
 
 

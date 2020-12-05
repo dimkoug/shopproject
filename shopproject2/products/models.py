@@ -15,6 +15,7 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
     status = StatusManager()
+    objects = models.Manager()
 
     slug_field = 'name'
 
@@ -30,11 +31,14 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
         return self.name
 
 
-class Brand(Timestamped, Published):
+class Brand(Timestamped, UUSlug,Published):
     name = models.CharField(max_length=50, unique=True)
     logo = models.ImageField(upload_to='brand/logos', null=True, blank=True)
     brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     status = StatusManager()
+    objects = models.Manager()
+
+    slug_field = 'name'
 
     class Meta:
         default_related_name = 'brands'
@@ -78,6 +82,7 @@ class Tag(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     status = StatusManager()
+    objects = models.Manager()
 
     class Meta:
         default_related_name = 'tags'
@@ -102,6 +107,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
     status = StatusManager()
+    objects = models.Manager()
 
     slug_field = 'name'
 
@@ -122,6 +128,7 @@ class ProductShipment(Timestamped, Published):
     stock = models.IntegerField(default=0)
     shipment_date = models.DateTimeField(default=timezone.now)
     status = StatusManager()
+    objects = models.Manager()
 
     class Meta:
         default_related_name = 'productshipment'
@@ -139,6 +146,7 @@ class ProductMedia(Timestamped, Published):
     media_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     image = models.ImageField(upload_to='productmedia/')
     status = StatusManager()
+    objects = models.Manager()
 
 
     class Meta:
@@ -154,6 +162,7 @@ class ProductTag(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     status = StatusManager()
+    objects = models.Manager()
 
 
     class Meta:
@@ -169,6 +178,7 @@ class ProductCategory(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     status = StatusManager()
+    objects = models.Manager()
 
 
     class Meta:
@@ -184,6 +194,7 @@ class ProductAttribute(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     status = StatusManager()
+    objects = models.Manager()
 
 
     class Meta:

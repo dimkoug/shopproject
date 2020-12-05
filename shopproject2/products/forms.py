@@ -49,7 +49,7 @@ class ProductShipmentForm(BootstrapForm,forms.ModelForm):
 class BrandForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Brand
-        fields = ('name','logo', 'is_published')
+        fields = ('name','slug', 'logo', 'is_published')
 
 
 class SpecificationForm(BootstrapForm,forms.ModelForm):
