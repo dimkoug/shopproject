@@ -8,7 +8,7 @@
     <div class="card-body">
       <h5 class="card-title"><a href="{% url 'product-detail' product.slug %}">{{product.name}}</a></h5>
       <p class="card-text">{{product.description|safe}}</p>
-      <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary">Add to basket</a>
+      <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary">Add to basket &#128;{{product.price}}</a>
     </div>
   </div>
 </div>

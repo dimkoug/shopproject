@@ -24,14 +24,14 @@ class CategoryAdmin(BaseAdmin):
     date_hierarchy = 'created'
     prepopulated_fields = {"slug": ("name",)}
 
-
-
-
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "parent":
-            kwargs["queryset"] = Category.objects.filter(parent__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
+            pk = request.resolver_match.kwargs.get("object_id")
+            if(pk):
+                kwargs["queryset"] = Category.objects.exclude(
+                    pk=pk)
+        return super(CategoryAdmin, self).formfield_for_foreignkey(
+            db_field, request, **kwargs)
 
 
 class BrandAdmin(BaseAdmin):
@@ -114,8 +114,12 @@ class ProductAdmin(BaseAdmin):
     ]
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "parent":
-            kwargs["queryset"] = Product.objects.filter(parent__isnull=True)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+            pk = request.resolver_match.kwargs.get("object_id")
+            if(pk):
+                kwargs["queryset"] = Product.objects.exclude(
+                    pk=pk)
+        return super(ProductAdmin, self).formfield_for_foreignkey(
+            db_field, request, **kwargs)
 
 
 admin.site.register(ProductShipment, ProductShipmentAdmin)
