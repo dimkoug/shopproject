@@ -2,14 +2,27 @@
 {% load static %}
 {% block content %}
 <div class="row">
-  <div class="col-lg-2">
+  <div class="col-2">
     {% include 'tags_partial.html' %}
   </div>
-  <div class="col-lg-8">
+  <div class="col-8">
     <div class="row">
-      {{object.name}}
-      <a href="{% url 'add_to_basket' object.id %}" class="btn btn-primary">Add to basket</a>
+      <div class="col">
+        <h1>{{object.name}}</h1>
+      </div>
     </div>
+    <div class="row">
+      <div class="col">
+          <a href="{% url 'add_to_basket' object.id %}" class="float-right">Add to basket  &#128;{{object.price}}</a>
+      </div>
+    </div>
+    {% if object.image %}
+      <div class="row">
+        <div class="col">
+            <img src="{{object.image.url}}" class="product-image" alt="...">
+        </div>
+      </div>
+    {% endif %}
   </div>
 </div>
 

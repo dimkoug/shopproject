@@ -10,7 +10,7 @@ from profiles.models import Profile
 
 class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
-    hero = models.ImageField(upload_to='category/heroes', null=True, blank=True)
+    image = models.ImageField(upload_to='category/heroes', null=True, blank=True)
     category_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
@@ -33,7 +33,7 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
 
 class Brand(Timestamped, UUSlug,Published):
     name = models.CharField(max_length=50, unique=True)
-    logo = models.ImageField(upload_to='brand/logos', null=True, blank=True)
+    image = models.ImageField(upload_to='brand/logos', null=True, blank=True)
     brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     status = StatusManager()
     objects = models.Manager()
@@ -95,7 +95,7 @@ class Tag(Timestamped, Published):
 
 class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
-    hero = models.ImageField(upload_to='product/heroes', null=True, blank=True)
+    image = models.ImageField(upload_to='product/heroes', null=True, blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     featured = models.BooleanField(default=False)

@@ -1,6 +1,4 @@
 from django.contrib import admin
-
-
 from core.admin  import BaseAdmin
 
 
@@ -17,7 +15,7 @@ from .forms import (CategoryForm,TagForm,BrandForm,
 
 
 class CategoryAdmin(BaseAdmin):
-    list_display = ('name', 'parent', 'is_published')
+    list_display = ['name', 'parent', 'is_published'] + BaseAdmin.list_display
     list_filter = ('parent', 'is_published')
     list_select_related = ('parent',)
     search_fields = ['name']
@@ -25,6 +23,9 @@ class CategoryAdmin(BaseAdmin):
     form = CategoryForm
     date_hierarchy = 'created'
     prepopulated_fields = {"slug": ("name",)}
+
+
+
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "parent":
@@ -34,7 +35,7 @@ class CategoryAdmin(BaseAdmin):
 
 
 class BrandAdmin(BaseAdmin):
-    list_display = ('name', 'is_published')
+    list_display = ['name', 'is_published'] + BaseAdmin.list_display
     list_filter = ('is_published',)
     search_fields = ['name']
     model = Brand
@@ -92,7 +93,7 @@ class ProductMediaAdmin(admin.ModelAdmin):
     form = ProductMediaForm
 
 class ProductAdmin(BaseAdmin):
-    list_display = ('name', 'parent', 'brand', 'is_published')
+    list_display = ['name', 'parent', 'brand', 'is_published'] + BaseAdmin.list_display
     list_filter = ('parent','brand', 'is_published')
     list_select_related = ('parent', 'brand')
     search_fields = ['name', 'brand']

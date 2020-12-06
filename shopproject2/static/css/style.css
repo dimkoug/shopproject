@@ -7,3 +7,7 @@
   min-width: 100%;
   background-color: #ffffff;
 }
+
+.product-image {
+  width:500px;
+}
