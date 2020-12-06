@@ -1,0 +1,9 @@
+.mega-menu-container{
+  z-index:100;
+  position:absolute;
+  width:100%;
+  left:0px;
+  right:0px;
+  min-width: 100%;
+  background-color: #ffffff;
+}

@@ -8,8 +8,8 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item {% if request.path == home_url %}active {% endif %}">
-        <a class="nav-link" href="{{home_url}}">Home<span class="sr-only">(current)</span></a>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="mega-menu">Categories</a>
       </li>
       {% if basket_count > 0 %}
         <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
@@ -31,7 +31,7 @@
       {% if not request.user.is_anonymous %}
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Hello {{request.user}}
+          <i class="fa fa-user-o" aria-hidden="true"></i> {{request.user}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

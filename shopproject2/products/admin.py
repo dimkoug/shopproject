@@ -1,5 +1,9 @@
 from django.contrib import admin
 
+
+from core.admin  import BaseAdmin
+
+
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
                      ProductAttribute,ProductCategory,
                      Brand,ProductMedia,
@@ -12,25 +16,44 @@ from .forms import (CategoryForm,TagForm,BrandForm,
                     ProductAttributeFormSet, ProductMediaForm)
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(BaseAdmin):
+    list_display = ('name', 'parent', 'is_published')
+    list_filter = ('parent', 'is_published')
+    list_select_related = ('parent',)
+    search_fields = ['name']
     model = Category
     form = CategoryForm
     date_hierarchy = 'created'
     prepopulated_fields = {"slug": ("name",)}
 
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "parent":
+            kwargs["queryset"] = Category.objects.filter(parent__isnull=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-class BrandAdmin(admin.ModelAdmin):
+
+
+class BrandAdmin(BaseAdmin):
+    list_display = ('name', 'is_published')
+    list_filter = ('is_published',)
+    search_fields = ['name']
     model = Brand
     form = BrandForm
     prepopulated_fields = {"slug": ("name",)}
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseAdmin):
+    list_display = ('name', 'is_published')
+    list_filter = ('is_published',)
+    search_fields = ['name']
     model = Tag
     form = TagForm
 
 
-class SpecificationAdmin(admin.ModelAdmin):
+class SpecificationAdmin(BaseAdmin):
+    list_display = ('name', 'is_published')
+    list_filter = ('is_published',)
+    search_fields = ['name']
     model = Specification
     form = SpecificationForm
 
@@ -61,7 +84,11 @@ class ProductMediaAdmin(admin.ModelAdmin):
     model = ProductMedia
     form = ProductMediaForm
 
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(BaseAdmin):
+    list_display = ('name', 'parent', 'brand', 'is_published')
+    list_filter = ('parent','brand', 'is_published')
+    list_select_related = ('parent', 'brand')
+    search_fields = ['name', 'brand']
     model = Product
     form = ProductForm
     date_hierarchy = 'created'
@@ -72,6 +99,10 @@ class ProductAdmin(admin.ModelAdmin):
         ProductTagInline,
         ProductCategoryInline
     ]
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "parent":
+            kwargs["queryset"] = Product.objects.filter(parent__isnull=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 admin.site.register(ProductShipment, ProductShipmentAdmin)

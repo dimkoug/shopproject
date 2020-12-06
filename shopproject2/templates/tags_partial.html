@@ -1,0 +1,11 @@
+{% if tags %}
+  <h3>Tags</h3>
+  <nav class="navbar navbar-light bg-light">
+    <ul class="navbar-nav">
+      {% for tag in tags %}
+        {% url 'tag-detail' tag.name as tag_url %}
+        <li class="nav-item {% if request.path == tag_url %}active{% endif %}"><a  class="nav-link" href="{{tag_url}}">{{tag.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

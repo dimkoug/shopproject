@@ -11,7 +11,7 @@ def get_context_data(request):
     else:
         basket_count = 0
     return {
-        'categories': Category.objects.filter(id__in=productcategories),
+        'categories': Category.status.published(),
         'tags': Tag.status.published(),
         'brands': Brand.status.published(),
         'basket_count' : basket_count
