@@ -14,5 +14,6 @@ def get_context_data(request):
         'categories': Category.status.published(),
         'tags': Tag.status.published(),
         'brands': Brand.status.published(),
+        'donottrack': request.META.get('HTTP_DNT') == '1',
         'basket_count' : basket_count
     }

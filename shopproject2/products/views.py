@@ -7,9 +7,13 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 
-from .models import (Brand,Category, ProductCategory,Tag, Specification, Attribute, Product, ProductTag,
-                     ProductAttribute, ShoppingCartItem)
-from .forms import (CategoryForm,TagForm,SpecificationForm,AttributeForm,ProductForm,
+from core.functions import id_generator
+
+from .models import (Brand,Category, ProductCategory,Tag, Specification,
+                     Attribute, Product, ProductTag,
+                     ProductAttribute,ProductStatistics, ShoppingCartItem)
+from .forms import (CategoryForm,TagForm,SpecificationForm,AttributeForm,
+                    ProductForm,
                     ProductTagForm, ProductAttributeForm)
 
 
@@ -21,7 +25,8 @@ class BrandDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        product_list = Product.objects.select_related('brand').filter(is_published=True,brand=self.get_object())
+        product_list = Product.objects.select_related('brand').filter(
+            is_published=True,brand=self.get_object())
         context['product_list'] = product_list
         return context
 
@@ -35,9 +40,11 @@ class CategoryDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         attrs = self.request.GET.getlist('attrs')
         print(attrs)
-        productcategories = ProductCategory.objects.select_related('product','category').filter(category=self.get_object())
+        productcategories = ProductCategory.objects.select_related(
+            'product','category').filter(category=self.get_object())
         if attrs:
-            productcategories = productcategories.filter(product__attributes__in=attrs)
+            productcategories = productcategories.filter(
+                product__attributes__in=attrs)
         context['attrs_checked'] = attrs
         context['productcategory_list'] = productcategories
         context['specification_list'] = Specification.objects.select_related(
@@ -66,6 +73,14 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'product_detail.html'
 
+    def dispatch(self, *args, **kwargs):
+        if not self.request.session.get('id'):
+             self.request.session['id'] = id_generator(256)
+        return super().dispatch(*args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if(self.request.session.get('id')):
+            ProductStatistics.create(journey=self.request.session.get('id'),
+            product=self.get_object())
         return context

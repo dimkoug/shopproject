@@ -139,6 +139,17 @@ class ProductShipment(Timestamped, Published):
         return self.product.name
 
 
+class ProductStatistics(Timestamped):
+    journey = models.CharField(max_length=255)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    @classmethod
+    def create(cls, journey,product):
+        obj = cls(journey=journey, product=product)
+        obj.save()
+        return obj
+
+
 
 class ProductMedia(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

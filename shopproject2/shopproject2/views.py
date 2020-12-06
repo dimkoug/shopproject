@@ -1,14 +1,10 @@
-import string
-import random
 from django.views.generic import TemplateView
 from django.db.models import Prefetch
 from core.mixins import ProtectedViewMixin
 
 from products.models import Product, Specification, Attribute
 
-
-def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+from core.functions import id_generator
 
 
 class HomeView(TemplateView):
