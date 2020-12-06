@@ -13,7 +13,12 @@
       </li>
       {% if basket_count > 0 %}
         <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
-          <a class="nav-link" href="{{basket_url}}">Basket<span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="{{basket_url}}">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+             <span id="cart-status">
+                {{basket_count}}
+             </span>
+        </a>
         </li>
       {% endif %}
       <li class="nav-item dropdown">
