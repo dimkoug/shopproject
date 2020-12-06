@@ -76,6 +76,13 @@ class ProductCategoryInline(admin.TabularInline):
     model = ProductCategory
     formset = ProductCategoryFormSet
 
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        field = super().formfield_for_foreignkey(db_field, request, **kwargs)
+        if db_field.name == 'category':
+            field.queryset = field.queryset.filter(is_published=True, parent__isnull=False, level__gt=1)
+        return field
+
+
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
