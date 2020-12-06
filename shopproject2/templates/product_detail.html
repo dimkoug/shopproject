@@ -11,11 +11,13 @@
         <h1>{{object.name}}</h1>
       </div>
     </div>
+    <hr>
     <div class="row">
       <div class="col">
           <a href="{% url 'add_to_basket' object.id %}" class="float-right">Add to basket  &#128;{{object.price}}</a>
       </div>
     </div>
+    <hr>
     {% if object.image %}
       <div class="row">
         <div class="col">
@@ -23,6 +25,24 @@
         </div>
       </div>
     {% endif %}
+    <hr>
+    <div class="row">
+      <div class="col">
+          {{object.description|safe}}
+      </div>
+    </div>
+    <hr>
+    {% if object.productmedia.all %}
+      <div class="row">
+        <div class="col">
+          <div class="cycle-slideshow" data-cycle-slides="li">
+            {% for media in object.productmedia.all %}
+            <li><a class="test-popup-link" href="{{media.image.url}}"><img src="{{media.image.url}}" class="product-image" alt="..."></a></li>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
   </div>
 </div>
 

@@ -11,7 +11,7 @@ from .forms import (CategoryForm,TagForm,BrandForm,
                     ProductShipmentForm,
                     ProductForm,ProductTagForm, ProductAttributeForm,
                     ProductTagFormSet,ProductCategoryFormSet,
-                    ProductAttributeFormSet, ProductMediaForm)
+                    ProductAttributeFormSet,ProductMediaFormSet, ProductMediaForm)
 
 
 class CategoryAdmin(BaseAdmin):
@@ -88,6 +88,10 @@ class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
 
+class ProductMediaInline(admin.TabularInline):
+    model = ProductMedia
+    formset = ProductMediaFormSet
+
 class ProductMediaAdmin(admin.ModelAdmin):
     model = ProductMedia
     form = ProductMediaForm
@@ -105,7 +109,8 @@ class ProductAdmin(BaseAdmin):
     inlines = [
         ProductAttributeInline,
         ProductTagInline,
-        ProductCategoryInline
+        ProductCategoryInline,
+        ProductMediaInline
     ]
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "parent":

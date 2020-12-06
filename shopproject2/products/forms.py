@@ -99,3 +99,6 @@ ProductTagFormSet = inlineformset_factory(Product,ProductTag,
 ProductAttributeFormSet = inlineformset_factory(Product,ProductAttribute,
                                                 formset=unique_field_formset('attribute'),
                                                 form=ProductAttributeForm)
+
+ProductMediaFormSet = inlineformset_factory(Product,ProductMedia,
+                                            form=ProductMediaForm)

@@ -7,4 +7,9 @@
     $("body").on("click", "#close-menu",function(e){
       $(".mega-menu-container").fadeOut();
     })
+    $('.image-link').magnificPopup({type:'image'});
+    $('.test-popup-link').magnificPopup({
+  type: 'image'
+  // other options
+});
   })
