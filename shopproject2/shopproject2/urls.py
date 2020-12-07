@@ -19,13 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-from .views import HomeView, ManageView
+from .views import HomeView
 
 from rest_framework.authtoken import views as api_views
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
-    path('manage/', ManageView.as_view(), name='manage'),
+    path('cms/', include('cms.urls')),
     path('users/', include('users.urls')),
     path('profiles/', include('profiles.urls')),
     path('products/', include('products.urls')),

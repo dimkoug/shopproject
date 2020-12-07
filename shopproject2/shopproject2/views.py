@@ -29,7 +29,3 @@ class HomeView(TemplateView):
             Prefetch('attributes', queryset=Attribute.objects.select_related(
                 'specification'))).filter(is_published=True)
         return context
-
-
-class ManageView(ProtectedViewMixin, TemplateView):
-    template_name = "manage.html"

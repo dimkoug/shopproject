@@ -31,9 +31,22 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
         return self.name
 
 
+class Supplier(Timestamped):
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        default_related_name = 'suppliers'
+        verbose_name = 'supplier'
+        verbose_name_plural = 'suppliers'
+
+    def __str__(self):
+        return self.name
+
+
 class Brand(Timestamped, UUSlug,Published):
     name = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to='brand/logos', null=True, blank=True)
+    suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
     brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     status = StatusManager()
     objects = models.Manager()
@@ -47,6 +60,19 @@ class Brand(Timestamped, UUSlug,Published):
 
     def __str__(self):
         return self.name
+
+
+class BrandSupplier(Timestamped, Published):
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+
+    class Meta:
+        default_related_name = 'brandsuppliers'
+        verbose_name = 'brand supplier'
+        verbose_name_plural = 'brand suppliers'
+
+    def __str__(self):
+        return self.supplier.name
 
 
 class Specification(Timestamped, Published):

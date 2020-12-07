@@ -4,6 +4,7 @@ from django.forms import inlineformset_factory
 from core.forms import BootstrapForm
 from .models import (Category, Tag, Specification, Attribute,Product,ProductTag,
                      ProductShipment,
+                     Supplier, BrandSupplier,
                      ProductAttribute,ProductCategory,
                      Brand,ProductMedia)
 
@@ -35,10 +36,17 @@ class TagForm(BootstrapForm,forms.ModelForm):
         fields = ('name', 'is_published')
 
 
+class SupplierForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = Supplier
+        fields = ('name',)
+
+
 class ProductMediaForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = ProductMedia
         fields = ('product', 'caption', 'image', 'is_published')
+
 
 class ProductShipmentForm(BootstrapForm,forms.ModelForm):
     class Meta:
@@ -87,6 +95,17 @@ class ProductCategoryForm(BootstrapForm,forms.ModelForm):
         model = ProductCategory
         fields = ('product', 'category')
 
+
+class BrandSupplierForm(BootstrapForm,forms.ModelForm):
+    class Meta:
+        model = BrandSupplier
+        fields = ('brand', 'supplier')
+
+
+
+BrandSupplierFormSet = inlineformset_factory(Brand,BrandSupplier,
+                                          formset=unique_field_formset('supplier'),
+                                          form=BrandSupplierForm)
 
 
 ProductCategoryFormSet = inlineformset_factory(Product,ProductCategory,

@@ -5,10 +5,12 @@ from core.admin  import BaseAdmin
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
                      ProductAttribute,ProductCategory,
                      Brand,ProductMedia,
+                     Supplier,BrandSupplier,
                      ProductShipment)
 from .forms import (CategoryForm,TagForm,BrandForm,
                     SpecificationForm,AttributeForm,
                     ProductShipmentForm,
+                    SupplierForm, BrandSupplierFormSet,
                     ProductForm,ProductTagForm, ProductAttributeForm,
                     ProductTagFormSet,ProductCategoryFormSet,
                     ProductAttributeFormSet,ProductMediaFormSet, ProductMediaForm)
@@ -34,6 +36,12 @@ class CategoryAdmin(BaseAdmin):
             db_field, request, **kwargs)
 
 
+
+class BrandSupplierInline(admin.TabularInline):
+    model = BrandSupplier
+    formset = BrandSupplierFormSet
+
+
 class BrandAdmin(BaseAdmin):
     list_display = ['name', 'is_published'] + BaseAdmin.list_display
     list_filter = ('is_published',)
@@ -42,6 +50,10 @@ class BrandAdmin(BaseAdmin):
     form = BrandForm
     prepopulated_fields = {"slug": ("name",)}
 
+    inlines = [
+        BrandSupplierInline,
+    ]
+
 
 class TagAdmin(BaseAdmin):
     list_display = ('name', 'is_published')
@@ -49,6 +61,12 @@ class TagAdmin(BaseAdmin):
     search_fields = ['name']
     model = Tag
     form = TagForm
+
+class SupplierAdmin(BaseAdmin):
+    list_display = ('name', )
+    search_fields = ['name']
+    model = Supplier
+    form = SupplierForm
 
 
 class SpecificationAdmin(BaseAdmin):
@@ -67,6 +85,8 @@ class AttributeAdmin(admin.ModelAdmin):
 class ProductShipmentAdmin(admin.ModelAdmin):
     model = ProductShipment
     form = ProductShipmentForm
+
+
 
 
 class ProductTagInline(admin.TabularInline):
@@ -124,6 +144,7 @@ class ProductAdmin(BaseAdmin):
 
 admin.site.register(ProductShipment, ProductShipmentAdmin)
 admin.site.register(Brand, BrandAdmin)
+admin.site.register(Supplier, SupplierAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Specification, SpecificationAdmin)
