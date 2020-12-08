@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mptt',
+    'adminsortable2',
+    'sorl.thumbnail',
     'rest_framework',
     'rest_framework.authtoken',
     'core',

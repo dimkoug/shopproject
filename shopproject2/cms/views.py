@@ -5,4 +5,4 @@ from core.mixins import ProtectedViewMixin
 # Create your views here.
 
 class ManageView(ProtectedViewMixin, TemplateView):
-    template_name = "manage.html"
+    template_name = "cms/manage.html"

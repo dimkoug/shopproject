@@ -26,6 +26,7 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
         default_related_name = 'categories'
         verbose_name = 'category'
         verbose_name_plural = 'categories'
+        ordering = ['category_order']
 
     def __str__(self):
         return self.name
@@ -57,6 +58,7 @@ class Brand(Timestamped, UUSlug,Published):
         default_related_name = 'brands'
         verbose_name = 'brand'
         verbose_name_plural = 'brands'
+        ordering = ['brand_order']
 
     def __str__(self):
         return self.name
@@ -65,11 +67,13 @@ class Brand(Timestamped, UUSlug,Published):
 class BrandSupplier(Timestamped, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
 
     class Meta:
         default_related_name = 'brandsuppliers'
         verbose_name = 'brand supplier'
         verbose_name_plural = 'brand suppliers'
+        ordering = ['brand_order']
 
     def __str__(self):
         return self.supplier.name
@@ -86,6 +90,7 @@ class Specification(Timestamped, Published):
         default_related_name = 'specifications'
         verbose_name = 'specification'
         verbose_name_plural = 'specifications'
+        ordering = ['specification_order']
 
     def __str__(self):
         return self.name
@@ -114,6 +119,7 @@ class Tag(Timestamped, Published):
         default_related_name = 'tags'
         verbose_name = 'tag'
         verbose_name_plural = 'tags'
+        ordering = ['tag_order']
 
     def __str__(self):
         return self.name
@@ -144,6 +150,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
         default_related_name = 'products'
         verbose_name = 'product'
         verbose_name_plural = 'products'
+        ordering = ['product_order']
 
     def __str__(self):
         return self.name
@@ -190,6 +197,7 @@ class ProductMedia(Timestamped, Published):
         default_related_name = 'productmedia'
         verbose_name = 'product media'
         verbose_name_plural = 'product media'
+        ordering = ['media_order']
 
     def __str__(self):
         return self.product.name
@@ -198,6 +206,7 @@ class ProductMedia(Timestamped, Published):
 class ProductTag(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
     status = StatusManager()
     objects = models.Manager()
 
@@ -206,6 +215,7 @@ class ProductTag(Timestamped, Published):
         default_related_name = 'producttags'
         verbose_name = 'product tag'
         verbose_name_plural = 'product tags'
+        ordering = ['tag_order']
 
     def __str__(self):
         return self.tag.name

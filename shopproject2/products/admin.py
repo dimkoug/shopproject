@@ -1,6 +1,9 @@
 from django.contrib import admin
-from core.admin  import BaseAdmin
 
+from adminsortable2.admin import SortableAdminMixin
+from core.admin  import BaseAdmin, ImageAdminMixin
+
+from core.forms import AdminImageWidget
 
 from .models import (Category,Tag,Specification,Attribute,Product,ProductTag,
                      ProductAttribute,ProductCategory,
@@ -16,7 +19,7 @@ from .forms import (CategoryForm,TagForm,BrandForm,
                     ProductAttributeFormSet,ProductMediaFormSet, ProductMediaForm)
 
 
-class CategoryAdmin(BaseAdmin):
+class CategoryAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ['name', 'parent', 'is_published'] + BaseAdmin.list_display
     list_filter = ('parent', 'is_published')
     list_select_related = ('parent',)
@@ -32,7 +35,7 @@ class CategoryAdmin(BaseAdmin):
             if(pk):
                 kwargs["queryset"] = Category.objects.exclude(
                     pk=pk)
-        return super(CategoryAdmin, self).formfield_for_foreignkey(
+        return super().formfield_for_foreignkey(
             db_field, request, **kwargs)
 
 
@@ -42,7 +45,7 @@ class BrandSupplierInline(admin.TabularInline):
     formset = BrandSupplierFormSet
 
 
-class BrandAdmin(BaseAdmin):
+class BrandAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ['name', 'is_published'] + BaseAdmin.list_display
     list_filter = ('is_published',)
     search_fields = ['name']
@@ -55,7 +58,7 @@ class BrandAdmin(BaseAdmin):
     ]
 
 
-class TagAdmin(BaseAdmin):
+class TagAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ('name', 'is_published')
     list_filter = ('is_published',)
     search_fields = ['name']
@@ -69,7 +72,7 @@ class SupplierAdmin(BaseAdmin):
     form = SupplierForm
 
 
-class SpecificationAdmin(BaseAdmin):
+class SpecificationAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ('name', 'is_published')
     list_filter = ('is_published',)
     search_fields = ['name']
@@ -108,15 +111,16 @@ class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
 
-class ProductMediaInline(admin.TabularInline):
+class ProductMediaInline(ImageAdminMixin, admin.TabularInline):
     model = ProductMedia
     formset = ProductMediaFormSet
 
-class ProductMediaAdmin(admin.ModelAdmin):
+class ProductMediaAdmin(ImageAdminMixin, admin.ModelAdmin):
     model = ProductMedia
     form = ProductMediaForm
 
-class ProductAdmin(BaseAdmin):
+
+class ProductAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ['name', 'parent', 'brand', 'is_published'] + BaseAdmin.list_display
     list_filter = ('parent','brand', 'is_published')
     list_select_related = ('parent', 'brand')
@@ -138,7 +142,7 @@ class ProductAdmin(BaseAdmin):
             if(pk):
                 kwargs["queryset"] = Product.objects.exclude(
                     pk=pk)
-        return super(ProductAdmin, self).formfield_for_foreignkey(
+        return super().formfield_for_foreignkey(
             db_field, request, **kwargs)
 
 
