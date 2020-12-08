@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.html import format_html
 from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
+from adminsortable2.admin import CustomInlineFormSet
 from django.contrib.admin.widgets import AdminFileWidget
 from django.utils.safestring import mark_safe
 from django.forms import ModelForm
@@ -9,7 +11,8 @@ from sorl.thumbnail import get_thumbnail
 
 def unique_field_formset(field_name):
     from django.forms.models import BaseInlineFormSet
-    class UniqueFieldFormSet(BaseInlineFormSet):
+    from adminsortable2.admin import CustomInlineFormSet
+    class UniqueFieldFormSet(CustomInlineFormSet, BaseInlineFormSet):
         def clean(self):
             if any(self.errors):
                 # Don't bother validating the formset unless each form is valid on its own
@@ -23,6 +26,9 @@ def unique_field_formset(field_name):
                     values.add(value)
     return UniqueFieldFormSet
 
+
+class ShortableFormSet(CustomInlineFormSet, BaseInlineFormSet):
+    pass
 
 
 class SlugValidator:

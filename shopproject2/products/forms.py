@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import inlineformset_factory
-
-from core.forms import BootstrapForm, AdminImageWidget, unique_field_formset
+from adminsortable2.admin import CustomInlineFormSet
+from core.forms import (BootstrapForm, AdminImageWidget, unique_field_formset,
+                        ShortableFormSet)
 from .models import (Category, Tag, Specification, Attribute,Product,ProductTag,
                      ProductShipment,
                      Supplier, BrandSupplier,
@@ -103,19 +104,28 @@ class BrandSupplierForm(BootstrapForm,forms.ModelForm):
 
 BrandSupplierFormSet = inlineformset_factory(Brand,BrandSupplier,
                                           formset=unique_field_formset('supplier'),
-                                          form=BrandSupplierForm)
+                                          form=BrandSupplierForm, can_delete=True,
+                                          can_order=True)
 
 
 ProductCategoryFormSet = inlineformset_factory(Product,ProductCategory,
                                           formset=unique_field_formset('category'),
-                                          form=ProductCategoryForm)
+                                          form=ProductCategoryForm, can_delete=True,
+                                          can_order=True)
 
 ProductTagFormSet = inlineformset_factory(Product,ProductTag,
                                           formset=unique_field_formset('tag'),
-                                          form=ProductTagForm)
+                                          form=ProductTagForm,
+                                          can_delete=True,
+                                          can_order=True)
 ProductAttributeFormSet = inlineformset_factory(Product,ProductAttribute,
                                                 formset=unique_field_formset('attribute'),
-                                                form=ProductAttributeForm)
+                                                form=ProductAttributeForm,
+                                                can_delete=True,
+                                                can_order=True)
 
 ProductMediaFormSet = inlineformset_factory(Product,ProductMedia,
-                                            form=ProductMediaForm)
+                                            form=ProductMediaForm,
+                                            formset=ShortableFormSet,
+                                            can_delete=True,
+                                            can_order=True)

@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from adminsortable2.admin import SortableAdminMixin
+from adminsortable2.admin import SortableInlineAdminMixin
 from core.admin  import BaseAdmin, ImageAdminMixin
 
 from core.forms import AdminImageWidget
@@ -40,7 +41,7 @@ class CategoryAdmin(SortableAdminMixin, BaseAdmin):
 
 
 
-class BrandSupplierInline(admin.TabularInline):
+class BrandSupplierInline(SortableInlineAdminMixin, admin.TabularInline):
     model = BrandSupplier
     formset = BrandSupplierFormSet
 
@@ -65,7 +66,7 @@ class TagAdmin(SortableAdminMixin, BaseAdmin):
     model = Tag
     form = TagForm
 
-class SupplierAdmin(BaseAdmin):
+class SupplierAdmin(SortableAdminMixin, BaseAdmin):
     list_display = ('name', )
     search_fields = ['name']
     model = Supplier
@@ -80,7 +81,7 @@ class SpecificationAdmin(SortableAdminMixin, BaseAdmin):
     form = SpecificationForm
 
 
-class AttributeAdmin(admin.ModelAdmin):
+class AttributeAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = Attribute
     form = AttributeForm
 
@@ -90,13 +91,11 @@ class ProductShipmentAdmin(admin.ModelAdmin):
     form = ProductShipmentForm
 
 
-
-
-class ProductTagInline(admin.TabularInline):
+class ProductTagInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductTag
     formset = ProductTagFormSet
 
-class ProductCategoryInline(admin.TabularInline):
+class ProductCategoryInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductCategory
     formset = ProductCategoryFormSet
 
@@ -107,11 +106,11 @@ class ProductCategoryInline(admin.TabularInline):
         return field
 
 
-class ProductAttributeInline(admin.TabularInline):
+class ProductAttributeInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
 
-class ProductMediaInline(ImageAdminMixin, admin.TabularInline):
+class ProductMediaInline(SortableInlineAdminMixin, ImageAdminMixin, admin.TabularInline):
     model = ProductMedia
     formset = ProductMediaFormSet
 

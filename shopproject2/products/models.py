@@ -11,7 +11,7 @@ from profiles.models import Profile
 class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to='category/heroes', null=True, blank=True)
-    category_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    category_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,
                             blank=True, related_name='children')
     status = StatusManager()
@@ -34,11 +34,13 @@ class Category(Timestamped, Seo, UUSlug, Published, MPTTModel):
 
 class Supplier(Timestamped):
     name = models.CharField(max_length=50, unique=True)
+    supplier_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
 
     class Meta:
         default_related_name = 'suppliers'
         verbose_name = 'supplier'
         verbose_name_plural = 'suppliers'
+        ordering = ['supplier_order']
 
     def __str__(self):
         return self.name
@@ -48,7 +50,7 @@ class Brand(Timestamped, UUSlug,Published):
     name = models.CharField(max_length=50, unique=True)
     image = models.ImageField(upload_to='brand/logos', null=True, blank=True)
     suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
-    brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    brand_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -67,7 +69,7 @@ class Brand(Timestamped, UUSlug,Published):
 class BrandSupplier(Timestamped, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-    brand_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    brand_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
 
     class Meta:
         default_related_name = 'brandsuppliers'
@@ -82,7 +84,7 @@ class BrandSupplier(Timestamped, Published):
 class Specification(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    specification_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    specification_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -99,11 +101,13 @@ class Specification(Timestamped, Published):
 class Attribute(Timestamped):
     specification = models.ForeignKey(Specification, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, unique=True)
+    attribute_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
 
     class Meta:
         default_related_name = 'attributes'
         verbose_name = 'attribute'
         verbose_name_plural = 'attributes'
+        ordering = ['attribute_order']
 
     def __str__(self):
         return self.name
@@ -111,7 +115,7 @@ class Attribute(Timestamped):
 
 class Tag(Timestamped, Published):
     name = models.CharField(max_length=50, unique=True)
-    tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    tag_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -135,7 +139,7 @@ class Product(Timestamped, Seo, UUSlug, Published, MPTTModel):
     categories = models.ManyToManyField(Category, through='ProductCategory')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
-    product_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    product_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     parent = TreeForeignKey('self', on_delete=models.CASCADE,
                             null=True, blank=True, related_name='children')
     status = StatusManager()
@@ -187,7 +191,7 @@ class ProductStatistics(Timestamped):
 class ProductMedia(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     caption = models.CharField(max_length=50, blank=True)
-    media_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    media_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     image = models.ImageField(upload_to='productmedia/')
     status = StatusManager()
     objects = models.Manager()
@@ -206,7 +210,7 @@ class ProductMedia(Timestamped, Published):
 class ProductTag(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
-    tag_order=models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    tag_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -224,6 +228,7 @@ class ProductTag(Timestamped, Published):
 class ProductCategory(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -232,6 +237,7 @@ class ProductCategory(Timestamped, Published):
         default_related_name = 'productcategories'
         verbose_name = 'product category'
         verbose_name_plural = 'product categories'
+        ordering = ['category_order']
 
     def __str__(self):
         return self.category.name
@@ -240,6 +246,7 @@ class ProductCategory(Timestamped, Published):
 class ProductAttribute(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+    attribute_order=models.PositiveIntegerField(default=0, db_index=True,blank=False, null=False)
     status = StatusManager()
     objects = models.Manager()
 
@@ -248,6 +255,7 @@ class ProductAttribute(Timestamped, Published):
         default_related_name = 'productattributes'
         verbose_name = 'product attribute'
         verbose_name_plural = 'product attributes'
+        ordering = ['attribute_order']
 
     def __str__(self):
         return self.attribute.name
