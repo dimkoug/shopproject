@@ -17,8 +17,8 @@
       {% for productcategory in productcategory_list %}
       <div class="col-lg-6">
         <div class="card lg-6">
-          {% if productcategory,product.image %}
-            <img src="{{product.image.url}}" class="card-img-top" alt="...">
+          {% if productcategory.product.image %}
+            <img src="{{productcategory.product.image.url}}" class="card-img-top" alt="...">
           {% endif %}
           <div class="card-body">
             <h5 class="card-title"><a href="{% url 'product-detail' productcategory.product.slug %}">{{productcategory.product.name}}</a></h5>
