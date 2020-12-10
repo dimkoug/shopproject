@@ -1,14 +1,41 @@
 {% extends 'users/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'bootstrap4/css/signin.css' %}">
+<style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+{% endblock %}
+
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-  <a href="{% url 'signup' %}">Register</a>
-  <a href="{% url 'password_reset' %}">Forgot password</a>
+
+<form class="form-signin" method="post">
+<img class="mb-4" src="{% static 'img/bootstrap-solid.svg' %}" alt="" width="72" height="72">
+<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+{% csrf_token %}
+{{ form.as_p }}
+</div>
+<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+<p class="mt-5 mb-3 text-muted">&copy; 2017-2020</p>
+<a href="{% url 'signup' %}">Register</a>
+<a href="{% url 'password_reset' %}">Forgot password</a>
+</form>
+
 {% endblock %}

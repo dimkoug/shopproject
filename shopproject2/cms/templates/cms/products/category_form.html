@@ -1,0 +1,22 @@
+{% extends 'cms/base.html' %}
+{% load cms %}
+{% block content %}
+<form method="post">{% csrf_token %}
+    <div class="row">
+      <div class="col">
+          {{ form.as_p }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+          <a href="{% get_url 'list' %}">Back</a>
+          <input type="submit" name="contine" class="btn btn-primary float-right"  value="Save and continue editing" />
+          <input type="submit" name="new" class="btn btn-primary float-right"  value="Save and add new" />
+          {% if form.instance.pk %}
+            <a href="{% get_url 'delete' form.instance %}" class="btn btn-danger">Delete</a>
+          {% endif %}
+          <input type="submit" class="btn btn-primary float-right" value="{% if form.instance.pk %}Update {% else  %}Save {% endif %}">
+      </div>
+    </div>
+</form>
+{% endblock %}

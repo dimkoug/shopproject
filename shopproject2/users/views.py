@@ -1,22 +1,38 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login as auth_login, authenticate
 from django.shortcuts import render, redirect
 
 from .forms import UserCreationForm
 # Create your views here.
 
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes
+from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 
 
 from .models import User
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
+from .forms import AuthenticationForm
+
+
+
+def login(request):
+    form = AuthenticationForm(request.POST or None)
+    if request.method== "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)
+            return redirect(settings.LOGIN_REDIRECT_URL)
+        else:
+            messages.error(
+                request, 'wrong username or password')
+    return render(request, "registration/login.html", {'form':form})
 
 
 def signup(request):
@@ -58,7 +74,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
-        login(request, user)
+        auth_login(request, user)
         return redirect('home')
     else:
         return render(request, 'users/account_activation_invalid.html')
