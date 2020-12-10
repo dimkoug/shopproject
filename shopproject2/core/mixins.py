@@ -65,7 +65,7 @@ class MessageMixin:
         app = self.model._meta.app_label
         if 'new' in self.request.POST:
             return redirect(reverse_lazy("{}:{}-create".format(app, model_name)))
-        if 'contine' in self.request.POST:
+        if 'continue' in self.request.POST:
             return redirect(reverse_lazy("{}:{}-update".format(app, model_name), kwargs={"pk":obj.pk}))
         messages.success(
             self.request, 'Your {} was proccesed successfully!'.format(

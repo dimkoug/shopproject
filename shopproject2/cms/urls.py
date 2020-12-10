@@ -1,13 +1,18 @@
 from django.urls import path
 
 from .views import (
-    ManageView,
-    CategoryListView,
-    CategoryDetailView,
-    CategoryCreateView,
-    CategoryUpdateView,
-    CategoryDeleteView
-
+    ManageView, CategoryListView, CategoryDetailView, CategoryCreateView,
+    CategoryUpdateView, CategoryDeleteView, SupplierListView,
+    SupplierDetailView, SupplierCreateView, SupplierUpdateView,
+    SupplierDeleteView, BrandListView, BrandDetailView, BrandCreateView,
+    BrandUpdateView, BrandDeleteView, SpecificationListView,
+    SpecificationDetailView, SpecificationCreateView,
+    SpecificationUpdateView, SpecificationDeleteView, AttributeListView,
+    AttributeDetailView, AttributeCreateView, AttributeUpdateView,
+    AttributeDeleteView, TagListView, TagDetailView, TagCreateView,
+    TagUpdateView, TagDeleteView,
+    ProductListView, ProductDetailView, ProductCreateView,
+    ProductUpdateView, ProductDeleteView
 )
 
 app_name='cms'
@@ -23,4 +28,72 @@ urlpatterns =[
          name='category-update'),
     path('category/<int:pk>/delete/', CategoryDeleteView.as_view(),
          name='category-delete'),
+
+    path('supplier/list/', SupplierListView.as_view(),
+         name='supplier-list'),
+    path('supplier/create/', SupplierCreateView.as_view(),
+         name='supplier-create'),
+    path('supplier/<int:pk>/detail/', SupplierDetailView.as_view(),
+         name='supplier-detail'),
+    path('supplier/<int:pk>/update/', SupplierUpdateView.as_view(),
+         name='supplier-update'),
+    path('supplier/<int:pk>/delete/', SupplierDeleteView.as_view(),
+         name='supplier-delete'),
+
+    path('brand/list/', BrandListView.as_view(),
+         name='brand-list'),
+    path('brand/create/', BrandCreateView.as_view(),
+         name='brand-create'),
+    path('brand/<int:pk>/detail/', BrandDetailView.as_view(),
+         name='brand-detail'),
+    path('brand/<int:pk>/update/', BrandUpdateView.as_view(),
+         name='brand-update'),
+    path('brand/<int:pk>/delete/', BrandDeleteView.as_view(),
+         name='brand-delete'),
+
+    path('specification/list/', SpecificationListView.as_view(),
+         name='specification-list'),
+    path('specification/create/', SpecificationCreateView.as_view(),
+         name='specification-create'),
+    path('specification/<int:pk>/detail/', SpecificationDetailView.as_view(),
+         name='specification-detail'),
+    path('specification/<int:pk>/update/', SpecificationUpdateView.as_view(),
+         name='specification-update'),
+    path('specification/<int:pk>/delete/', SpecificationDeleteView.as_view(),
+         name='specification-delete'),
+
+    path('attribute/list/', AttributeListView.as_view(),
+         name='attribute-list'),
+    path('attribute/create/', AttributeCreateView.as_view(),
+         name='attribute-create'),
+    path('attribute/<int:pk>/detail/', AttributeDetailView.as_view(),
+         name='attribute-detail'),
+    path('attribute/<int:pk>/update/', AttributeUpdateView.as_view(),
+         name='attribute-update'),
+    path('attribute/<int:pk>/delete/', AttributeDeleteView.as_view(),
+         name='attribute-delete'),
+
+    path('tag/list/', TagListView.as_view(),
+         name='tag-list'),
+    path('tag/create/', TagCreateView.as_view(),
+         name='tag-create'),
+    path('tag/<int:pk>/detail/', TagDetailView.as_view(),
+         name='tag-detail'),
+    path('tag/<int:pk>/update/', TagUpdateView.as_view(),
+         name='tag-update'),
+    path('tag/<int:pk>/delete/', TagDeleteView.as_view(),
+         name='tag-delete'),
+
+
+    path('product/list/', ProductListView.as_view(),
+         name='product-list'),
+    path('product/create/', ProductCreateView.as_view(),
+         name='product-create'),
+    path('product/<int:pk>/detail/', ProductDetailView.as_view(),
+         name='product-detail'),
+    path('product/<int:pk>/update/', ProductUpdateView.as_view(),
+         name='product-update'),
+    path('product/<int:pk>/delete/', ProductDeleteView.as_view(),
+         name='product-delete'),
+
 ]

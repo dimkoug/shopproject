@@ -10,7 +10,7 @@
     <div class="row">
       <div class="col">
           <a href="{% get_url 'list' %}">Back</a>
-          <input type="submit" name="contine" class="btn btn-primary float-right"  value="Save and continue editing" />
+          <input type="submit" name="continue" class="btn btn-primary float-right"  value="Save and continue editing" />
           <input type="submit" name="new" class="btn btn-primary float-right"  value="Save and add new" />
           {% if form.instance.pk %}
             <a href="{% get_url 'delete' form.instance %}" class="btn btn-danger">Delete</a>

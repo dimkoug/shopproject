@@ -1,5 +1,6 @@
 {% extends "site/base.html" %}
 {% load static %}
+{% load thumbnail %}
 {% block content %}
 <div class="row">
   <div class="col-2">
@@ -21,7 +22,9 @@
     {% if object.image %}
       <div class="row">
         <div class="col">
-            <img src="{{object.image.url}}" class="product-image" alt="...">
+          {% thumbnail object.image "500x500" crop="center" as im %}
+              <img src="{{ im.url }}" width="{{ im.width }}" class="product-image">
+          {% endthumbnail %}
         </div>
       </div>
     {% endif %}
@@ -37,7 +40,11 @@
         <div class="col">
           <div class="cycle-slideshow" data-cycle-slides="li">
             {% for media in object.productmedia.all %}
-            <li><a class="test-popup-link" href="{{media.image.url}}"><img src="{{media.image.url}}" class="product-image" alt="..."></a></li>
+            <li><a class="test-popup-link" href="{{media.image.url}}">
+              {% thumbnail media.image "500x500" crop="center" as im %}
+                  <img src="{{ im.url }}" width="{{ im.width }}" class="product-image">
+              {% endthumbnail %}
+              </li>
             {% endfor %}
           </div>
         </div>

@@ -1,0 +1,53 @@
+{% extends 'cms/base.html' %}
+{% load cms %}
+{% load thumbnail %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+    <div class="row">
+      <div class="col">
+          {{ form.as_p }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="avatar">Add product images</label>
+        <input type="file" id="images" name="file" accept="image/png, image/jpeg" multiple>
+      </div>
+    </div>
+    {% if form.instance.pk %}
+    <div class="row">
+      <div class="col">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Image</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in form.instance.productmedia.all %}
+            <tr>
+              <td>
+                {% thumbnail item.image "100x100" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% endthumbnail %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+    <div class="row">
+      <div class="col">
+          <a href="{% get_url 'list' %}">Back</a>
+          <input type="submit" name="continue" class="btn btn-primary float-right"  value="Save and continue editing" />
+          <input type="submit" name="new" class="btn btn-primary float-right"  value="Save and add new" />
+          {% if form.instance.pk %}
+            <a href="{% get_url 'delete' form.instance %}" class="btn btn-danger">Delete</a>
+          {% endif %}
+          <input type="submit" class="btn btn-primary float-right" value="{% if form.instance.pk %}Update {% else  %}Save {% endif %}">
+      </div>
+    </div>
+</form>
+{% endblock %}

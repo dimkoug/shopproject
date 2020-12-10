@@ -1,9 +1,12 @@
 {% load static %}
+{% load thumbnail %}
 {% for product in product_list %}
 <div class="col-lg-6">
   <div class="card lg-6">
     {% if product.image %}
-      <img src="{{product.image.url}}" class="card-img-top" alt="...">
+    {% thumbnail product.image "500x500" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" class="card-img-top">
+    {% endthumbnail %}
     {% endif %}
     <div class="card-body">
       <h5 class="card-title"><a href="{% url 'product-detail' product.slug %}">{{product.name}}</a></h5>

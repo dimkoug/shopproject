@@ -11,7 +11,7 @@ def get_context_data(request):
     else:
         basket_count = 0
     return {
-        'categories': Category.status.published(),
+        'categories': Category.objects.filter(parent__isnull=True, is_published=True),
         'tags': Tag.status.published(),
         'brands': Brand.status.published(),
         'donottrack': request.META.get('HTTP_DNT') == '1',

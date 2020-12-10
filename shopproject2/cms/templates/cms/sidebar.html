@@ -1,0 +1,54 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="sidebar-sticky pt-3">
+    <ul class="nav flex-column">
+      {% url 'cms:manage' as manage_url %}
+      {% url 'cms:category-list' as category_url %}
+      {% url 'cms:supplier-list' as supplier_url %}
+      {% url 'cms:brand-list' as brand_url %}
+      {% url 'cms:specification-list' as specification_url %}
+      {% url 'cms:attribute-list' as attribute_url %}
+      {% url 'cms:tag-list' as tag_url %}
+      {% url 'cms:product-list' as product_url %}
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == manage_url %}active {% endif %}" href="{{manage_url}}">
+          Manage <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == category_url %}active {% endif %}" href="{{category_url}}">
+          Categories <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == supplier_url %}active {% endif %}" href="{{supplier_url}}">
+          Suppliers <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == brand_url %}active {% endif %}" href="{{brand_url}}">
+          Brands <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == specification_url %}active {% endif %}" href="{{specification_url}}">
+          Specifications <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == attribute_url %}active {% endif %}" href="{{attribute_url}}">
+          Attributes <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == tag_url %}active {% endif %}" href="{{tag_url}}">
+          Tags <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == product_url %}active {% endif %}" href="{{product_url}}">
+          Products <span class="sr-only">(current)</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

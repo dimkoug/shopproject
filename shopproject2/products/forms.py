@@ -50,7 +50,7 @@ class ProductShipmentForm(BootstrapForm,forms.ModelForm):
 class BrandForm(BootstrapForm,forms.ModelForm):
     class Meta:
         model = Brand
-        fields = ('name','slug', 'image', 'is_published')
+        fields = ('name','slug', 'suppliers', 'image', 'is_published')
         widgets = {
             'image': AdminImageWidget,
         }
@@ -73,6 +73,7 @@ class ProductForm(BootstrapForm,forms.ModelForm):
         model = Product
         fields = ('name', 'parent', 'brand', 'slug','price',
                   'description',
+                  'categories', 'tags', 'attributes',
                   'meta_description', 'meta_keywords','image', 'featured', 'is_published')
         widgets = {
             'image': AdminImageWidget,

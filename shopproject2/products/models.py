@@ -110,7 +110,8 @@ class Attribute(Timestamped):
         ordering = ['attribute_order']
 
     def __str__(self):
-        return self.name
+        return "{} - {}".format(self.specification.name,
+            self.name)
 
 
 class Tag(Timestamped, Published):
@@ -258,7 +259,8 @@ class ProductAttribute(Timestamped, Published):
         ordering = ['attribute_order']
 
     def __str__(self):
-        return self.attribute.name
+        return "{} - {}".format(self.attribute.specification.name,
+            self.attribute.name)
 
 
 class ShoppingCartItem(Timestamped):

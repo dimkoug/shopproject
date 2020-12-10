@@ -30,20 +30,30 @@
         </div>
       </div>
       <div class="row">
-        {% recursetree categories %}
-      <div class="col">
-          {% if node.is_leaf_node %}
-          <div class=""><a href="{% url 'category-detail' node.slug %}">{{node.name}}</a></div>
-          {% else %}
-          <div class="">{{node.name}}</div>
+        {% for category in categories %}
+        {% if category.children.all.count > 0 %}
+        <div class="col">
+          <div class="">{{category}}</div>
+          {% if category.children %}
+          <div class="row">
+            {% for child in category.children.all %}
+            <div class="col">
+              <div class="" style="padding-left:1rem;">{{child}}</div>
+              {% if child.children %}
+              <div class="row">
+                {% for ch in child.children.all %}
+                <div class="col" > <a href="{% url 'category-detail' ch.slug %}" class="nav-category">{{ch.name}}</a>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
           {% endif %}
-          {% if not node.is_leaf_node %}
-              <ul class="children">
-                  {{ children }}
-              </ul>
-          {% endif %}
-      </div>
-  {% endrecursetree %}
+        </div>
+        {% endif %}
+        {% endfor %}
       </div>
     </div>
     <main class="container">
