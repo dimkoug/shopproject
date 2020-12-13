@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Prefetch
 from django.contrib import messages
+from django.conf import settings
 from core.mixins import ProtectedViewMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 
 from core.functions import id_generator
+from core.pagination import get_pagination
 
 from .models import (Brand,Category, ProductCategory,Tag, Specification,
                      Attribute, Product, ProductTag,
@@ -27,7 +29,8 @@ class BrandDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         product_list = Product.objects.select_related('brand').filter(
             is_published=True,brand=self.get_object())
-        context['product_list'] = product_list
+        context['product_list'] = get_pagination(self.request,product_list,
+            settings.PRODUCT_LIST_ITEMS)
         return context
 
 
@@ -46,7 +49,8 @@ class CategoryDetailView(DetailView):
             productcategories = productcategories.filter(
                 product__attributes__in=attrs)
         context['attrs_checked'] = attrs
-        context['productcategory_list'] = productcategories
+        context['productcategory_list'] = get_pagination(self.request,productcategories,
+            settings.PRODUCT_LIST_ITEMS)
         context['specification_list'] = Specification.objects.select_related(
             'category').prefetch_related(
                 Prefetch('attributes',
@@ -64,7 +68,9 @@ class TagDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['product_list'] = Product.objects.filter(tags=self.get_object())
+        product_list = Product.objects.filter(tags=self.get_object())
+        context['product_list'] = get_pagination(self.request,product_list,
+            settings.PRODUCT_LIST_ITEMS)
         return context
 
 

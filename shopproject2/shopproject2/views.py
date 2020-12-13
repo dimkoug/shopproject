@@ -1,10 +1,11 @@
 from django.views.generic import TemplateView
 from django.db.models import Prefetch
 from core.mixins import ProtectedViewMixin
-
+from django.conf import settings
 from products.models import Product, Specification, Attribute
 
 from core.functions import id_generator
+from core.pagination import get_pagination
 
 
 class HomeView(TemplateView):
@@ -24,7 +25,8 @@ class HomeView(TemplateView):
         if attrs:
             products = products.filter(attributes__in=attrs)
         context['attrs_checked'] = attrs
-        context['product_list'] = products
+        context['product_list'] = get_pagination(self.request, products,
+            settings.PRODUCT_LIST_ITEMS)
         context['specification_list'] = Specification.objects.prefetch_related(
             Prefetch('attributes', queryset=Attribute.objects.select_related(
                 'specification'))).filter(is_published=True)

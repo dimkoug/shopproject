@@ -90,3 +90,6 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+
+PRODUCT_LIST_ITEMS = 30

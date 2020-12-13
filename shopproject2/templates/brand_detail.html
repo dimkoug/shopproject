@@ -10,27 +10,60 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-lg-8">
-    <div class="row">
-      {% for product in product_list %}
-      <div class="col-lg-6">
-        <div class="card lg-6">
-          {% if product.image %}
-          {% thumbnail product.image "500x500" crop="center" as im %}
-              <img src="{{ im.url }}" class="card-img-top">
-          {% endthumbnail %}
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title"><a href="{% url 'product-detail' product.slug %}">{{product.name}}</a></h5>
-            <p class="card-text">{{product.description|safe}}</p>
-            <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary">Add to basket</a>
+  <div class="col">
+    <div class="results">
+      <div class="row">
+        {% for product in product_list %}
+        <div class="col-lg-4 py-2">
+          <div class="card lg-6">
+            {% if product.image %}
+            {% thumbnail product.image "500x500" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" class="card-img-top">
+            {% endthumbnail %}
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title"><a href="{% url 'product-detail' product.slug %}">{{product.name}}</a></h5>
+              <p class="card-text">{{product.description|safe}}</p>
+              <a href="{% url 'add_to_basket' product.id %}" class="btn btn-primary">Add to basket &#128;{{product.price}}</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+
+      <div class="row">
+        <div class="col">
+          {% if product_list.has_other_pages %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {% if product_list.has_previous %}
+                <li class="page-item"><a class="page-link"  href="?page={{ product_list.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a></li>
+              {% endif %}
+              {% for i in product_list.paginator.page_range %}
+                {% if product_list.number == i %}
+                  <li class="page-item active"><a class="page-link" href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+                {% else %}
+                  <li class="page-item"><a class="page-link"  href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if product_list.has_next %}
+                <li class="page-item"><a class="page-link"  href="?page={{ product_list.next_page_number }}">&raquo;</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% endif %}
+        </div>
+
+      </div>
     </div>
   </div>
+
 </div>
+
 
 
 {% endblock %}

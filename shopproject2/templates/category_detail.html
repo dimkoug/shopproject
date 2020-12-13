@@ -14,26 +14,51 @@
       </div>
       </div>
     {% endif %}
-    <div class="row">
-      {% for productcategory in productcategory_list %}
-      <div class="col-lg-6">
-        <div class="card lg-6">
-          {% if productcategory.product.image %}
-          {% thumbnail productcategory.product.image "500x500" crop="center" as im %}
-              <img src="{{ im.url }}" class="card-img-top">
-          {% endthumbnail %}
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title"><a href="{% url 'product-detail' productcategory.product.slug %}">{{productcategory.product.name}}</a></h5>
-            <p class="card-text">{{productcategory.product.description|safe}}</p>
-            <a href="{% url 'add_to_basket' productcategory.product.id %}" class="btn btn-primary">Add to basket</a>
+    <div class="results">
+      <div class="row">
+        {% for productcategory in productcategory_list %}
+        <div class="col-lg-6 py-2">
+          <div class="card lg-6">
+            {% if productcategory.product.image %}
+            {% thumbnail productcategory.product.image "500x500" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" class="card-img-top">
+            {% endthumbnail %}
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title"><a href="{% url 'product-detail' productcategory.product.slug %}">{{productcategory.product.name}}</a></h5>
+              <p class="card-text">{{productcategory.product.description|safe}}</p>
+              <a href="{% url 'add_to_basket' productcategory.product.id %}" class="btn btn-primary">Add to basket &#128;{{productcategory.product.price}}</a>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
+      <div class="row">
+        <div class="col">
+          {% if productcategory_list.has_other_pages %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              {% if productcategory_list.has_previous %}
+                <li class="page-item"><a class="page-link"  href="?page={{ productcategory_list.previous_page_number }}">&laquo;</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a></li>
+              {% endif %}
+              {% for i in productcategory_list.paginator.page_range %}
+                {% if productcategory_list.number == i %}
+                  <li class="page-item active"><a class="page-link" href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+                {% else %}
+                  <li class="page-item"><a class="page-link"  href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+              {% if productcategory_list.has_next %}
+                <li class="page-item"><a class="page-link"  href="?page={{ productcategory_list.next_page_number }}">&raquo;</a></li>
+              {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+          {% endif %}
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-
 {% endblock %}
