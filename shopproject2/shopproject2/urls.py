@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from api import routers
 
 from .views import HomeView
 
@@ -25,12 +26,14 @@ from rest_framework.authtoken import views as api_views
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('api/', include(routers.router.urls)),
     path('cms/', include('cms.urls')),
     path('users/', include('users.urls')),
     path('profiles/', include('profiles.urls')),
     path('products/', include('products.urls')),
     path('orders/', include('orders.urls')),
     path('api-token-auth/', api_views.obtain_auth_token, name='api-token'),
+    path('api-auth/', include('rest_framework.urls')),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
 ]
