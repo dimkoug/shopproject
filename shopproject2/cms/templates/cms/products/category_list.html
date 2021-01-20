@@ -8,7 +8,7 @@
 
 <div class="row">
   <div class="col">
-    <a href="{% get_url 'create' %}" class="btn btn-primary float-right">Add</a>
+    <a href="{% get_url 'create' 'cms' %}" class="btn btn-primary float-right">Add</a>
   </div>
 </div>
 
@@ -28,7 +28,7 @@
         {% for item in object_list %}
         <tr>
           <td>{{item.pk}}</td>
-          <td> <a href="{% get_url 'detail' item %}">{{item.name}}</a></td>
+          <td> <a href="{% get_url 'detail' item 'cms' %}">{{item.name}}</a></td>
           <td>{{item.parent|default_if_none:"---"}}</td>
           <td>
             {% thumbnail item.image "100x100" crop="center" as im %}
@@ -37,8 +37,8 @@
 
           </td>
           <td>
-            <a href="{% get_url 'update' item %}" class="btn btn-warning">Update</a>
-            <a href="{% get_url 'delete' item %}" class="btn btn-danger">Delete</a>
+            <a href="{% get_url 'update' item 'cms' %}" class="btn btn-warning">Update</a>
+            <a href="{% get_url 'delete' item 'cms' %}" class="btn btn-danger">Delete</a>
           </td>
         </tr>
         {% endfor %}

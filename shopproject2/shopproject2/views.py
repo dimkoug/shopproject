@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 from django.db.models import Prefetch
-from core.mixins import ProtectedViewMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
 from products.models import Product, Specification, Attribute
 

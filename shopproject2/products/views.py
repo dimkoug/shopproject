@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Prefetch
 from django.contrib import messages
 from django.conf import settings
-from core.mixins import ProtectedViewMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required

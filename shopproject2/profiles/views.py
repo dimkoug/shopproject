@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
 from .forms import ProfileForm
 from .models import Profile
 
-from core.mixins import ProtectedViewMixin
+
 
 
 class ProtectProfile:
@@ -17,11 +18,11 @@ class ProtectProfile:
         return super().dispatch(*args, **kwargs)
 
 
-class ProfileDetail(ProtectProfile, ProtectedViewMixin, DetailView):
+class ProfileDetail(ProtectProfile, LoginRequiredMixin, DetailView):
     model = Profile
 
 
-class ProfileUpdate(ProtectProfile, ProtectedViewMixin, UpdateView):
+class ProfileUpdate(ProtectProfile, LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileForm
     template_name = 'profiles/profile_form.html'

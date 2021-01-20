@@ -1,6 +1,5 @@
 {% load static %}
 {% load thumbnail %}
-
 <div class="results">
   <div class="row">
     {% for product in product_list %}
@@ -20,7 +19,6 @@
     </div>
     {% endfor %}
   </div>
-
   <div class="row">
     <div class="col">
       {% if product_list.has_other_pages %}
@@ -47,6 +45,5 @@
       </nav>
       {% endif %}
     </div>
-
   </div>
 </div>

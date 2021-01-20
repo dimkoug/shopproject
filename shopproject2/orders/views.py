@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Prefetch
 from django.contrib import messages
-from core.mixins import ProtectedViewMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,7 @@ from .models import Order, OrderDetail
 from .forms import OrderForm
 
 
-class OrderListView(ProtectedViewMixin, ListView):
+class OrderListView(LoginRequiredMixin, ListView):
 
     model = Order
     paginate_by = 100  # if pagination is desired

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -6,8 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Prefetch
 from django.urls import reverse_lazy
 
-from core.mixins import ProtectedViewMixin, ModelMixin
-from .mixins import SuccessUrlMixin, MessageMixin, DynamicTemplateMixin
+from .mixins import BaseViewMixin, FormViewMixin
 
 
 from products.models import (
@@ -24,13 +24,11 @@ from products.forms import (
 )
 
 
-class ManageView(ProtectedViewMixin, TemplateView):
+class ManageView(LoginRequiredMixin, TemplateView):
     template_name = "cms/manage.html"
 
 
-
-class CategoryListView(ProtectedViewMixin, DynamicTemplateMixin,
-                       ModelMixin, ListView):
+class CategoryListView(BaseViewMixin, ListView):
     model = Category
     template = 'list'
     paginate_by = 100  # if pagination is desired
@@ -40,8 +38,7 @@ class CategoryListView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class CategoryDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                         ModelMixin, DetailView):
+class CategoryDetailView(BaseViewMixin, DetailView):
     model = Category
     template = 'detail'
 
@@ -50,33 +47,26 @@ class CategoryDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class CategoryCreateView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         MessageMixin, CreateView):
+class CategoryCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Category
     form_class = CategoryForm
 
 
 
-class CategoryUpdateView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         MessageMixin, UpdateView):
+class CategoryUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Category
     form_class = CategoryForm
 
 
-class CategoryDeleteView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         DeleteView):
-    template = 'delete'
+class CategoryDeleteView(FormViewMixin, DeleteView):
+    template = 'confirm_delete'
     model = Category
 
 
 
-class ProductListView(ProtectedViewMixin, DynamicTemplateMixin,
-                      ModelMixin, ListView):
+class ProductListView(BaseViewMixin, ListView):
     model = Product
     template = 'list'
     paginate_by = 100  # if pagination is desired
@@ -86,8 +76,7 @@ class ProductListView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class ProductDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                        ModelMixin, DetailView):
+class ProductDetailView(BaseViewMixin, DetailView):
     model = Product
     template = 'detail'
 
@@ -96,9 +85,7 @@ class ProductDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class ProductCreateView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         MessageMixin, CreateView):
+class ProductCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Product
     form_class = ProductForm
@@ -112,9 +99,7 @@ class ProductCreateView(ProtectedViewMixin, ModelMixin,
 
 
 
-class ProductUpdateView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         MessageMixin, UpdateView):
+class ProductUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Product
     form_class = ProductForm
@@ -127,15 +112,12 @@ class ProductUpdateView(ProtectedViewMixin, ModelMixin,
         return super().form_valid(form)
 
 
-class ProductDeleteView(ProtectedViewMixin, ModelMixin,
-                         DynamicTemplateMixin, SuccessUrlMixin,
-                         DeleteView):
-    template = 'delete'
+class ProductDeleteView(FormViewMixin,DeleteView):
+    template = 'confirm_delete'
     model = Product
 
 
-class SupplierListView(ProtectedViewMixin, DynamicTemplateMixin,
-                       ModelMixin, ListView):
+class SupplierListView(BaseViewMixin, ListView):
     template = 'list'
     model = Supplier
     paginate_by = 100  # if pagination is desired
@@ -144,8 +126,7 @@ class SupplierListView(ProtectedViewMixin, DynamicTemplateMixin,
         context = super().get_context_data(**kwargs)
         return context
 
-class SupplierDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                         ModelMixin, DetailView):
+class SupplierDetailView(BaseViewMixin, DetailView):
     model = Supplier
     template = 'detail'
 
@@ -154,32 +135,25 @@ class SupplierDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class SupplierCreateView(ProtectedViewMixin, DynamicTemplateMixin,
-                         ModelMixin, SuccessUrlMixin,
-                         MessageMixin, CreateView):
+class SupplierCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Supplier
     form_class = SupplierForm
 
 
 
-class SupplierUpdateView(ProtectedViewMixin, DynamicTemplateMixin,
-                         ModelMixin, SuccessUrlMixin,
-                         MessageMixin, UpdateView):
+class SupplierUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Supplier
     form_class = SupplierForm
 
 
-class SupplierDeleteView(ProtectedViewMixin, DynamicTemplateMixin,
-                         ModelMixin, SuccessUrlMixin,
-                         DeleteView):
-    template = 'delete'
+class SupplierDeleteView(FormViewMixin, DeleteView):
+    template = 'confirm_delete'
     model = Supplier
 
 
-class BrandListView(ProtectedViewMixin, DynamicTemplateMixin,
-                    ModelMixin, ListView):
+class BrandListView(BaseViewMixin, ListView):
     template = 'list'
     model = Brand
     paginate_by = 100  # if pagination is desired
@@ -189,8 +163,7 @@ class BrandListView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class BrandDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                      ModelMixin, DetailView):
+class BrandDetailView(BaseViewMixin, DetailView):
     model = Brand
     template = 'detail'
 
@@ -199,31 +172,24 @@ class BrandDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class BrandCreateView(ProtectedViewMixin, DynamicTemplateMixin,
-                      ModelMixin, SuccessUrlMixin,
-                      MessageMixin, CreateView):
+class BrandCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Brand
     form_class = BrandForm
 
 
 
-class BrandUpdateView(ProtectedViewMixin, DynamicTemplateMixin,
-                      ModelMixin, SuccessUrlMixin,
-                      MessageMixin, UpdateView):
+class BrandUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Brand
     form_class = BrandForm
 
 
-class BrandDeleteView(ProtectedViewMixin, DynamicTemplateMixin,
-                      ModelMixin, SuccessUrlMixin,
-                      DeleteView):
-    template = 'form'
+class BrandDeleteView(FormViewMixin, DeleteView):
+    template = 'confirm_delete'
     model = Brand
 
-class SpecificationListView(ProtectedViewMixin,DynamicTemplateMixin,
-                            ModelMixin, ListView):
+class SpecificationListView(BaseViewMixin, ListView):
     template = 'list'
     model = Specification
     paginate_by = 100  # if pagination is desired
@@ -233,8 +199,7 @@ class SpecificationListView(ProtectedViewMixin,DynamicTemplateMixin,
         return context
 
 
-class SpecificationDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                              ModelMixin, DetailView):
+class SpecificationDetailView(BaseViewMixin, DetailView):
     model = Specification
     template = 'detail'
 
@@ -243,32 +208,25 @@ class SpecificationDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class SpecificationCreateView(ProtectedViewMixin, DynamicTemplateMixin,
-                              ModelMixin, SuccessUrlMixin,
-                              MessageMixin, CreateView):
+class SpecificationCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Specification
     form_class = SpecificationForm
 
 
 
-class SpecificationUpdateView(ProtectedViewMixin, DynamicTemplateMixin,
-                              ModelMixin, SuccessUrlMixin,
-                              MessageMixin, UpdateView):
+class SpecificationUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Specification
     form_class = SpecificationForm
 
 
-class SpecificationDeleteView(ProtectedViewMixin, DynamicTemplateMixin,
-                              ModelMixin, SuccessUrlMixin,
-                              DeleteView):
-    template = 'delete'
+class SpecificationDeleteView(FormViewMixin, DeleteView):
+    template = 'confirm_delete'
     model = Specification
 
 
-class AttributeListView(ProtectedViewMixin, DynamicTemplateMixin,
-                        ModelMixin, ListView):
+class AttributeListView(BaseViewMixin, ListView):
     template = 'list'
     model = Attribute
     paginate_by = 100  # if pagination is desired
@@ -278,8 +236,7 @@ class AttributeListView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class AttributeDetailView(ProtectedViewMixin, DynamicTemplateMixin,
-                          ModelMixin, DetailView):
+class AttributeDetailView(BaseViewMixin, DetailView):
     model = Attribute
     template = 'detail'
 
@@ -288,32 +245,25 @@ class AttributeDetailView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class AttributeCreateView(ProtectedViewMixin, DynamicTemplateMixin,
-                          ModelMixin, SuccessUrlMixin,
-                          MessageMixin, CreateView):
+class AttributeCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Attribute
     form_class = AttributeForm
 
 
 
-class AttributeUpdateView(ProtectedViewMixin, DynamicTemplateMixin,
-                          ModelMixin, SuccessUrlMixin,
-                          MessageMixin, UpdateView):
+class AttributeUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Attribute
     form_class = AttributeForm
 
 
-class AttributeDeleteView(ProtectedViewMixin, DynamicTemplateMixin,
-                          ModelMixin, SuccessUrlMixin,
-                          DeleteView):
-    template = 'delete'
+class AttributeDeleteView(FormViewMixin, DeleteView):
+    template = 'confirm_delete'
     model = Attribute
 
 
-class TagListView(ProtectedViewMixin, DynamicTemplateMixin,
-                  ModelMixin, ListView):
+class TagListView(BaseViewMixin, ListView):
     template = 'list'
     model = Tag
     paginate_by = 100  # if pagination is desired
@@ -323,8 +273,7 @@ class TagListView(ProtectedViewMixin, DynamicTemplateMixin,
         return context
 
 
-class TagDetailView(ProtectedViewMixin,DynamicTemplateMixin,
-                    ModelMixin, DetailView):
+class TagDetailView(BaseViewMixin, DetailView):
     model = Tag
     template = 'detail'
 
@@ -333,24 +282,19 @@ class TagDetailView(ProtectedViewMixin,DynamicTemplateMixin,
         return context
 
 
-class TagCreateView(ProtectedViewMixin, ModelMixin,
-                    DynamicTemplateMixin, SuccessUrlMixin,
-                    MessageMixin, CreateView):
+class TagCreateView(FormViewMixin, CreateView):
     template = 'form'
     model = Tag
     form_class = TagForm
 
 
 
-class TagUpdateView(ProtectedViewMixin, DynamicTemplateMixin,
-                    ModelMixin, SuccessUrlMixin,
-                    MessageMixin, UpdateView):
+class TagUpdateView(FormViewMixin, UpdateView):
     template = 'form'
     model = Tag
     form_class = TagForm
 
 
-class TagDeleteView(ProtectedViewMixin, DynamicTemplateMixin,
-                    ModelMixin, SuccessUrlMixin,  DeleteView):
-    template = "delete"
+class TagDeleteView(FormViewMixin,  DeleteView):
+    template = "confirm_delete"
     model = Tag
