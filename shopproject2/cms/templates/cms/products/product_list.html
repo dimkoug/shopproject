@@ -30,7 +30,7 @@
           <td>{{item.pk}}</td>
           <td> <a href="{% get_url 'detail' item 'cms' %}">{{item.name}}</a></td>
           <td>{{item.parent|default_if_none:"---"}}</td>
-          <td> <a href="{% get_url 'detail' item.brand %}">{{item.brand}}</a></td>
+          <td> <a href="{% get_url 'detail' item.brand 'cms' %}">{{item.brand}}</a></td>
           <td>
             {% thumbnail item.image "100x100" crop="center" as im %}
                 <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
