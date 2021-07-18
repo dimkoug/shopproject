@@ -28,7 +28,6 @@
               <tr>
                 <th>Product</th>
                 <th>Quantity</th>
-                <th></th>
                 <th>Price</th>
                 <th></th>
               </tr>
@@ -37,17 +36,19 @@
               {% for item in items %}
               <tr>
                 <td>{{item.product}}</td>
-                <td>{{item.quantity}}</td>
                 <td>
-                  <a href="{% url 'shop:add_to_basket' item.product.id %}" class="btn btn-primary {% if ajax %} ajax_add {% endif %}"><i class="bi bi-plus"></i></a>
-                  <a href="{% url 'shop:remove_from_basket' item.product.id %}" class="btn btn-danger {% if ajax  %} ajax_delete {% endif %}"><i class="bi bi-x"></i></a>
+                  <a href="{% url 'shop:add_to_basket' item.product.id %}" class="text-primary {% if ajax %} ajax_add {% endif %}"><i class="bi bi-plus" style="font-size:1.5rem"></i></a>
+                  <span class="badge bg-light text-dark" style="font-size:1rem">
+                      {{item.quantity}}
+                  </span>
+                  <a href="{% url 'shop:remove_from_basket' item.product.id %}" class="text-danger {% if ajax  %} ajax_delete {% endif %}"><i class="bi bi-x" style="font-size:1.5rem"></i></a>
                 </td>
                 <td>{{item.product.price}}</td>
-                <td><a href="{% url 'shop:remove_item_from_basket' item.product.id %}" class="btn btn-danger {% if ajax %} ajax_remove {% endif %}"><i class="bi bi-bag-x-fill"></i></a></td>
+                <td><a href="{% url 'shop:remove_item_from_basket' item.product.id %}" class="text-danger {% if ajax %} ajax_remove {% endif %}"><i class="bi bi-bag-x-fill" style="font-size:1.5rem"></i></a></td>
               </tr>
               {% endfor %}
               <tr>
-                <td colspan="3">Sum</td>
+                <td colspan="2">Sum</td>
                 <td>{{sum}}</td>
                 <td></td>
               </tr>
