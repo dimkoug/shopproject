@@ -14,11 +14,11 @@
       <hr>
       <div class="row py-2">
         {% if object.image %}
-        <div class="col-2">
+        <div class="col-2 col-sm-2">
             <img src="{{ object.image.url }}" class="img-fluid">
         </div>
         {% endif %}
-        <div class="col-8">
+        <div class="col-8 col-sm-8">
           <div class="">
             Brand : <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">{{object.brand}}</a>
           </div>
@@ -47,7 +47,7 @@
       </div>
       <hr>
       <div class="row py-2">
-          <div class="col-6">
+          <div class="col-6 col-sm-6">
             <div class="">
               Product Images
             </div>
@@ -61,7 +61,7 @@
               {% endfor %}
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-6 col-sm-6">
             <div class="">
               Product Attributes
             </div>

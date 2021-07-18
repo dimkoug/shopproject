@@ -12,17 +12,15 @@
   <hr>
   <div class="row py-2">
       {% for item in hero.item_list %}
-        <div class="col-2">
+        <div class="col col-sm-2">
           <div class="card">
             {% if item.product.image %}
-                <img src="{{ item.product.image.url }}" class="img-fluid">
+                <img src="{{ item.product.image.url }}" class="card-img-top">
             {% endif %}
             <div class="card-body">
               <p class="card-text">{{item.product}}</p>
               <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
                   <a href="{% url 'shop:catalog-product-detail' item.product.slug %}"  class="btn btn-sm btn-outline-secondary">View</a>
-                </div>
               </div>
             </div>
         </div>
