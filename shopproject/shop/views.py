@@ -37,31 +37,53 @@ class CatalogListView(ListView):
     model = Product
     paginate_by = 100  # if pagination is desired
     template_name = 'site/product_list.html'
+    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
+        Prefetch('categories',
+                 queryset=ProductCategory.objects.select_related(
+                    'product', 'category'), to_attr='productcategory_list'),
+        Prefetch('tags',
+                 queryset=ProductTag.objects.select_related(
+                    'product', 'tag'), to_attr='producttag_list'),
+        Prefetch('productattributes',
+                 queryset=ProductAttribute.objects.select_related(
+                    'product', 'attribute'), to_attr='productattribute_list')
+    )
 
     def get_queryset(self):
-        queryset = super().get_queryset().select_related(
-            'brand').prefetch_related(
-                Prefetch('categories',
-                         queryset=ProductCategory.objects.select_related(
-                            'product', 'category')),
-                Prefetch('tags',
-                         queryset=ProductTag.objects.select_related(
-                            'product', 'tag')))
+        queryset = super().get_queryset()
         category = self.request.GET.get('category')
         q = self.request.GET.get('q')
         brand = self.request.GET.get('brand')
         tag = self.request.GET.get('tag')
         attrs = self.request.GET.getlist('attrs')
         if category:
-            queryset = queryset.filter(categories__in=category)
+            p = Prefetch('categories',
+                         queryset=ProductCategory.objects.select_related(
+                            'product', 'category').filter(
+                                category_id=category),
+                         to_attr='productcategory_list')
+            queryset = Product.objects.select_related(
+                'brand').prefetch_related(p).filter(categories__in=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
-            queryset = queryset.filter(tags__in=tag)
+            p = Prefetch('tags',
+                         queryset=ProductTag.objects.select_related(
+                            'product', 'tag').filter(
+                                tag_id=tag), to_attr='producttag_list')
+            queryset = Product.objects.select_related(
+                'brand').prefetch_related(p).filter(producttags__in=tag)
         if q and q != '':
             queryset = queryset.filter(name__icontains=q)
         if len(attrs) > 0:
-            queryset = queryset.filter(productattributes__in=attrs)
+            p = Prefetch('productattributes',
+                         queryset=ProductAttribute.objects.select_related(
+                            'product', 'attribute').filter(
+                                attribute_id__in=attrs),
+                         to_attr='productattribute_list')
+            queryset = Product.objects.select_related(
+                'brand').prefetch_related(p).filter(
+                    productattributes__in=attrs)
         return queryset
 
     def get_context_data(self, **kwargs):
