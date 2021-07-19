@@ -31,17 +31,17 @@
     <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for category in categories %}
-        {% if category.children.all.count > 0 %}
+        {% if category.second_level %}
         <div class="col">
           <div class="level-1">{{category}}</div>
           <hr>
-          {% if category.children %}
-            {% for child in category.children.all %}
+          {% if category.second_level %}
+            {% for child in category.second_level %}
             <div class="col">
               <div class="level-2">{{child}}</div>
-              {% if child.children %}
+              {% if child.third_level %}
               <div class="row">
-                {% for ch in child.children.all %}
+                {% for ch in child.third_level %}
                 <div class="col" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
                 </div>
                 {% endfor %}

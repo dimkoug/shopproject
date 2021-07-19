@@ -1,11 +1,22 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count
 from shop.models import (ShoppingCartItem, Brand,
                          Category, ProductCategory, Tag, Hero, HeroItem)
 
 
 def get_context_data(request):
-    productcategories = [productcategory.category.id for productcategory
-                         in ProductCategory.status.published()]
+    published_products = ProductCategory.objects.select_related(
+        'product', 'category').filter(product__is_published=True)
+    active_products = Count('productcategories', filter=published_products)
+    third_categories = Category.objects.prefetch_related(
+            Prefetch('productcategories',
+                     queryset=ProductCategory.objects.select_related('category'))
+            ).annotate(count_active_products=Count('productcategories'),
+                       c=active_products).filter(
+                       productcategories__in=published_products)
+    second_categories = Category.objects.prefetch_related('children').filter(
+        children__in=third_categories).distinct()
+    first_categories = Category.objects.prefetch_related('children').filter(
+        children__in=second_categories).distinct()
     cart_id = request.session.get('shopping_cart_id')
     heroes = Hero.objects.prefetch_related(
         Prefetch('heroitems',
@@ -18,9 +29,27 @@ def get_context_data(request):
         basket_count = ShoppingCartItem.objects.filter(cartid=cart_id).count()
     else:
         basket_count = 0
+
+    p = Prefetch(
+        'children',
+        queryset=Category.objects.select_related(
+                'parent').prefetch_related(
+                    Prefetch(
+                        'children',
+                        queryset=Category.objects.select_related(
+                            'parent').filter(
+                             id__in=third_categories).order_by('order'),
+                        to_attr='third_level'
+                    )
+                ).filter(id__in=second_categories).order_by('order'),
+        to_attr='second_level'
+    )
+
+    categories = Category.objects.prefetch_related(p).filter(
+        parent__isnull=True, is_published=True, id__in=first_categories).order_by('order')
+
     return {
-        'categories': Category.objects.filter(
-            parent__isnull=True, is_published=True),
+        'categories': categories,
         'tags': Tag.status.published(),
         'brands': Brand.status.published(),
         'donottrack': request.META.get('HTTP_DNT') == '1',
