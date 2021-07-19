@@ -51,13 +51,11 @@
             <div class="">
               Product Images
             </div>
-            <div class="cycle-slideshow" data-cycle-slides="li">
+            <div class="cycle-slideshow" data-cycle-slides="a">
               {% for media in object.productmedia_list %}
-              <li><a class="test-popup-link" href="{{media.image.url}}">
-                {% thumbnail media.image "500x500" crop="center" as im %}
-                    <img src="{{ im.url }}" width="{{ im.width }}" class="product-image">
-                {% endthumbnail %}
-                </li>
+              <a class="test-popup-link" href="{{media.image.url}}">
+                    <img src="{{ media.image.url }}" class="img-fluid product-image">
+              </a>
               {% endfor %}
             </div>
           </div>
