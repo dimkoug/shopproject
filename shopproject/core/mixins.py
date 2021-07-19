@@ -93,7 +93,8 @@ class FormMixin:
         if 'new' in self.request.POST:
             return redirect(reverse_lazy("{}:{}-create".format(app, model_name)))
         if 'continue' in self.request.POST:
-            return redirect(reverse_lazy("{}:{}-update".format(app, model_name), kwargs={"pk":obj.pk}))
+            url = reverse_lazy("{}:{}-update".format(app, model_name), kwargs={"pk": obj.pk})
+            return redirect(url)
         if not self.request.is_ajax():
             messages.success(
                 self.request, 'Your {} was proccesed successfully!'.format(
