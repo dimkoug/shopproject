@@ -51,12 +51,18 @@
             <div class="">
               Product Images
             </div>
-            <div class="cycle-slideshow" data-cycle-slides="a">
-              {% for media in object.productmedia_list %}
-              <a class="test-popup-link" href="{{media.image.url}}">
-                    <img src="{{ media.image.url }}" class="img-fluid product-image">
-              </a>
-              {% endfor %}
+            <div class="">
+              <div class="swiper-container mySwiper">
+                <div class="swiper-wrapper">
+                  {% for media in object.productmedia_list %}
+                    <div class="swiper-slide">
+                        <img src="{{ media.image.url }}">
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+              </div>
             </div>
           </div>
           <div class="col-6 col-sm-6">

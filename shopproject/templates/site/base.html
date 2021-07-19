@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap-icons/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
@@ -20,6 +21,7 @@
     <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/jquery.cycle2.min.js' %}"></script>
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
     <script src="{% static 'js/scripts.js' %}"></script>
     <title>{% block page_title %}{% endblock %}</title>
     {% block head %}{% endblock %}
@@ -57,25 +59,18 @@
       <div class="row py-2">
         <div class="col">
           <img src="{% static 'img/loading.svg' %}" class="loading">
-
         </div>
-
       </div>
-      <div class="row py-2 basket_res">
-
-      </div>
+      <div class="row py-2 basket_res"></div>
     </div>
     <main class="container-fluid">
         <div class="row py-2">
           <div class="col-12">
               {% include 'messages.html' %}
           </div>
-
         </div>
     </main>
-        {% block content %}{% endblock %}
-
-
+    {% block content %}{% endblock %}
     {% block body_scripts %}{% endblock %}
   </body>
 </html>
