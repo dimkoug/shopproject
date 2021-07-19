@@ -3,12 +3,12 @@
 <div class="results">
     {% for product in product_list %}
     <div class="row py-2">
-      <div class="col-2">
+      <div class="col-3 col-lg-2">
         {% if product.image %}
-            <img src="{{ product.image.url }}" class="card-img-top">
+            <img src="{{ product.image.url }}" class="img-fluid rounded">
         {% endif %}
       </div>
-      <div class="col-8">
+      <div class="col-7 col-lg-8">
         <div class="">
           <a href="{% url 'shop:catalog-product-detail' product.slug %}" class="link">{{product.name}}</a>
         </div>
@@ -19,7 +19,7 @@
           <p>{{product.description|safe}}</p>
         </div>
       </div>
-      <div class="col-2">
+      <div class="col-2 col-lg-2">
         <a href="{% url 'shop:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> &#128;{{product.price}}</a>
       </div>
     </div>

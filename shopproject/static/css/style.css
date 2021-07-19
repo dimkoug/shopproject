@@ -149,4 +149,9 @@ div[class*="mega-menu-container-"]{
   .ajax_add_to_cart {
     font-size: 0.5rem;
   }
+
+  .wrapper{
+    width: 100%;
+    display:block;
+  }
 }
