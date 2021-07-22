@@ -1,6 +1,6 @@
 import uuid
 from django.urls import reverse_lazy
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Count,Q
 from django.contrib import messages
 from django.http import JsonResponse
 from django import template
@@ -37,6 +37,8 @@ class CatalogListView(ListView):
     model = Product
     paginate_by = 100  # if pagination is desired
     template_name = 'site/product_list.html'
+    ajax_partial = 'shop/partials/product_ajax_list_partial.html'
+
     queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
         Prefetch('categories',
                  queryset=ProductCategory.objects.select_related(
@@ -51,11 +53,14 @@ class CatalogListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        attrs = []
         category = self.request.GET.get('category')
         q = self.request.GET.get('q')
         brand = self.request.GET.get('brand')
         tag = self.request.GET.get('tag')
-        attrs = self.request.GET.getlist('attrs')
+        features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
+        for feature in features:
+            attrs.append(self.request.GET.getlist(feature))
         if category:
             p = Prefetch('categories',
                          queryset=ProductCategory.objects.select_related(
@@ -76,23 +81,51 @@ class CatalogListView(ListView):
         if q and q != '':
             queryset = queryset.filter(name__icontains=q)
         if len(attrs) > 0:
-            p = Prefetch('productattributes',
-                         queryset=ProductAttribute.objects.select_related(
-                            'product', 'attribute').filter(
-                                attribute_id__in=attrs),
-                         to_attr='productattribute_list')
-            queryset = Product.objects.select_related(
-                'brand').prefetch_related(p).filter(
-                    productattributes__in=attrs)
+            for attr in attrs:
+                p = Prefetch('productattributes',
+                             queryset=ProductAttribute.objects.select_related(
+                                'product', 'attribute').filter(
+                                    attribute_id__in=attr),
+                             to_attr='productattribute_list')
+                queryset = Product.objects.select_related(
+                    'brand').prefetch_related(p).filter(
+                        productattributes__in=attr)
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        context = self.get_context_data()
+        if request.is_ajax():
+            context['ajax'] = True
+            html = render_to_string(
+                self.ajax_partial, context, request)
+            return JsonResponse({'html': html})
+        else:
+            return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['attrs_checked'] = self.request.GET.getlist('attrs')
+        attrs = []
+        attrs_checked = []
+        features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
+        for feature in features:
+            attrs.append(self.request.GET.getlist(feature))
+        for arrt in attrs:
+            for item in arrt:
+                attrs_checked.append(item)
+        context['attrs_checked'] = attrs_checked
+        counter = Count('product', filter=Q(product__in=self.get_queryset()))
         context['specification_list'] = Specification.objects.prefetch_related(
             Prefetch('attributes',
-                     queryset=Attribute.objects.select_related('specification')
+                     queryset=Attribute.objects.select_related(
+                        'specification').prefetch_related(
+                            Prefetch('productattributes',
+                                     queryset=ProductAttribute.objects.select_related(
+                                        'product', 'attribute').annotate(
+                                        product_counter=counter),
+                                     to_attr='attr_list'))
                      , to_attr='attribute_list')).all()
+        context['products_count'] = self.get_queryset().count()
         return context
 
 

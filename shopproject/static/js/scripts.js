@@ -47,4 +47,49 @@ var swiper = new Swiper(".mySwiper", {
   },
 });
 
+
+$("body").on("click", '.tag-link, .remove-filter-link', function(e){
+    e.preventDefault();
+    $.when($.ajax({
+             url: $(this).attr("href"),
+             method: 'GET',
+             datatype: 'json',
+             beforeSend: function(){
+               $(".loading").show();
+             },
+             complete: function(){
+               $(".loading").hide();
+             }
+         })).then(function( resp, textStatus, jqXHR ) {
+           $(".products").html(resp.html);
+           $(".loading").hide();
+         })
+
+    return false;
+})
+
+$("body").on("submit", '#filters-form', function(e){
+    e.preventDefault();
+    var data = $(this).serialize();
+    $.when($.ajax({
+             url: $(this).attr("href"),
+             method: 'GET',
+             data: data,
+             datatype: 'json',
+             beforeSend: function(){
+               $(".loading").show();
+                 $('#exampleModal').modal('hide');
+             },
+             complete: function(){
+               $(".loading").hide();
+             }
+         })).then(function( resp, textStatus, jqXHR ) {
+          $('#exampleModal').modal('hide');
+           $(".products").html(resp.html);
+           $(".loading").hide();
+         })
+
+    return false;
+})
+
 })
