@@ -48,7 +48,7 @@ var swiper = new Swiper(".mySwiper", {
 });
 
 
-$("body").on("click", '.tag-link, .remove-filter-link', function(e){
+$("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
     e.preventDefault();
     $.when($.ajax({
              url: $(this).attr("href"),

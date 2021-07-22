@@ -27,29 +27,7 @@
   </div>
   <div class="row py-2">
     <div class="col">
-      {% if product_list.has_other_pages %}
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          {% if product_list.has_previous %}
-            <li class="page-item"><a class="page-link"  href="?page={{ product_list.previous_page_number }}">&laquo;</a></li>
-          {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a></li>
-          {% endif %}
-          {% for i in product_list.paginator.page_range %}
-            {% if product_list.number == i %}
-              <li class="page-item active"><a class="page-link" href="#">{{i}} <span class="sr-only">(current)</span></a></li>
-            {% else %}
-              <li class="page-item"><a class="page-link"  href="?page={{ i }}">{{ i }}</a></li>
-            {% endif %}
-          {% endfor %}
-          {% if product_list.has_next %}
-            <li class="page-item"><a class="page-link"  href="?page={{ product_list.next_page_number }}">&raquo;</a></li>
-          {% else %}
-            <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a></li>
-          {% endif %}
-        </ul>
-      </nav>
-      {% endif %}
+      {% include 'pagination.html' %}
     </div>
   </div>
 </div>
