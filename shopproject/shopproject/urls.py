@@ -24,12 +24,11 @@ from rest_framework_jwt.views import (
   obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 )
 
-from .views import IndexView, ManageView
+from shop.views import IndexView
 
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
-    path('manage/', ManageView.as_view(), name='manage'),
     path('shop/', include('shop.urls', namespace='shop')),
     path('api/', include('shop.shopapi.routers')),
     path('users/', include('users.urls')),

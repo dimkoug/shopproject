@@ -3,46 +3,33 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
-    <meta name="author" content="{% block meta_author %}{% endblock %}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap5/css/dashboard.css' %}">
     <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap-icons/bootstrap-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
-    <script src="{% static 'bootstrap5/js/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'bootstrap5/js/popper.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/django_ajax.js' %}"></script>
     <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/select2.full.min.js' %}"></script>
-    <title>{% block page_title %}{% endblock %}</title>
-    {% block head %}{% endblock %}
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'js/site.js' %}"></script>
   </head>
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
-    {% include "cms/navbar.html" %}
-
-
+    {% include 'cms/navbar.html' %}
     <div class="container-fluid">
-      <div class="row">
-        {% include "cms/sidebar.html" %}
-        <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
-          </div>
-          {% include "messages.html" %}
-          {% block content %}{% endblock %}
-        </main>
+  <div class="row">
+    {% include 'cms/sidebar.html' %}
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
       </div>
-    </div>
+      <h2>{% block section_title %}{% endblock %}</h2>
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
 
-<script>
-$(document).ready(function(){
-$('select').select2();
-
-
-})
-
-</script>
-    {% block body_scripts %}{% endblock %}
   </body>
 </html>

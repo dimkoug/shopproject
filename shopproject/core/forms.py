@@ -39,6 +39,7 @@ class BootstrapFormSet(BaseInlineFormSet):
                     form.fields[field].widget.attrs.update({
                         'class': 'form-control'
                     })
+
     def add_fields(self, form, index):
         super().add_fields(form, index)
         fields = ['CheckboxInput', 'ClearableFileInput', 'FileInput']
@@ -69,11 +70,10 @@ def unique_bootstrap_field_formset(field_name):
     return UniqueFieldBootstrapFormSet
 
 
-
-
 def unique_field_formset(field_name):
     from django.forms.models import BaseInlineFormSet
     from adminsortable2.admin import CustomInlineFormSet
+
     class UniqueFieldFormSet(CustomInlineFormSet, BaseInlineFormSet):
         def clean(self):
             if any(self.errors):
@@ -107,6 +107,7 @@ class SlugValidator:
 
 
 class AdminImageWidget(AdminFileWidget):
+
   def render(self, name, value, attrs=None, renderer=None):
     output = []
     if value and getattr(value, "url", None):

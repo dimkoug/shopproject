@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from shop.models import (
-    Category, Supplier, Brand, BrandSupplier, Specification,
-    SpecificationCategory, Attribute, Tag, Product, ProductShipment,
-    ProductStatistics, ProductTag, ProductAttribute, ProductCategory,
-    ProductMedia, Offer, OfferDetail, Order, OrderStatus, OrderDetail,
+    Category, Supplier, Brand, BrandSupplier, Feature,
+    FeatureCategory, Attribute, Tag, Product, Shippment,
+    ProductTag, ProductAttribute, ProductCategory,
+    Media, Offer, OfferItem, Order, OrderItem,
     ShoppingCartItem, Hero, HeroItem
 )
 
@@ -27,16 +27,16 @@ class BrandSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name', 'image', 'suppliers', 'order']
 
 
-class SpecificationSerializer(serializers.HyperlinkedModelSerializer):
+class FeatureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Specification
+        model = Feature
         fields = ['url', 'name', 'categories', 'order']
 
 
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Attribute
-        fields = ['url', 'name', 'specification', 'order']
+        fields = ['url', 'name', 'feature', 'order']
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,13 +53,13 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
                   'order']
 
 
-class ProductShipmentSerializer(serializers.HyperlinkedModelSerializer):
+class ShippmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ProductShipment
+        model = Shippment
         fields = ['url', 'product', 'stock', 'shipment_date']
 
 
-class ProductMediaSerializer(serializers.HyperlinkedModelSerializer):
+class MediaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = ProductMedia
+        model = Media
         fields = ['url', 'product', 'image', 'order']

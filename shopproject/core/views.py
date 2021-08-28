@@ -1,44 +1,48 @@
-from django.views.generic.detail import DetailView
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
-from .mixins import BaseViewMixin, FormViewMixin
+from .mixins import ModelMixin
 
 
-class CoreListView(BaseViewMixin, ListView):
-    template = ''
-    ajax_partial = ''
-    model_name = ''
-    app = ''
-
-    def dispatch(self, *args, **kwargs):
-        self.template = 'list'
-        self.app = self.model._meta.app_label
-        self.model_name = self.model.__name__.lower()
-        self.ajax_partial = '{}/partials/{}_form_partial.html'.format(self.app,self.model_name)
-        return super().dispatch(*args, **kwargs)
+class BaseIndexView(TemplateView):
+    def get_template_names(self):
+        return ['{}/cms/index.html'.format(
+                self.app)]
 
 
-class CoreDetailView(BaseViewMixin, DetailView):
-    template = ''
-    model_name = ''
-    app = ''
-
-    def dispatch(self, *args, **kwargs):
-        self.template = 'detail'
-        self.app = self.model._meta.app_label
-        self.model_name = self.model.__name__.lower()
-        return super().dispatch(*args, **kwargs)
+class BaseListView(ModelMixin, ListView):
+    def get_template_names(self):
+        return ['{}/cms/{}_list.html'.format(
+                self.model._meta.app_label, self.model.__name__)]
 
 
-class CoreCreateView(FormViewMixin, CreateView):
-    pass
+class BaseDetailView(ModelMixin, DetailView):
+    def get_template_names(self):
+        return ['{}/cms/{}_detail.html'.format(
+                self.model._meta.app_label, self.model.__name__)]
 
 
-class CoreUpdateView(FormViewMixin, UpdateView):
-    pass
+class BaseCreateView(ModelMixin, CreateView):
+    def get_template_names(self):
+        return ['{}/cms/{}_form.html'.format(
+                self.model._meta.app_label, self.model.__name__)]
 
 
-class CoreDeleteView(FormViewMixin, DeleteView):
-    pass
+class BaseUpdateView(ModelMixin, UpdateView):
+    def get_template_names(self):
+        return ['{}/cms/{}_form.html'.format(
+                self.model._meta.app_label, self.model.__name__)]
+
+
+class BaseDeleteView(ModelMixin, DeleteView):
+    def get_template_names(self):
+        return ['{}/cms/{}_confirm_delete.html'.format(
+                self.model._meta.app_label, self.model.__name__)]

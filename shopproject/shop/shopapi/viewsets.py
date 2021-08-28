@@ -5,18 +5,18 @@ from rest_framework import generics, permissions
 
 
 from shop.models import (
-    Category, Supplier, Brand, BrandSupplier, Specification,
-    SpecificationCategory, Attribute, Tag, Product, ProductShipment,
-    ProductStatistics, ProductTag, ProductAttribute, ProductCategory,
-    ProductMedia, Offer, OfferDetail, Order, OrderStatus, OrderDetail,
+    Category, Supplier, Brand, BrandSupplier, Feature,
+    FeatureCategory, Attribute, Tag, Product, Shippment,
+    ProductTag, ProductAttribute, ProductCategory,
+    Media, Offer, OfferItem, Order, OrderItem,
     ShoppingCartItem, Hero, HeroItem
 )
 
 
 from .serializers import (
-    CategorySerializer, TagSerializer, SpecificationSerializer,
-    AttributeSerializer, ProductSerializer, ProductShipmentSerializer,
-    SupplierSerializer, BrandSerializer, ProductMediaSerializer
+    CategorySerializer, TagSerializer, FeatureSerializer,
+    AttributeSerializer, ProductSerializer, ShippmentSerializer,
+    SupplierSerializer, BrandSerializer, MediaSerializer
 )
 
 
@@ -32,9 +32,9 @@ class TagViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class SpecificationViewSet(viewsets.ModelViewSet):
-    queryset = Specification.objects.all()
-    serializer_class = SpecificationSerializer
+class FeatureViewSet(viewsets.ModelViewSet):
+    queryset = Feature.objects.all()
+    serializer_class = FeatureSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
@@ -50,9 +50,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class ProductShipmentViewSet(viewsets.ModelViewSet):
-    queryset = ProductShipment.objects.all()
-    serializer_class = ProductShipmentSerializer
+class ShippmentViewSet(viewsets.ModelViewSet):
+    queryset = Shippment.objects.all()
+    serializer_class = ShippmentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
@@ -68,7 +68,7 @@ class BrandViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class ProductMediaViewSet(viewsets.ModelViewSet):
-    queryset = ProductMedia.objects.all()
-    serializer_class = ProductMediaSerializer
+class MediaViewSet(viewsets.ModelViewSet):
+    queryset = Media.objects.all()
+    serializer_class = MediaSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

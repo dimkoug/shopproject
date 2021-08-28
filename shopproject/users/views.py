@@ -2,6 +2,7 @@ from django.conf import settings
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
+from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
 from django.utils.encoding import force_text
@@ -13,9 +14,11 @@ from django.template.loader import render_to_string
 from django.views.generic import FormView
 
 from .tokens import account_activation_token
-from .forms import (UserCreationForm, UserAuthenticationForm,
-                    UserPasswordResetForm)
-from .models import User
+from .forms import (
+    UserCreationForm, UserAuthenticationForm,
+    UserPasswordResetForm
+)
+User = get_user_model()
 
 
 class UserLoginView(auth_views.LoginView):

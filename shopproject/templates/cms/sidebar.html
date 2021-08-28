@@ -1,70 +1,88 @@
+{% url 'shop:cms-index' as cms_index %}
+{% url 'index' as site_index %}
+{% url 'shop:category-list' as category_list %}
+{% url 'shop:tag-list' as tag_list %}
+{% url 'shop:supplier-list' as supplier_list %}
+{% url 'shop:warehouse-list' as warehouse_list %}
+{% url 'shop:brand-list' as brand_list %}
+{% url 'shop:feature-list' as feature_list %}
+{% url 'shop:product-list' as product_list %}
+{% url 'shop:shippment-list' as shippment_list %}
+{% url 'shop:hero-list' as hero_list %}
+{% url 'shop:offer-list' as offer_list %}
+{% url 'shop:address-list' as address_list %}
+{% url 'shop:order-list' as order_list %}
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-  <div class="sidebar-sticky pt-3">
+  <div class="position-sticky pt-3">
     <ul class="nav flex-column">
-      {% url 'manage' as manage_url %}
-      {% url 'index' as index_url %}
-      {% url 'shop:category-list' as category_url %}
-      {% url 'shop:supplier-list' as supplier_url %}
-      {% url 'shop:brand-list' as brand_url %}
-      {% url 'shop:specification-list' as specification_url %}
-      {% url 'shop:attribute-list' as attribute_url %}
-      {% url 'shop:tag-list' as tag_url %}
-      {% url 'shop:product-list' as product_url %}
-      {% url 'shop:hero-list' as hero_url %}
-      {% url 'shop:heroitem-list' as heroitem_url %}
       <li class="nav-item">
-        <a class="nav-link {% if request.path == index_url %}active {% endif %}" href="{{index_url}}" rel="noopener noreferrer" target="_blank">
-          View  Site
+        <a class="nav-link {% if request.path == cms_index %}active {% endif %}" aria-current="page" href="{{cms_index}}">
+          Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == manage_url %}active {% endif %}" href="{{manage_url}}">
-          Manage
+        <a class="nav-link {% if request.path == site_index %}active {% endif %}" aria-current="page" href="{{site_index}}">
+          View site
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == category_url %}active {% endif %}" href="{{category_url}}">
+        <a class="nav-link {% if request.path == category_list %}active {% endif %}" aria-current="page" href="{{category_list}}">
           Categories
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == supplier_url %}active {% endif %}" href="{{supplier_url}}">
-          Suppliers
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if request.path == brand_url %}active {% endif %}" href="{{brand_url}}">
-          Brands
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if request.path == specification_url %}active {% endif %}" href="{{specification_url}}">
-          Specifications
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if request.path == attribute_url %}active {% endif %}" href="{{attribute_url}}">
-          Attributes
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link {% if request.path == tag_url %}active {% endif %}" href="{{tag_url}}">
+        <a class="nav-link {% if request.path == tag_list %}active {% endif %}" aria-current="page" href="{{tag_list}}">
           Tags
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == hero_url %}active {% endif %}" href="{{hero_url}}">
-          Hero
+        <a class="nav-link {% if request.path == supplier_list %}active {% endif %}" aria-current="page" href="{{supplier_list}}">
+          Suppliers
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == heroitem_url %}active {% endif %}" href="{{heroitem_url}}">
-          Hero Items
+        <a class="nav-link {% if request.path == warehouse_list %}active {% endif %}" aria-current="page" href="{{warehouse_list}}">
+          WareHouses
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == product_url %}active {% endif %}" href="{{product_url}}">
+        <a class="nav-link {% if request.path == brand_list %}active {% endif %}" aria-current="page" href="{{brand_list}}">
+          Brands
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == feature_list %}active {% endif %}" aria-current="page" href="{{feature_list}}">
+          Features
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == product_list %}active {% endif %}" aria-current="page" href="{{product_list}}">
           Products
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == shippment_list %}active {% endif %}" aria-current="page" href="{{shippment_list}}">
+          Shippments
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == hero_list %}active {% endif %}" aria-current="page" href="{{hero_list}}">
+          Heroes
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == offer_list %}active {% endif %}" aria-current="page" href="{{offer_list}}">
+          Offers
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == address_list %}active {% endif %}" aria-current="page" href="{{address_list}}">
+          Address
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == order_list %}active {% endif %}" aria-current="page" href="{{order_list}}">
+          Orders
         </a>
       </li>
     </ul>

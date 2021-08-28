@@ -1,360 +1,885 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
-from django.db.models import Prefetch
 from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from core.views import (
-    CoreListView, CoreDetailView, CoreCreateView,
-    CoreUpdateView, CoreDeleteView
+    BaseIndexView, BaseListView, BaseDetailView,
+    BaseCreateView, BaseUpdateView, BaseDeleteView
 )
+
+from core.mixins import FormMixin, SuccessUrlMixin
+
 
 from .models import (
-    Category, Supplier, Brand, BrandSupplier, Specification, Attribute, Tag,
-    Product, ProductShipment, ProductMedia, ProductTag, ProductCategory,
-    ProductAttribute, Hero, HeroItem
+    Category, ChildCategory, Tag, Supplier, WareHouse, Brand, BrandSupplier,
+    Feature, FeatureCategory, Attribute, Product, ProductCategory,
+    ProductTag, ProductRelated, Media, Logo, Stock, Shippment,
+    ProductAttribute, Hero, HeroItem, Offer, OfferItem, ShoppingCartItem,
+    Address, Order, OrderItem
 )
+
+
 from .forms import (
-    CategoryForm, SupplierForm, BrandForm, BrandSupplierForm,
-    SpecificationForm, AttributeForm, TagForm,
-    ProductForm, ProductShipmentForm, ProductMediaForm, ProductTagForm,
-    ProductCategoryForm, ProductAttributeForm, HeroForm, HeroItemForm
+    CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
+    TagForm, SupplierForm, WareHouseForm, BrandForm,
+    SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
+    ProductForm, ProductCategoryFormSet, ProductTagFormSet,
+    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShippmentForm,
+    ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
+    OfferItemFormSet, AddressForm, OrderForm, OrderItemFormSet,
+    MediaFormSet, LogoFormSet, StockFormSet, AttributeFormSet
 )
 
 
-class CategoryListView(CoreListView):
+class IndexView(LoginRequiredMixin, BaseIndexView):
+    app = 'shop'
+
+
+class CategoryListView(LoginRequiredMixin, BaseListView):
     model = Category
-    template = 'list'
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
 
-class CategoryDetailView(CoreDetailView):
+class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
     model = Category
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
 
-class CategoryCreateView(CoreCreateView):
-    template = 'form'
+class CategoryCreateView(LoginRequiredMixin, FormMixin,
+                         SuccessUrlMixin, BaseCreateView):
     model = Category
     form_class = CategoryForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Child Categories',
+                'formset': ChildCategoryFormSet(self.request.POST or None)
+            }
+        ]
+        return context
 
-class CategoryUpdateView(CoreUpdateView):
-    template = 'form'
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                ChildCategoryFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class CategoryUpdateView(LoginRequiredMixin, FormMixin,
+                         SuccessUrlMixin, BaseUpdateView):
     model = Category
     form_class = CategoryForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Child Categories',
+                'formset': ChildCategoryFormSet(self.request.POST or None,
+                                                instance=self.get_object())
+            }
+        ]
+        return context
 
-class CategoryDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                ChildCategoryFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class CategoryDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Category
 
 
-class ProductListView(CoreListView):
-    model = Product
-    template = 'list'
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class ProductDetailView(CoreDetailView):
-    model = Product
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class ProductCreateView(CoreCreateView):
-    template = 'form'
-    model = Product
-    form_class = ProductForm
-
-    def form_valid(self, form):
-        obj = form.save()
-        if self.request.FILES:
-            for f in self.request.FILES.getlist('file'):
-                ProductMedia.objects.create(image=f, product=obj)
-        return super().form_valid(form)
-
-
-class ProductUpdateView(CoreUpdateView):
-    template = 'form'
-    model = Product
-    form_class = ProductForm
-
-    def form_valid(self, form):
-        obj = form.save()
-        if self.request.FILES:
-            for f in self.request.FILES.getlist('file'):
-                ProductMedia.objects.create(image=f, product=obj)
-        return super().form_valid(form)
-
-
-class ProductDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
-    model = Product
-
-
-class SupplierListView(CoreListView):
-    template = 'list'
-    model = Supplier
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class SupplierDetailView(CoreDetailView):
-    model = Supplier
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class SupplierCreateView(CoreCreateView):
-    template = 'form'
-    model = Supplier
-    form_class = SupplierForm
-
-
-class SupplierUpdateView(CoreUpdateView):
-    template = 'form'
-    model = Supplier
-    form_class = SupplierForm
-
-
-class SupplierDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
-    model = Supplier
-
-
-class BrandListView(CoreListView):
-    template = 'list'
-    model = Brand
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class BrandDetailView(CoreDetailView):
-    model = Brand
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class BrandCreateView(CoreCreateView):
-    template = 'form'
-    model = Brand
-    form_class = BrandForm
-
-
-class BrandUpdateView(CoreUpdateView):
-    template = 'form'
-    model = Brand
-    form_class = BrandForm
-
-
-class BrandDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
-    model = Brand
-
-
-class SpecificationListView(CoreListView):
-    template = 'list'
-    model = Specification
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class SpecificationDetailView(CoreDetailView):
-    model = Specification
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class SpecificationCreateView(CoreCreateView):
-    template = 'form'
-    model = Specification
-    form_class = SpecificationForm
-
-
-class SpecificationUpdateView(CoreUpdateView):
-    template = 'form'
-    model = Specification
-    form_class = SpecificationForm
-
-
-class SpecificationDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
-    model = Specification
-
-
-class AttributeListView(CoreListView):
-    template = 'list'
-    model = Attribute
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class AttributeDetailView(CoreDetailView):
-    model = Attribute
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
-class AttributeCreateView(CoreCreateView):
-    template = 'form'
-    model = Attribute
-    form_class = AttributeForm
-
-
-class AttributeUpdateView(CoreUpdateView):
-    template = 'form'
-    model = Attribute
-    form_class = AttributeForm
-
-
-class AttributeDeleteView(CoreDeleteView):
-    template = 'confirm_delete'
-    model = Attribute
-
-
-class TagListView(CoreListView):
-    template = 'list'
+class TagListView(LoginRequiredMixin, BaseListView):
     model = Tag
-    paginate_by = 100  # if pagination is desired
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
 
-class TagDetailView(CoreDetailView):
+class TagDetailView(LoginRequiredMixin, BaseDetailView):
     model = Tag
-    template = 'detail'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
 
 
-class TagCreateView(CoreCreateView):
-    template = 'form'
+class TagCreateView(LoginRequiredMixin, FormMixin,
+                    SuccessUrlMixin, BaseCreateView):
     model = Tag
     form_class = TagForm
 
 
-class TagUpdateView(CoreUpdateView):
-    template = 'form'
+class TagUpdateView(LoginRequiredMixin, FormMixin,
+                    SuccessUrlMixin, BaseUpdateView):
     model = Tag
     form_class = TagForm
 
 
-class TagDeleteView(CoreDeleteView):
-    template = "confirm_delete"
+class TagDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Tag
 
 
-class HeroListView(CoreListView):
-    template = 'list'
-    model = Hero
-    paginate_by = 100  # if pagination is desired
+class SupplierListView(LoginRequiredMixin, BaseListView):
+    model = Supplier
+
+
+class SupplierDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Supplier
+
+
+class SupplierCreateView(LoginRequiredMixin, FormMixin,
+                         SuccessUrlMixin, BaseCreateView):
+    model = Supplier
+    form_class = SupplierForm
+
+
+class SupplierUpdateView(LoginRequiredMixin, FormMixin,
+                         SuccessUrlMixin, BaseUpdateView):
+    model = Supplier
+    form_class = SupplierForm
+
+
+class SupplierDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Supplier
+
+
+class WareHouseListView(LoginRequiredMixin, BaseListView):
+    model = WareHouse
+
+
+class WareHouseDetailView(LoginRequiredMixin, BaseDetailView):
+    model = WareHouse
+
+
+class WareHouseCreateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseCreateView):
+    model = WareHouse
+    form_class = WareHouseForm
+
+
+class WareHouseUpdateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseUpdateView):
+    model = WareHouse
+    form_class = WareHouseForm
+
+
+class WareHouseDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = WareHouse
+
+
+class BrandListView(LoginRequiredMixin, BaseListView):
+    model = Brand
+
+
+class BrandDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Brand
+
+
+class BrandCreateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseCreateView):
+    model = Brand
+    form_class = BrandForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Suppliers',
+                'formset': SupplierFormSet(self.request.POST or None)
+            }
+        ]
         return context
 
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                SupplierFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
-class HeroDetailView(CoreDetailView):
-    model = Hero
-    template = 'detail'
+
+class BrandUpdateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseUpdateView):
+    model = Brand
+    form_class = BrandForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Suppliers',
+                'formset': SupplierFormSet(self.request.POST or None,
+                                           instance=self.get_object())
+            }
+        ]
         return context
 
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                SupplierFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
-class HeroCreateView(CoreCreateView):
-    template = 'form'
+
+class BrandDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Brand
+
+
+class FeatureListView(LoginRequiredMixin, BaseListView):
+    model = Feature
+
+
+class FeatureDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Feature
+
+
+class FeatureCreateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseCreateView):
+    model = Feature
+    form_class = FeatureForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Categories',
+                'formset': CategoryFormSet(self.request.POST or None)
+            },
+            {
+                'title': 'Attributes',
+                'formset': AttributeFormSet(self.request.POST or None)
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                CategoryFormSet(self.request.POST, instance=obj),
+                AttributeFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class FeatureUpdateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseUpdateView):
+    model = Feature
+    form_class = FeatureForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Categories',
+                'formset': CategoryFormSet(self.request.POST or None,
+                                           instance=self.get_object())
+            },
+            {
+                'title': 'Attributes',
+                'formset': AttributeFormSet(self.request.POST or None,
+                                            instance=self.get_object())
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                CategoryFormSet(self.request.POST, instance=obj),
+                AttributeFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Feature
+
+
+class AttributeListView(LoginRequiredMixin, BaseListView):
+    model = Attribute
+
+
+class AttributeDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Attribute
+
+
+class AttributeCreateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseCreateView):
+    model = Attribute
+    form_class = AttributeForm
+
+
+class AttributeUpdateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseUpdateView):
+    model = Attribute
+    form_class = AttributeForm
+
+
+class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Attribute
+
+
+class ProductListView(LoginRequiredMixin, BaseListView):
+    model = Product
+
+
+class ProductDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Product
+
+
+class ProductCreateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseCreateView):
+    model = Product
+    form_class = ProductForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Product Categories',
+                'formset': ProductCategoryFormSet(self.request.POST or None)
+            },
+            {
+                'title': 'Product Tags',
+                'formset': ProductTagFormSet(self.request.POST or None)
+            },
+            {
+                'title': 'Product Attributes',
+                'formset': ProductAttributeFormSet(self.request.POST or None)
+            },
+            {
+                'title': 'Related Products',
+                'formset': ProductRelatedFormSet(self.request.POST or None)
+            },
+            {
+                'title': 'Media',
+                'formset': MediaFormSet(self.request.POST or None,
+                                        self.request.FILES or None)
+            },
+            {
+                'title': 'Logo',
+                'formset': LogoFormSet(self.request.POST or None,
+                                       self.request.FILES or None)
+            },
+            {
+                'title': 'Stock',
+                'formset': StockFormSet(self.request.POST or None,
+                                        self.request.FILES or None)
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                ProductCategoryFormSet(self.request.POST, instance=obj),
+                ProductAttributeFormSet(self.request.POST, instance=obj),
+                ProductTagFormSet(self.request.POST, instance=obj),
+                ProductRelatedFormSet(self.request.POST, instance=obj),
+                MediaFormSet(self.request.POST, self.request.FILES,
+                             instance=obj),
+                LogoFormSet(self.request.POST, self.request.FILES,
+                            instance=obj),
+                StockFormSet(self.request.POST, self.request.FILES,
+                             instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseUpdateView):
+    model = Product
+    form_class = ProductForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Product Categories',
+                'formset': ProductCategoryFormSet(self.request.POST or None,
+                                                  instance=self.get_object())
+            },
+            {
+                'title': 'Product Tags',
+                'formset': ProductTagFormSet(self.request.POST or None,
+                                             instance=self.get_object())
+            },
+            {
+                'title': 'Product Attributes',
+                'formset': ProductAttributeFormSet(self.request.POST or None,
+                                                   instance=self.get_object())
+            },
+            {
+                'title': 'Related Products',
+                'formset': ProductRelatedFormSet(self.request.POST or None,
+                                                 instance=self.get_object())
+            },
+            {
+                'title': 'Media',
+                'formset': MediaFormSet(self.request.POST or None,
+                                        self.request.FILES or None,
+                                        instance=self.get_object())
+            },
+            {
+                'title': 'Logo',
+                'formset': LogoFormSet(self.request.POST or None,
+                                       self.request.FILES or None,
+                                       instance=self.get_object())
+            },
+            {
+                'title': 'Stock',
+                'formset': StockFormSet(self.request.POST or None,
+                                        self.request.FILES or None,
+                                        instance=self.get_object())
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                ProductCategoryFormSet(self.request.POST, instance=obj),
+                ProductAttributeFormSet(self.request.POST, instance=obj),
+                ProductTagFormSet(self.request.POST, instance=obj),
+                ProductRelatedFormSet(self.request.POST, instance=obj),
+                MediaFormSet(self.request.POST, self.request.FILES,
+                             instance=obj),
+                LogoFormSet(self.request.POST, self.request.FILES,
+                            instance=obj),
+                StockFormSet(self.request.POST, self.request.FILES,
+                             instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class ProductDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Product
+
+
+class MediaListView(LoginRequiredMixin, BaseListView):
+    model = Media
+
+
+class MediaDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Media
+
+
+class MediaCreateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseCreateView):
+    model = Media
+    form_class = MediaForm
+
+
+class MediaUpdateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseUpdateView):
+    model = Media
+    form_class = MediaForm
+
+
+class MediaDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Media
+
+
+class LogoListView(LoginRequiredMixin, BaseListView):
+    model = Logo
+
+
+class LogoDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Logo
+
+
+class LogoCreateView(LoginRequiredMixin, FormMixin,
+                     SuccessUrlMixin, BaseCreateView):
+    model = Logo
+    form_class = LogoForm
+
+
+class LogoUpdateView(LoginRequiredMixin, FormMixin,
+                     SuccessUrlMixin, BaseUpdateView):
+    model = Logo
+    form_class = LogoForm
+
+
+class LogoDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Logo
+
+
+class StockListView(LoginRequiredMixin, BaseListView):
+    model = Stock
+
+
+class StockDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Stock
+
+
+class StockCreateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseCreateView):
+    model = Stock
+    form_class = StockForm
+
+
+class StockUpdateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseUpdateView):
+    model = Stock
+    form_class = StockForm
+
+
+class StockDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Stock
+
+
+class ShippmentListView(LoginRequiredMixin, BaseListView):
+    model = Shippment
+
+
+class ShippmentDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Shippment
+
+
+class ShippmentCreateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseCreateView):
+    model = Shippment
+    form_class = ShippmentForm
+
+
+class ShippmentUpdateView(LoginRequiredMixin, FormMixin,
+                          SuccessUrlMixin, BaseUpdateView):
+    model = Shippment
+    form_class = ShippmentForm
+
+
+class ShippmentDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Shippment
+
+
+class HeroListView(LoginRequiredMixin, BaseListView):
+    model = Hero
+
+
+class HeroDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Hero
+
+
+class HeroCreateView(LoginRequiredMixin, FormMixin,
+                     SuccessUrlMixin, BaseCreateView):
     model = Hero
     form_class = HeroForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': HeroItemFormSet(self.request.POST or None)
+            },
+        ]
+        return context
 
-class HeroUpdateView(CoreUpdateView):
-    template = 'form'
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                HeroItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class HeroUpdateView(LoginRequiredMixin, FormMixin,
+                     SuccessUrlMixin, BaseUpdateView):
     model = Hero
     form_class = HeroForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': HeroItemFormSet(self.request.POST or None,
+                                           instance=self.get_object())
+            },
+        ]
+        return context
 
-class HeroDeleteView(CoreDeleteView):
-    template = "confirm_delete"
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                HeroItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class HeroDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Hero
 
 
-class HeroItemListView(CoreListView):
-    template = 'list'
-    model = HeroItem
-    paginate_by = 100  # if pagination is desired
+class OfferListView(LoginRequiredMixin, BaseListView):
+    model = Offer
+
+
+class OfferDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Offer
+
+
+class OfferCreateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseCreateView):
+    model = Offer
+    form_class = OfferForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': OfferItemFormSet(self.request.POST or None)
+            },
+        ]
         return context
 
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                OfferItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
-class HeroItemDetailView(CoreDetailView):
-    model = HeroItem
-    template = 'detail'
+
+class OfferUpdateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseUpdateView):
+    model = Offer
+    form_class = OfferForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': OfferItemFormSet(self.request.POST or None,
+                                            instance=self.get_object())
+            },
+        ]
         return context
 
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                OfferItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
-class HeroItemCreateView(CoreCreateView):
-    template = 'form'
-    model = HeroItem
-    form_class = HeroItemForm
+
+class OfferDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Offer
 
 
-class HeroItemUpdateView(CoreUpdateView):
-    template = 'form'
-    model = HeroItem
-    form_class = HeroItemForm
+class AddressListView(LoginRequiredMixin, BaseListView):
+    model = Address
 
 
-class HeroItemDeleteView(CoreDeleteView):
-    template = "confirm_delete"
-    model = HeroItem
+class AddressDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Address
+
+
+class AddressCreateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseCreateView):
+    model = Address
+    form_class = AddressForm
+
+
+class AddressUpdateView(LoginRequiredMixin, FormMixin,
+                        SuccessUrlMixin, BaseUpdateView):
+    model = Address
+    form_class = AddressForm
+
+
+class AddressDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Address
+
+
+class OrderListView(LoginRequiredMixin, BaseListView):
+    model = Order
+
+
+class OrderDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Order
+
+
+class OrderCreateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseCreateView):
+    model = Order
+    form_class = OrderForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': OrderItemFormSet(self.request.POST or None)
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                OrderItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class OrderUpdateView(LoginRequiredMixin, FormMixin,
+                      SuccessUrlMixin, BaseUpdateView):
+    model = Order
+    form_class = OrderForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Items',
+                'formset': OrderItemFormSet(self.request.POST or None,
+                                            instance=self.get_object())
+            },
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                OrderItemFormSet(self.request.POST, instance=obj),
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
+
+class OrderDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Order

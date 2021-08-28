@@ -1,12 +1,12 @@
 from django.urls import path
 
-
-from .views import (UserLoginView, UserLogoutView, UserPasswordResetView,
-                    UserPasswordResetCompleteView,
-                    UserPasswordResetDoneView, UserPasswordResetConfirmView,
-                    AccountActivationSent, activate, SignupView)
-
 from rest_framework.authtoken import views
+
+from .views import (
+    UserLoginView, UserLogoutView, UserPasswordResetView,
+    UserPasswordResetCompleteView, UserPasswordResetDoneView,
+    UserPasswordResetConfirmView, AccountActivationSent, activate, SignupView
+)
 
 
 urlpatterns = [

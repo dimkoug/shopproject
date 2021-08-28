@@ -1,6 +1,9 @@
 from django.db.models import Prefetch, Count
-from shop.models import (ShoppingCartItem, Brand,
-                         Category, ProductCategory, Tag, Hero, HeroItem)
+from shop.models import (
+    ShoppingCartItem, Brand,
+    Category, ProductCategory,
+    Tag, Hero, HeroItem
+)
 
 
 def get_context_data(request):
@@ -17,7 +20,7 @@ def get_context_data(request):
         children__in=third_categories).distinct()
     first_categories = Category.objects.prefetch_related('children').filter(
         children__in=second_categories).distinct()
-    cart_id = request.session.get('shopping_cart_id')
+    shopping_cart_id = request.session.get('shopping_cart_id')
     heroes = Hero.objects.prefetch_related(
         Prefetch('heroitems',
                  queryset=HeroItem.objects.select_related(
@@ -25,19 +28,18 @@ def get_context_data(request):
                         is_published=True), to_attr='item_list'
                  )
         ).filter(is_published=True)
-    if cart_id:
-        basket_count = ShoppingCartItem.objects.filter(cartid=cart_id).count()
+    if shopping_cart_id:
+        basket_count = ShoppingCartItem.objects.filter(
+            shopping_cart_id=shopping_cart_id).count()
     else:
         basket_count = 0
 
     p = Prefetch(
         'children',
-        queryset=Category.objects.select_related(
-                'parent').prefetch_related(
+        queryset=Category.objects.prefetch_related(
                     Prefetch(
                         'children',
-                        queryset=Category.objects.select_related(
-                            'parent').filter(
+                        queryset=Category.objects.filter(
                              id__in=third_categories).order_by('order'),
                         to_attr='third_level'
                     )
@@ -46,12 +48,12 @@ def get_context_data(request):
     )
 
     categories = Category.objects.prefetch_related(p).filter(
-        parent__isnull=True, is_published=True, id__in=first_categories).order_by('order')
+        is_published=True, id__in=first_categories).order_by('order')
 
     return {
         'categories': categories,
-        'tags': Tag.status.published(),
-        'brands': Brand.status.published(),
+        'tags': Tag.objects.filter(is_published=True),
+        'brands': Brand.objects.filter(is_published=True),
         'donottrack': request.META.get('HTTP_DNT') == '1',
         'basket_count': basket_count,
         'heroes': heroes

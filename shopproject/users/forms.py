@@ -1,5 +1,7 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
+    ReadOnlyPasswordHashField,
     AuthenticationForm as BaseAuthenticationForm,
     PasswordResetForm as BasePasswordResetForm,
     UserCreationForm as BaseUserCreationForm,
@@ -8,7 +10,7 @@ from django.contrib.auth.forms import (
 
 from core.forms import BootstrapForm
 
-from .models import User
+User = get_user_model()
 
 
 class UserCreationForm(BootstrapForm, BaseUserCreationForm):
