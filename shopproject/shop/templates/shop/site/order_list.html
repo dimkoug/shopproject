@@ -23,12 +23,12 @@
             <tbody>
               {% for obj in object_list %}
               <tr>
-                <td>{{obj.pk}}</td>
-                <td>{{obj.amount}}</td>
+                <td>{{obj.order_registration}}</td>
+                <td>{{obj.total}}</td>
                 <td>
                   <ul>
-                    {% for item in obj.orderdetail_set.all %}
-                    <li><a href="{% url 'shop:catalog-product-detail' item.product.slug %}">{{item.product}}</a></li>
+                    {% for item in obj.orderitems.all %}
+                    <li><a href="{% url 'shop:catalog-product-detail' item.product.pk %}">{{item.product}}</a></li>
                     {% endfor %}
                   </ul>
                 </td>

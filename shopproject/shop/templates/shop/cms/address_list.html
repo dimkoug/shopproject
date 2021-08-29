@@ -18,7 +18,7 @@
       <tbody>
         {% for obj in object_list %}
         <tr>
-          <td>{{obj.name}}</td>
+          <td>{{obj}}</td>
           <td>
             {% include 'cms/action_buttons.html' with obj=obj %}
           </td>

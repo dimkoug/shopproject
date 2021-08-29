@@ -1,25 +1,32 @@
 import uuid
 from django.urls import reverse_lazy
-from django.db.models import Prefetch, Count,Q
+from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
 from django.http import JsonResponse
+from django.core.exceptions import PermissionDenied
 from django import template
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 
+from profiles.views import ProtectProfile
 
-from core.mixins import PassRequestToFormViewMixin, PaginationMixin
 
-from .models import (ProductCategory, Feature,
-                     Product, ProductTag, Order, OrderItem,
-                     ShoppingCartItem, Attribute,
-                     Media, ProductAttribute)
+from core.mixins import (
+    PassRequestToFormViewMixin, PaginationMixin, FormMixin
+)
+from .models import (
+    ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
+    ShoppingCartItem, Attribute, Address,
+    Media, ProductAttribute
+)
 
-from .forms import OrderForm
+from .forms import (
+    SiteOrderForm, SiteAddressForm
+)
 
 
 class IndexView(TemplateView):
@@ -62,19 +69,20 @@ class CatalogListView(PaginationMixin, ListView):
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            p = Prefetch('productcategories',
-                         queryset=ProductCategory.objects.select_related(
-                            'product', 'category').filter(category_id=category),
-                         to_attr='productcategory_list')
+            p = Prefetch(
+                'productcategories',
+                queryset=ProductCategory.objects.select_related(
+                        'product', 'category').filter(category_id=category),
+            )
             queryset = Product.objects.select_related(
-                'brand').filter(categories__in=category)
+                'brand').prefetch_related(p).filter(categories__in=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
             p = Prefetch('producttags',
                          queryset=ProductTag.objects.select_related(
                             'product', 'tag').filter(
-                                tag_id=tag), to_attr='producttag_list')
+                                tag_id=tag))
             queryset = Product.objects.select_related(
                 'brand').prefetch_related(p).filter(producttags__in=tag)
         if q and q != '':
@@ -149,11 +157,11 @@ class OrderListView(LoginRequiredMixin, ListView):
 
 
 class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
-                    CreateView):
+                    FormMixin, CreateView):
     model = Order
-    form_class = OrderForm
+    form_class = SiteOrderForm
     template_name = 'shop/site/order_form.html'
-    success_url = reverse_lazy("shop:index")
+    success_url = reverse_lazy("index")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -172,7 +180,8 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
         shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = self.get_context_data()['sum']
         items = self.get_context_data()['items']
-        obj.amount = sum
+        obj.order_registration = str(uuid.uuid4())[-10:]
+        obj.total = sum
         obj.save()
         for item in items:
             detail = OrderItem()
@@ -180,7 +189,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
             detail.product = item.product
             detail.quantity = item.quantity
             detail.save()
-            ShoppingCartItem.objects.filter(cartid=shopping_cart_id).delete()
+            ShoppingCartItem.objects.filter(shopping_cart_id=shopping_cart_id).delete()
             messages.success(self.request, 'The order is placed successfully!')
         return super().form_valid(form)
 
@@ -233,3 +242,43 @@ class CatalogProductDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
+
+
+class AddressCreateView(FormMixin, CreateView):
+    model = Address
+    form_class = SiteAddressForm
+    template_name = 'shop/site/address_form.html'
+
+    def get_success_url(self):
+        url = reverse_lazy('index')
+        return url
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        if not self.request.user.is_anonymous:
+            obj.profile = self.request.user.profile
+        address_type = self.request.GET.get('addr')
+        if address_type is not None:
+            address_type = Address.ADDRESS_CHOICES[int(address_type)][0]
+            obj.address_type = address_type
+        obj.save()
+        return super().form_valid(form)
+
+
+class AddressUpdateView(ProtectProfile, FormMixin, UpdateView):
+    model = Address
+    form_class = SiteAddressForm
+    template_name = 'shop/site/address_form.html'
+
+    def get_success_url(self):
+        url = reverse_lazy('index')
+        return url
+
+
+class AddressDeleteView(ProtectProfile, FormMixin, DeleteView):
+    model = Address
+    template_name = 'shop/site/address_form_confirm_delete.html'
+
+    def get_success_url(self):
+        url = reverse_lazy('index')
+        return url

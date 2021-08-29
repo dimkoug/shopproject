@@ -251,6 +251,14 @@ class AddressForm(BootstrapForm, forms.ModelForm):
                   'street_number', 'floor_number')
 
 
+class SiteAddressForm(BootstrapForm, forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ('first_name', 'last_name',
+                  'mobile', 'street_name', 'postal_code', 'city',
+                  'street_number', 'floor_number')
+
+
 class OrderForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Order
@@ -260,6 +268,25 @@ class OrderForm(BootstrapForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
+
+
+class SiteOrderForm(BootstrapForm, forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('billing_address', 'shipping_address',
+                  'comments')
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+        self.fields['billing_address'].queryset = Address.objects.select_related(
+            'profile').filter(profile_id=self.request.user.profile.pk,
+                              address_type=Address.BILLING_ADDRESS)
+        self.fields['shipping_address'].queryset = Address.objects.select_related(
+            'profile').filter(profile_id=self.request.user.profile.pk,
+                              address_type=Address.SHIPPING_ADDRESS)
+
+
 
 
 class OrderItemForm(BootstrapForm, forms.ModelForm):

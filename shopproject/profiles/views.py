@@ -5,6 +5,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
+
+from shop.models import Address
+
 from .forms import ProfileForm
 from .models import Profile
 
@@ -19,6 +22,16 @@ class ProtectProfile:
 class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
     model = Profile
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['billing_address_list'] = Address.objects.select_related(
+            'profile').filter(profile=self.get_object(),
+                              address_type=Address.BILLING_ADDRESS)
+        context['shipping_address_list'] = Address.objects.select_related(
+            'profile').filter(profile=self.get_object(),
+                              address_type=Address.SHIPPING_ADDRESS)
+        return context
+
 
 class ProfileUpdateView(ProtectProfile, LoginRequiredMixin, UpdateView):
     model = Profile
@@ -26,11 +39,14 @@ class ProfileUpdateView(ProtectProfile, LoginRequiredMixin, UpdateView):
     template_name = 'profiles/profile_form.html'
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('profile-detail', kwargs = {'pk': self.get_object().pk})
+        return reverse_lazy('profile-detail',
+                            kwargs={'pk': self.get_object().pk})
+
 
 class ProfileDeleteView(ProtectProfile, LoginRequiredMixin, DeleteView):
     model = Profile
     template_name = 'profiles/profile_confirm_delete.html'
 
     def get_success_url(self, **kwargs):
-        return reverse_lazy('profile-detail', kwargs = {'pk': self.get_object().pk})
+        return reverse_lazy('profile-detail',
+                            kwargs={'pk': self.get_object().pk})

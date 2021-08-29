@@ -1,29 +1,31 @@
 from django.urls import path
 
 from .cms_views import (
-    IndexView as CmsIndexView, CategoryListView, CategoryDetailView, CategoryCreateView,
-    CategoryUpdateView, CategoryDeleteView, TagListView, TagDetailView,
-    TagCreateView, TagUpdateView, TagDeleteView, SupplierListView,
-    SupplierDetailView, SupplierCreateView, SupplierUpdateView,
-    SupplierDeleteView, WareHouseListView, WareHouseDetailView,
-    WareHouseCreateView, WareHouseUpdateView, WareHouseDeleteView,
-    BrandListView, BrandDetailView, BrandCreateView, BrandUpdateView,
-    BrandDeleteView, FeatureListView, FeatureDetailView, FeatureCreateView,
-    FeatureUpdateView, FeatureDeleteView, ProductListView, ProductDetailView,
-    ProductCreateView, ProductUpdateView, ProductDeleteView, ShippmentListView,
-    ShippmentDetailView, ShippmentCreateView, ShippmentUpdateView,
-    ShippmentDeleteView, HeroListView, HeroDetailView, HeroCreateView,
-    HeroUpdateView, HeroDeleteView, OfferListView, OfferDetailView,
-    OfferCreateView, OfferUpdateView, OfferDeleteView, AddressListView,
-    AddressDetailView, AddressCreateView, AddressUpdateView,
-    AddressDeleteView, OrderListView as CmsOrderListView, OrderDetailView, OrderCreateView,
-    OrderUpdateView, OrderDeleteView,
+    IndexView as CmsIndexView, CategoryListView, CategoryDetailView,
+    CategoryCreateView, CategoryUpdateView, CategoryDeleteView,
+    TagListView, TagDetailView, TagCreateView, TagUpdateView, TagDeleteView,
+    SupplierListView, SupplierDetailView, SupplierCreateView,
+    SupplierUpdateView, SupplierDeleteView, WareHouseListView,
+    WareHouseDetailView, WareHouseCreateView, WareHouseUpdateView,
+    WareHouseDeleteView, BrandListView, BrandDetailView, BrandCreateView,
+    BrandUpdateView, BrandDeleteView, FeatureListView, FeatureDetailView,
+    FeatureCreateView, FeatureUpdateView, FeatureDeleteView, ProductListView,
+    ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView,
+    ShippmentListView, ShippmentDetailView, ShippmentCreateView,
+    ShippmentUpdateView, ShippmentDeleteView, HeroListView, HeroDetailView,
+    HeroCreateView, HeroUpdateView, HeroDeleteView, OfferListView,
+    OfferDetailView, OfferCreateView, OfferUpdateView, OfferDeleteView,
+    AddressListView, AddressDetailView, AddressCreateView, AddressUpdateView,
+    AddressDeleteView, OrderListView as CmsOrderListView, OrderDetailView,
+    OrderCreateView, OrderUpdateView, OrderDeleteView,
 )
 
 from .views import (
     IndexView, CatalogListView,
     CatalogProductDetailView, OrderListView, BasketView,
-    OrderFormView
+    OrderFormView, AddressCreateView as SiteAddressCreateView,
+    AddressUpdateView as SiteAddressUpdateView,
+    AddressDeleteView as SiteAddressDeleteView
 )
 
 from .functions import (
@@ -173,6 +175,12 @@ urlpatterns += [
     path('catalog/<int:pk>/', CatalogProductDetailView.as_view(),
          name='catalog-product-detail'),
     path('basket/items/', BasketView.as_view(), name='basket'),
+    path('address/create/', SiteAddressCreateView.as_view(),
+         name='site-address-add'),
+    path('address/<int:pk>/update/', SiteAddressUpdateView.as_view(),
+         name='site-address-update'),
+    path('address/<int:pk>/delete/', SiteAddressDeleteView.as_view(),
+         name='site-address-delete'),
     path('myorders/items/', OrderListView.as_view(), name='myorders'),
     path('remove_from_basket/<int:id>/', remove_from_basket,
          name='remove_from_basket'),

@@ -340,7 +340,7 @@ class Address(Timestamped):
         verbose_name_plural = 'addresses'
 
     def __str__(self):
-        return f"{self.street_name}"
+        return f"{self.first_name},{self.last_name}"
 
 
 class Order(Timestamped):
