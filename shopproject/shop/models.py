@@ -34,6 +34,9 @@ class ChildCategory(Timestamped, Ordered, Published):
 
     class Meta:
         unique_together = (('source', 'target'),)
+        indexes = [
+            models.Index(fields=['source', 'target']),
+        ]
 
 
 class Tag(Timestamped, Ordered, Published):
@@ -94,6 +97,9 @@ class BrandSupplier(Timestamped, Ordered, Published):
 
     class Meta:
         unique_together = (('brand', 'supplier'),)
+        indexes = [
+            models.Index(fields=['brand', 'supplier']),
+        ]
 
 
 class Feature(Timestamped, Ordered, Published):
@@ -118,6 +124,9 @@ class FeatureCategory(Timestamped, Ordered, Published):
 
     class Meta:
         unique_together = (('feature', 'category'),)
+        indexes = [
+            models.Index(fields=['feature', 'category']),
+        ]
 
 
 class Attribute(Timestamped, Ordered, Published):
@@ -164,6 +173,9 @@ class ProductCategory(Timestamped, Ordered, Published):
     class Meta:
         default_related_name = 'productcategories'
         unique_together = (('product', 'category'),)
+        indexes = [
+            models.Index(fields=['product', 'category']),
+        ]
 
 
 class ProductTag(Timestamped, Ordered, Published):
@@ -173,6 +185,9 @@ class ProductTag(Timestamped, Ordered, Published):
     class Meta:
         default_related_name = 'producttags'
         unique_together = (('product', 'tag'),)
+        indexes = [
+            models.Index(fields=['product', 'tag']),
+        ]
 
 
 class ProductRelated(Timestamped, Ordered, Published):
@@ -184,6 +199,9 @@ class ProductRelated(Timestamped, Ordered, Published):
     class Meta:
         default_related_name = 'relatedproducts'
         unique_together = (('source', 'target'),)
+        indexes = [
+            models.Index(fields=['source', 'target']),
+        ]
 
 
 class Media(Timestamped, Ordered, Published):
@@ -222,6 +240,9 @@ class Stock(Timestamped, Ordered, Published):
         verbose_name = 'stock'
         verbose_name_plural = 'stocks'
         unique_together = (('warehouse', 'product'),)
+        indexes = [
+            models.Index(fields=['warehouse', 'product']),
+        ]
 
     def __str__(self):
         return f"{str(self.stock)}"
@@ -250,6 +271,9 @@ class ProductAttribute(Timestamped, Ordered, Published):
         default_related_name = 'productattributes'
         verbose_name = 'product attribute'
         verbose_name_plural = 'product attributes'
+        indexes = [
+            models.Index(fields=['product', 'attribute']),
+        ]
 
     def __str__(self):
         return f"{self.attribute.name}"
@@ -276,6 +300,9 @@ class HeroItem(Timestamped, Ordered, Published):
         verbose_name = 'hero item'
         verbose_name_plural = 'heroitems'
         unique_together = (('hero', 'product'),)
+        indexes = [
+            models.Index(fields=['hero', 'product']),
+        ]
 
     def __str__(self):
         return f"{self.hero.name}"
@@ -305,6 +332,9 @@ class OfferItem(Timestamped, Ordered, Published):
         verbose_name = 'offer item'
         verbose_name_plural = 'offeritems'
         unique_together = (('offer', 'product'),)
+        indexes = [
+            models.Index(fields=['offer', 'product']),
+        ]
 
     def __str__(self):
         return f"{self.offer.name}"

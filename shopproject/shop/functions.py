@@ -13,7 +13,7 @@ def ajax_basket(request):
     shopping_items = ShoppingCartItem.objects.select_related(
             'product').filter(shopping_cart_id=shopping_cart_id)
     for item in shopping_items:
-        sum += item.product.price
+        sum += item.product.price * item.quantity
     context['sum'] = sum
     context['items'] = shopping_items
     context['ajax'] = True

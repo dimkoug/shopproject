@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.db.models import Prefetch
 
 from core.views import (
     BaseIndexView, BaseListView, BaseDetailView,
@@ -397,34 +398,50 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
         context['formsets'] = [
             {
                 'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(self.request.POST or None)
+                'formset': ProductCategoryFormSet(
+                        self.request.POST or None,
+                        queryset=ProductCategory.objects.select_related(
+                            'product', 'category'))
             },
             {
                 'title': 'Product Tags',
-                'formset': ProductTagFormSet(self.request.POST or None)
+                'formset': ProductTagFormSet(
+                        self.request.POST or None,
+                        queryset=ProductTag.objects.select_related(
+                            'product', 'tag'))
             },
             {
                 'title': 'Product Attributes',
-                'formset': ProductAttributeFormSet(self.request.POST or None)
+                'formset': ProductAttributeFormSet(
+                        self.request.POST or None,
+                        queryset=ProductAttribute.objects.select_related(
+                            'product', 'attribute'))
             },
             {
                 'title': 'Related Products',
-                'formset': ProductRelatedFormSet(self.request.POST or None)
+                'formset': ProductRelatedFormSet(
+                        self.request.POST or None,
+                        queryset=ProductRelated.objects.select_related(
+                            'source', 'target'))
             },
             {
                 'title': 'Media',
-                'formset': MediaFormSet(self.request.POST or None,
-                                        self.request.FILES or None)
+                'formset': MediaFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        queryset=Media.objects.select_related('product'))
             },
             {
                 'title': 'Logo',
-                'formset': LogoFormSet(self.request.POST or None,
-                                       self.request.FILES or None)
+                'formset': LogoFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        queryset=Logo.objects.select_related('product'))
             },
             {
                 'title': 'Stock',
-                'formset': StockFormSet(self.request.POST or None,
-                                        self.request.FILES or None)
+                'formset': StockFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        queryset=Stock.objects.select_related(
+                            'product', 'warehouse'))
             },
         ]
         return context
@@ -465,41 +482,53 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
         context['formsets'] = [
             {
                 'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(self.request.POST or None,
-                                                  instance=self.get_object())
+                'formset': ProductCategoryFormSet(
+                        self.request.POST or None, instance=self.get_object(),
+                        queryset=ProductCategory.objects.select_related(
+                            'product', 'category'))
             },
             {
                 'title': 'Product Tags',
-                'formset': ProductTagFormSet(self.request.POST or None,
-                                             instance=self.get_object())
+                'formset': ProductTagFormSet(
+                        self.request.POST or None, instance=self.get_object(),
+                        queryset=ProductTag.objects.select_related(
+                            'product', 'tag'))
             },
             {
                 'title': 'Product Attributes',
-                'formset': ProductAttributeFormSet(self.request.POST or None,
-                                                   instance=self.get_object())
+                'formset': ProductAttributeFormSet(
+                        self.request.POST or None, instance=self.get_object(),
+                        queryset=ProductAttribute.objects.select_related(
+                            'product', 'attribute'))
             },
             {
                 'title': 'Related Products',
-                'formset': ProductRelatedFormSet(self.request.POST or None,
-                                                 instance=self.get_object())
+                'formset': ProductRelatedFormSet(
+                        self.request.POST or None, instance=self.get_object(),
+                        queryset=ProductRelated.objects.select_related(
+                            'source', 'target'))
             },
             {
                 'title': 'Media',
-                'formset': MediaFormSet(self.request.POST or None,
-                                        self.request.FILES or None,
-                                        instance=self.get_object())
+                'formset': MediaFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        instance=self.get_object(),
+                        queryset=Media.objects.select_related('product'))
             },
             {
                 'title': 'Logo',
-                'formset': LogoFormSet(self.request.POST or None,
-                                       self.request.FILES or None,
-                                       instance=self.get_object())
+                'formset': LogoFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        instance=self.get_object(),
+                        queryset=Logo.objects.select_related('product'))
             },
             {
                 'title': 'Stock',
-                'formset': StockFormSet(self.request.POST or None,
-                                        self.request.FILES or None,
-                                        instance=self.get_object())
+                'formset': StockFormSet(
+                        self.request.POST or None, self.request.FILES or None,
+                        instance=self.get_object(),
+                        queryset=Stock.objects.select_related(
+                            'product', 'warehouse'))
             },
         ]
         return context

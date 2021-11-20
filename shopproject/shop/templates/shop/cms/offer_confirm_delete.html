@@ -8,7 +8,7 @@
 {% block content %}
 <form method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
-    <a href="{% get_url 'list' %}">Cancel</a>
+    <input type="submit" value="Confirm" class="btn btn-danger">
+    <a href="{% get_url 'list' %}" class="btn btn-light">Cancel</a>
 </form>
 {% endblock %}
