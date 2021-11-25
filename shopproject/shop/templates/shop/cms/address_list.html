@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-{% include 'cms/add_button.html' %}
+{% include 'partials/add_button.html' %}
 <div class="row py-2">
   <div class="col">
     <table class="table table-bordered">
@@ -20,7 +20,7 @@
         <tr>
           <td>{{obj}}</td>
           <td>
-            {% include 'cms/action_buttons.html' with obj=obj %}
+            {% include 'partials/action_buttons.html' with obj=obj %}
           </td>
         </tr>
         {% endfor %}
