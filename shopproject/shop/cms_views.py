@@ -45,6 +45,7 @@ class IndexView(LoginRequiredMixin, BaseIndexView):
 
 class CategoryListView(LoginRequiredMixin, BaseListView):
     model = Category
+    queryset = Category.objects.prefetch_related('children')
 
 
 class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
@@ -194,6 +195,7 @@ class WareHouseDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class BrandListView(LoginRequiredMixin, BaseListView):
     model = Brand
+    queryset = Brand.objects.prefetch_related('suppliers')
 
 
 class BrandDetailView(LoginRequiredMixin, BaseDetailView):
@@ -271,6 +273,7 @@ class BrandDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class FeatureListView(LoginRequiredMixin, BaseListView):
     model = Feature
+    queryset = Feature.objects.prefetch_related('categories')
 
 
 class FeatureDetailView(LoginRequiredMixin, BaseDetailView):
@@ -348,6 +351,7 @@ class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class AttributeListView(LoginRequiredMixin, BaseListView):
     model = Attribute
+    queryset = Attribute.objects.prefetch_related('features')
 
 
 class AttributeDetailView(LoginRequiredMixin, BaseDetailView):

@@ -12,6 +12,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Categories</th>
           <th></th>
         </tr>
       </thead>
@@ -19,6 +20,13 @@
         {% for obj in object_list %}
         <tr>
           <td>{{obj.name}}</td>
+          <td>
+            <ul>
+              {% for category in obj.categories.all %}
+                <li>{{category}}</li>
+              {% endfor %}
+            </ul>
+          </td>
           <td>
             {% include 'partials/action_buttons.html' with obj=obj %}
           </td>
