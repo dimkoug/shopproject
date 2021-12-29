@@ -982,11 +982,15 @@ class OrderDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 def model_order(request):
     if request.method == 'POST' and is_ajax(request):
-        model = apps.get_model('shop', request.POST['model_name'])
+        model_name = request.POST['model_name']
+        model = apps.get_model('shop', model_name)
         page_id_array = request.POST.getlist('page_id_array[]')
         objs = []
         for index, item in enumerate(page_id_array):
-            obj = model.objects.get(pk=item)
+            if model_name == 'childcategory':
+                obj = model.objects.get(target=item)
+            else:
+                obj = model.objects.get(pk=item)
             obj.order = index
             objs.append(obj)
             # obj.save()
