@@ -38,13 +38,23 @@
             </div>
       {% endfor %}
       <script type="text/javascript">
-          $('.formset_row-{{ formset.formset.prefix }}').formset({
-              addText: 'add another',
-              deleteText: 'remove',
-              prefix: '{{ formset.formset.prefix }}',
-              deleteCssClass: 'btn btn-danger col-2',
-              addCssClass: 'btn btn-primary'
-          });
+          $(document).ready(function(){
+            $('.formset_row-{{ formset.formset.prefix }}').formset({
+                addText: 'add another',
+                deleteText: 'remove',
+                prefix: '{{ formset.formset.prefix }}',
+                deleteCssClass: 'btn btn-danger col-2',
+                addCssClass: 'btn btn-primary formset_add_button'
+            });
+            $('.formset_add_button').click(function(e){
+              var $allLinks = $("select").hasClass(".select2-hidden-accessible");
+              for(item in $allLinks){
+                item.select2('destroy');
+              }
+              $("select").select2();
+            })
+            $("select").select2();
+          })
       </script>
   </div>
 
