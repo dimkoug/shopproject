@@ -8,6 +8,7 @@
 {% block content %}
 <form method="post">{% csrf_token %}
     {% include 'partials/form_partial.html' %}
-  {% include 'partials/form_buttons.html' with form=form %}
+    {% include 'partials/formsets.html' %}
+    {% include 'partials/form_buttons.html' with form=form %}
 </form>
 {% endblock %}

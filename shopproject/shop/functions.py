@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.template.loader import render_to_string
-from .models import ShoppingCartItem
+from .models import ShoppingCart
 
 
 def ajax_basket(request):
@@ -10,7 +10,7 @@ def ajax_basket(request):
     template_name = 'shop/partials/basket_partial.html'
     shopping_cart_id = request.session.get('shopping_cart_id')
     sum = 0
-    shopping_items = ShoppingCartItem.objects.select_related(
+    shopping_items = ShoppingCart.objects.select_related(
             'product').filter(shopping_cart_id=shopping_cart_id)
     for item in shopping_items:
         sum += item.product.price * item.quantity
@@ -26,12 +26,12 @@ def add_to_basket(request, id):
     shopping_cart_id = request.session.get('shopping_cart_id')
     print('shopping cart id:', shopping_cart_id)
     try:
-        shopping_items = ShoppingCartItem.objects.get(
+        shopping_items = ShoppingCart.objects.get(
             shopping_cart_id=shopping_cart_id, product_id=id)
         shopping_items.quantity += 1
         shopping_items.save()
-    except ShoppingCartItem.DoesNotExist:
-        shopping_items = ShoppingCartItem()
+    except ShoppingCart.DoesNotExist:
+        shopping_items = ShoppingCart()
         shopping_items.shopping_cart_id = shopping_cart_id
         shopping_items.product_id = id
         shopping_items.save()
@@ -45,15 +45,15 @@ def add_to_basket(request, id):
 def remove_from_basket(request, id):
     shopping_cart_id = request.session.get('shopping_cart_id')
     try:
-        shopping_items = ShoppingCartItem.objects.get(
+        shopping_items = ShoppingCart.objects.get(
             shopping_cart_id=shopping_cart_id, product_id=id)
         if shopping_items.quantity == 1 or shopping_items.quantity <= 1:
-            ShoppingCartItem.objects.filter(
+            ShoppingCart.objects.filter(
                 shopping_cart_id=shopping_cart_id, product_id=id).delete()
         else:
             shopping_items.quantity -= 1
             shopping_items.save()
-    except ShoppingCartItem.DoesNotExist:
+    except ShoppingCart.DoesNotExist:
         pass
     messages.success(request, 'Your basket was updated successfully!')
     if request.is_ajax():
@@ -63,7 +63,7 @@ def remove_from_basket(request, id):
 
 def clear_basket(request):
     shopping_cart_id = request.session.get('shopping_cart_id')
-    ShoppingCartItem.objects.filter(
+    ShoppingCart.objects.filter(
         shopping_cart_id=shopping_cart_id).delete()
     messages.success(request, 'Your basket was cleared successfully!')
     if request.is_ajax():
@@ -73,7 +73,7 @@ def clear_basket(request):
 
 def remove_item_from_basket(request, id):
     shopping_cart_id = request.session.get('shopping_cart_id')
-    ShoppingCartItem.objects.filter(
+    ShoppingCart.objects.filter(
         shopping_cart_id=shopping_cart_id, product_id=id).delete()
     messages.success(request, 'Your basket was cleared successfully!')
     if request.is_ajax():

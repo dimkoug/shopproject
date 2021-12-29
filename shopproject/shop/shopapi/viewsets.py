@@ -6,16 +6,16 @@ from rest_framework import generics, permissions
 
 from shop.models import (
     Category, Supplier, Brand, BrandSupplier, Feature,
-    FeatureCategory, Attribute, Tag, Product, Shippment,
+    FeatureCategory, Attribute, Tag, Product, Shipment,
     ProductTag, ProductAttribute, ProductCategory,
-    Media, Offer, OfferItem, Order, OrderItem,
-    ShoppingCartItem, Hero, HeroItem
+    Media, Offer, OfferProduct, Order, OrderItem,
+    ShoppingCart, Hero, HeroItem
 )
 
 
 from .serializers import (
     CategorySerializer, TagSerializer, FeatureSerializer,
-    AttributeSerializer, ProductSerializer, ShippmentSerializer,
+    AttributeSerializer, ProductSerializer, ShipmentSerializer,
     SupplierSerializer, BrandSerializer, MediaSerializer
 )
 
@@ -50,9 +50,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class ShippmentViewSet(viewsets.ModelViewSet):
-    queryset = Shippment.objects.all()
-    serializer_class = ShippmentSerializer
+class ShipmentViewSet(viewsets.ModelViewSet):
+    queryset = Shipment.objects.all()
+    serializer_class = ShipmentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 

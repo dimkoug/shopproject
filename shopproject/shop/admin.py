@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from django.utils.html import format_html
 # Register your models here.
 from .models import (
     Category, ChildCategory, Tag,
@@ -7,21 +7,23 @@ from .models import (
     BrandSupplier, Feature, FeatureCategory,
     Attribute, Product,
     ProductCategory, ProductTag, ProductRelated,
-    Media, Logo, Stock, Shippment, ProductAttribute,
+    Media, Logo, Stock, Shipment, ProductAttribute,
     Hero, HeroItem,
-    Offer, OfferItem, ShoppingCartItem,
-    Address, Order, OrderItem
+    Offer, OfferProduct, ShoppingCart,
+    Address, Order, OrderItem,
+    AttributeFeature
 )
 
 from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
-    AttributeFormSet, MediaFormSet, LogoFormSet, StockFormSet,
+    MediaFormSet, LogoFormSet, StockFormSet,
     ProductForm, ProductCategoryFormSet, ProductTagFormSet,
-    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShippmentForm,
+    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
-    OfferItemFormSet, AddressForm, OrderForm, OrderItemFormSet
+    AddressForm, OrderForm, OrderItemFormSet,
+    AttributeFeatureForm, AttributeFeatureFormSet, OfferProductForm, OfferProductFormSet
 )
 
 
@@ -29,72 +31,95 @@ class ChildCategoryInline(admin.TabularInline):
     model = ChildCategory
     formset = ChildCategoryFormSet
     fk_name = 'source'
+    extra = 1
+    autocomplete_fields = ['target']
+
+
+class AttributeFeatureInline(admin.TabularInline):
+    model = AttributeFeature
+    extra = 1
+    fk_name = 'attribute'
+    autocomplete_fields = ['feature']
 
 
 class SupplierInline(admin.TabularInline):
     model = BrandSupplier
     formset = SupplierFormSet
     fk_name = 'brand'
+    extra = 1
+    autocomplete_fields = ['supplier']
 
 
 class CategoryInline(admin.TabularInline):
     model = FeatureCategory
     formset = CategoryFormSet
     fk_name = 'feature'
+    extra = 1
+    autocomplete_fields = ['category']
 
 
 class ProductCategoryInline(admin.TabularInline):
     model = ProductCategory
     formset = ProductCategoryFormSet
     fk_name = 'product'
+    extra = 1
+    autocomplete_fields = ['category']
 
 
 class ProductTagInline(admin.TabularInline):
     model = ProductTag
     formset = ProductTagFormSet
     fk_name = 'product'
+    extra = 1
+    autocomplete_fields = ['tag']
 
 
 class ProductRelatedInline(admin.TabularInline):
     model = ProductRelated
     formset = ProductRelatedFormSet
     fk_name = 'source'
+    extra = 1
+    autocomplete_fields = ['target']
 
 
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
     fk_name = 'product'
+    extra = 1
+    autocomplete_fields = ['attribute']
 
 
 class MediaInline(admin.TabularInline):
     model = Media
     formset = MediaFormSet
     fk_name = 'product'
+    extra = 1
 
 
 class LogoInline(admin.TabularInline):
     model = Logo
     formset = LogoFormSet
     fk_name = 'product'
+    extra = 1
+
 
 
 class StockInline(admin.TabularInline):
     model = Stock
     formset = StockFormSet
     fk_name = 'product'
+    extra = 1
+    autocomplete_fields = ['warehouse']
 
 
 class HeroItemInline(admin.TabularInline):
     model = HeroItem
     formset = HeroItemFormSet
     fk_name = 'hero'
+    extra = 1
+    autocomplete_fields = ['product']
 
-
-class OfferItemInline(admin.TabularInline):
-    model = OfferItem
-    formset = OfferItemFormSet
-    fk_name = 'offer'
 
 
 class OrderItemInline(admin.TabularInline):
@@ -103,34 +128,52 @@ class OrderItemInline(admin.TabularInline):
     fk_name = 'order'
 
 
-class AttributeInline(admin.TabularInline):
-    model = Attribute
-    formset = AttributeFormSet
-    fk_name = 'feature'
 
 
 class CategoryAdmin(admin.ModelAdmin):
     model = Category
     form = CategoryForm
+    list_display = ('name', 'thumbnail', 'is_published', 'get_categories')
+    search_fields = ['name']
 
     inlines = [
         ChildCategoryInline,
     ]
 
+    def thumbnail(self, obj):
+        try:
+            return format_html('<img src="{}" style="width: 130px; \
+                               height: 100px"/>'.format(obj.image.url))
+        except:
+            return ''
+
+    thumbnail.short_description = 'thumbnail'
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('children')
+        return queryset
+
+    def get_categories(self, obj):
+        return "\n".join([p.name for p in obj.children.all()])
+
 
 class TagAdmin(admin.ModelAdmin):
     model = Tag
     form = TagForm
+    search_fields = ['name']
 
 
 class SupplierAdmin(admin.ModelAdmin):
     model = Supplier
     form = SupplierForm
+    search_fields = ['name']
 
 
 class WareHouseAdmin(admin.ModelAdmin):
     model = WareHouse
     form = WareHouseForm
+    search_fields = ['name']
 
 
 class BrandAdmin(admin.ModelAdmin):
@@ -145,21 +188,36 @@ class BrandAdmin(admin.ModelAdmin):
 class FeatureAdmin(admin.ModelAdmin):
     model = Feature
     form = FeatureForm
+    search_fields = ['name']
 
     inlines = [
         CategoryInline,
-        AttributeInline,
     ]
 
 
 class AttributeAdmin(admin.ModelAdmin):
     model = Attribute
     form = AttributeForm
+    list_display = ('name', 'is_published', 'get_features')
+    search_fields = ['name']
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('features')
+        return queryset
+
+    def get_features(self, obj):
+        return "\n".join([p.name for p in obj.features.all()])
+
+    inlines = [
+        AttributeFeatureInline
+    ]
 
 
 class ProductAdmin(admin.ModelAdmin):
     model = Product
     form = ProductForm
+    search_fields = ['name']
 
     inlines = [
         ProductCategoryInline,
@@ -187,9 +245,9 @@ class StockAdmin(admin.ModelAdmin):
     form = StockForm
 
 
-class ShippmentAdmin(admin.ModelAdmin):
-    model = Shippment
-    form = ShippmentForm
+class ShipmentAdmin(admin.ModelAdmin):
+    model = Shipment
+    form = ShipmentForm
 
 
 class HeroAdmin(admin.ModelAdmin):
@@ -200,14 +258,23 @@ class HeroAdmin(admin.ModelAdmin):
         HeroItemInline,
     ]
 
+class OfferProductInline(admin.TabularInline):
+    model = OfferProduct
+    extra = 1
+    fk_name = 'offer'
+    autocomplete_fields = ['product']
+
 
 class OfferAdmin(admin.ModelAdmin):
     model = Offer
     form = OfferForm
+    search_fields = ['name']
 
     inlines = [
-        OfferItemInline,
+        OfferProductInline
     ]
+
+
 
 
 class AddressAdmin(admin.ModelAdmin):
@@ -235,7 +302,7 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Logo, LogoAdmin)
 admin.site.register(Stock, StockAdmin)
-admin.site.register(Shippment, ShippmentAdmin)
+admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Address, AddressAdmin)

@@ -131,7 +131,7 @@ class FeatureCategory(Timestamped, Ordered, Published):
 
 class Attribute(Timestamped, Ordered, Published):
     name = models.TextField()
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    features = models.ManyToManyField(Feature, through='AttributeFeature')
 
     class Meta:
         default_related_name = 'attributes'
@@ -140,6 +140,22 @@ class Attribute(Timestamped, Ordered, Published):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class AttributeFeature(Timestamped, Ordered, Published):
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0, db_index=True)
+
+    class Meta:
+        default_related_name = 'attributefeatures'
+        verbose_name = 'attribute feature'
+        verbose_name_plural = 'attribute features'
+        ordering = ['order']
+        unique_together = (('attribute', 'feature'),)
+        indexes = [
+            models.Index(fields=['attribute', 'feature']),
+        ]
 
 
 class Product(Timestamped, Ordered, Published):
@@ -248,11 +264,11 @@ class Stock(Timestamped, Ordered, Published):
         return f"{str(self.stock)}"
 
 
-class Shippment(Timestamped, Ordered, Published):
+class Shipment(Timestamped, Ordered, Published):
     warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField()
 
     class Meta:
         default_related_name = 'shipments'
@@ -308,10 +324,11 @@ class HeroItem(Timestamped, Ordered, Published):
         return f"{self.hero.name}"
 
 
-class Offer(Timestamped, Ordered, Published):
-    name = models.CharField(max_length=100, unique=True)
-    start_date = models.DateTimeField(default=timezone.now)
-    end_date = models.DateTimeField(default=timezone.now)
+class Offer(Timestamped):
+    name = models.CharField(max_length=100)
+    products = models.ManyToManyField(Product, through='OfferProduct')
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
 
     class Meta:
         default_related_name = 'offers'
@@ -319,31 +336,34 @@ class Offer(Timestamped, Ordered, Published):
         verbose_name_plural = 'offers'
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 
-class OfferItem(Timestamped, Ordered, Published):
-    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+class OfferProduct(Timestamped, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=18, decimal_places=2)
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
+    is_primary = models.BooleanField(default=False)
+    is_complementary = models.BooleanField(default=False)
+    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    order = models.PositiveIntegerField(default=0, db_index=True)
 
     class Meta:
-        default_related_name = 'offeritems'
-        verbose_name = 'offer item'
-        verbose_name_plural = 'offeritems'
-        unique_together = (('offer', 'product'),)
+        default_related_name = 'offerproducts'
+        verbose_name = 'offer product'
+        verbose_name_plural = 'offer products'
+        ordering = ['order']
+        unique_together = (('product', 'offer', 'is_primary', 'is_complementary'),)
         indexes = [
-            models.Index(fields=['offer', 'product']),
+            models.Index(fields=['product', 'offer', 'is_primary', 'is_complementary']),
         ]
 
-    def __str__(self):
-        return f"{self.offer.name}"
 
-
-class ShoppingCartItem(Timestamped):
+class ShoppingCart(Timestamped):
     shopping_cart_id = models.CharField(max_length=255)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
 
 class Address(Timestamped):
@@ -375,12 +395,10 @@ class Address(Timestamped):
 
 class Order(Timestamped):
     order_registration = models.CharField(max_length=255)
-    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE,
-                                        related_name='billing_address_set')
-    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE,
-                                         related_name='shipping_address_set')
-    total = models.DecimalField(max_digits=18, decimal_places=2)
-    comments = models.TextField(blank=True)
+    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='billing_address')
+    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=8, decimal_places=2)
+    comments = models.TextField(blank=True, null=True)
 
     class Meta:
         default_related_name = 'orders'
@@ -395,6 +413,8 @@ class OrderItem(Timestamped):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
 
     class Meta:
         default_related_name = 'orderitems'

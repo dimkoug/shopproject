@@ -20,7 +20,7 @@ from core.mixins import (
 )
 from .models import (
     ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
-    ShoppingCartItem, Attribute, Address,
+    ShoppingCart, Attribute, Address,
     Media, ProductAttribute
 )
 
@@ -124,8 +124,7 @@ class CatalogListView(PaginationMixin, ListView):
         counter = Count('product', filter=Q(product__in=self.get_queryset()))
         context['specification_list'] = Feature.objects.prefetch_related(
             Prefetch('attributes',
-                     queryset=Attribute.objects.select_related(
-                        'feature').prefetch_related(
+                     queryset=Attribute.objects.prefetch_related(
                             Prefetch('productattributes',
                                      queryset=ProductAttribute.objects.select_related(
                                         'product', 'attribute').annotate(
@@ -167,7 +166,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
         context = super().get_context_data(**kwargs)
         sum = 0
         shopping_cart_id = self.request.session.get('shopping_cart_id')
-        shopping_items = ShoppingCartItem.objects.select_related(
+        shopping_items = ShoppingCart.objects.select_related(
             'product').filter(shopping_cart_id=shopping_cart_id)
         for item in shopping_items:
             sum += item.product.price
@@ -189,7 +188,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
             detail.product = item.product
             detail.quantity = item.quantity
             detail.save()
-            ShoppingCartItem.objects.filter(shopping_cart_id=shopping_cart_id).delete()
+            ShoppingCart.objects.filter(shopping_cart_id=shopping_cart_id).delete()
             messages.success(self.request, 'The order is placed successfully!')
         return super().form_valid(form)
 
@@ -212,7 +211,7 @@ class BasketView(TemplateView):
         context = super().get_context_data(**kwargs)
         shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = 0
-        shopping_items = ShoppingCartItem.objects.select_related(
+        shopping_items = ShoppingCart.objects.select_related(
             'product').filter(shopping_cart_id=shopping_cart_id)
         for item in shopping_items:
             sum += item.product.price * item.quantity

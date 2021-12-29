@@ -7,8 +7,9 @@ from .models import (
     Category, ChildCategory, Tag, Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory, Attribute, Product,
     ProductCategory, ProductTag, ProductRelated, Media, Logo, Stock,
-    Shippment, ProductAttribute, Hero, HeroItem,
-    Offer, OfferItem, Address, Order, OrderItem
+    Shipment, ProductAttribute, Hero, HeroItem,
+    Offer, Address, Order, OrderItem,
+    AttributeFeature, OfferProduct
 )
 
 
@@ -90,14 +91,27 @@ CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
 class AttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Attribute
-        fields = ('name', 'feature', 'is_published', 'order')
+        fields = ('name', 'is_published', 'order')
 
 
-AttributeFormSet = inlineformset_factory(Feature, Attribute,
-                                         form=AttributeForm,
-                                         formset=BootstrapFormSet,
-                                         can_delete=True,
-                                         fk_name='feature')
+class AttributeFeatureForm(BootstrapForm, forms.ModelForm):
+    class Meta:
+        model = AttributeFeature
+        fields = ('attribute', 'feature', 'is_published', 'order')
+
+
+AttributeFeatureFormSet = inlineformset_factory(Attribute, AttributeFeature,
+                                                form=AttributeFeatureForm,
+                                                formset=BootstrapFormSet,
+                                                can_delete=True,
+                                                fk_name='attribute')
+
+
+# AttributeFormSet = inlineformset_factory(Feature, Attribute,
+#                                          form=AttributeForm,
+#                                          formset=BootstrapFormSet,
+#                                          can_delete=True,
+#                                          fk_name='feature')
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):
@@ -185,9 +199,9 @@ StockFormSet = inlineformset_factory(Product, Stock,
                                      fk_name='product')
 
 
-class ShippmentForm(BootstrapForm, forms.ModelForm):
+class ShipmentForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = Shippment
+        model = Shipment
         fields = ('warehouse', 'product', 'stock', 'date',
                   'is_published', 'order')
 
@@ -227,20 +241,22 @@ HeroItemFormSet = inlineformset_factory(Hero, HeroItem,
 class OfferForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Offer
-        fields = ('name', 'start_date', 'end_date', 'is_published', 'order')
+        fields = ('name', 'start_date', 'end_date')
 
 
-class OfferItemForm(BootstrapForm, forms.ModelForm):
+class OfferProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = OfferItem
-        fields = ('offer', 'product', 'price',  'is_published', 'order')
+        model = OfferProduct
+        fields = ('offer', 'product', 'is_complementary', 'is_primary', 'discount_price')
 
 
-OfferItemFormSet = inlineformset_factory(Offer, OfferItem,
-                                         form=OfferItemForm,
-                                         formset=BootstrapFormSet,
-                                         can_delete=True,
-                                         fk_name='offer')
+OfferProductFormSet = inlineformset_factory(Offer, OfferProduct,
+                                            form=OfferProductForm,
+                                            formset=BootstrapFormSet,
+                                            can_delete=True,
+                                            fk_name='offer')
+
+
 
 
 class AddressForm(BootstrapForm, forms.ModelForm):

@@ -20,8 +20,8 @@ from core.mixins import FormMixin, SuccessUrlMixin
 from .models import (
     Category, ChildCategory, Tag, Supplier, WareHouse, Brand, BrandSupplier,
     Feature, FeatureCategory, Attribute, Product, ProductCategory,
-    ProductTag, ProductRelated, Media, Logo, Stock, Shippment,
-    ProductAttribute, Hero, HeroItem, Offer, OfferItem, ShoppingCartItem,
+    ProductTag, ProductRelated, Media, Logo, Stock, Shipment,
+    ProductAttribute, Hero, HeroItem, Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem
 )
 
@@ -31,10 +31,11 @@ from .forms import (
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
     ProductForm, ProductCategoryFormSet, ProductTagFormSet,
-    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShippmentForm,
+    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
-    OfferItemFormSet, AddressForm, OrderForm, OrderItemFormSet,
-    MediaFormSet, LogoFormSet, StockFormSet, AttributeFormSet
+    OfferProductFormSet, AddressForm, OrderForm, OrderItemFormSet,
+    MediaFormSet, LogoFormSet, StockFormSet, AttributeFeatureForm,
+    AttributeFeatureFormSet
 )
 
 
@@ -288,10 +289,6 @@ class FeatureCreateView(LoginRequiredMixin, FormMixin,
                 'title': 'Categories',
                 'formset': CategoryFormSet(self.request.POST or None)
             },
-            {
-                'title': 'Attributes',
-                'formset': AttributeFormSet(self.request.POST or None)
-            },
         ]
         return context
 
@@ -300,7 +297,6 @@ class FeatureCreateView(LoginRequiredMixin, FormMixin,
             obj = form.save(commit=False)
             formsets = [
                 CategoryFormSet(self.request.POST, instance=obj),
-                AttributeFormSet(self.request.POST, instance=obj),
             ]
             for formset in formsets:
                 if formset.is_valid():
@@ -326,11 +322,6 @@ class FeatureUpdateView(LoginRequiredMixin, FormMixin,
                 'formset': CategoryFormSet(self.request.POST or None,
                                            instance=self.get_object())
             },
-            {
-                'title': 'Attributes',
-                'formset': AttributeFormSet(self.request.POST or None,
-                                            instance=self.get_object())
-            },
         ]
         return context
 
@@ -339,7 +330,6 @@ class FeatureUpdateView(LoginRequiredMixin, FormMixin,
             obj = form.save(commit=False)
             formsets = [
                 CategoryFormSet(self.request.POST, instance=obj),
-                AttributeFormSet(self.request.POST, instance=obj),
             ]
             for formset in formsets:
                 if formset.is_valid():
@@ -369,11 +359,63 @@ class AttributeCreateView(LoginRequiredMixin, FormMixin,
     model = Attribute
     form_class = AttributeForm
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Features',
+                'formset': AttributeFeatureFormSet(self.request.POST or None)
+            }
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                AttributeFeatureFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
+
 
 class AttributeUpdateView(LoginRequiredMixin, FormMixin,
                           SuccessUrlMixin, BaseUpdateView):
     model = Attribute
     form_class = AttributeForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formsets'] = [
+            {
+                'title': 'Features',
+                'formset': AttributeFeatureFormSet(self.request.POST or None, instance=self.get_object())
+            }
+        ]
+        return context
+
+    def form_valid(self, form):
+        if form.is_valid():
+            obj = form.save(commit=False)
+            formsets = [
+                AttributeFeatureFormSet(self.request.POST, instance=obj)
+            ]
+            for formset in formsets:
+                if formset.is_valid():
+                    obj.save()
+                    formset.save()
+                else:
+                    print(formset.non_form_errors())
+                    print("formset errors:", formset.errors)
+                    return super().form_invalid(form)
+        return super().form_valid(form)
 
 
 class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
@@ -635,28 +677,28 @@ class StockDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Stock
 
 
-class ShippmentListView(LoginRequiredMixin, BaseListView):
-    model = Shippment
+class ShipmentListView(LoginRequiredMixin, BaseListView):
+    model = Shipment
 
 
-class ShippmentDetailView(LoginRequiredMixin, BaseDetailView):
-    model = Shippment
+class ShipmentDetailView(LoginRequiredMixin, BaseDetailView):
+    model = Shipment
 
 
-class ShippmentCreateView(LoginRequiredMixin, FormMixin,
+class ShipmentCreateView(LoginRequiredMixin, FormMixin,
                           SuccessUrlMixin, BaseCreateView):
-    model = Shippment
-    form_class = ShippmentForm
+    model = Shipment
+    form_class = ShipmentForm
 
 
-class ShippmentUpdateView(LoginRequiredMixin, FormMixin,
+class ShipmentUpdateView(LoginRequiredMixin, FormMixin,
                           SuccessUrlMixin, BaseUpdateView):
-    model = Shippment
-    form_class = ShippmentForm
+    model = Shipment
+    form_class = ShipmentForm
 
 
-class ShippmentDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
-    model = Shippment
+class ShipmentDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+    model = Shipment
 
 
 class HeroListView(LoginRequiredMixin, BaseListView):
@@ -754,7 +796,7 @@ class OfferCreateView(LoginRequiredMixin, FormMixin,
         context['formsets'] = [
             {
                 'title': 'Items',
-                'formset': OfferItemFormSet(self.request.POST or None)
+                'formset': OfferProductFormSet(self.request.POST or None)
             },
         ]
         return context
@@ -763,7 +805,7 @@ class OfferCreateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                OfferItemFormSet(self.request.POST, instance=obj),
+                OfferProductFormSet(self.request.POST, instance=obj),
             ]
             for formset in formsets:
                 if formset.is_valid():
@@ -786,8 +828,8 @@ class OfferUpdateView(LoginRequiredMixin, FormMixin,
         context['formsets'] = [
             {
                 'title': 'Items',
-                'formset': OfferItemFormSet(self.request.POST or None,
-                                            instance=self.get_object())
+                'formset': OfferProductFormSet(self.request.POST or None,
+                                               instance=self.get_object())
             },
         ]
         return context
@@ -796,7 +838,7 @@ class OfferUpdateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                OfferItemFormSet(self.request.POST, instance=obj),
+                OfferProductFormSet(self.request.POST, instance=obj),
             ]
             for formset in formsets:
                 if formset.is_valid():

@@ -2,10 +2,10 @@ from rest_framework import serializers
 
 from shop.models import (
     Category, Supplier, Brand, BrandSupplier, Feature,
-    FeatureCategory, Attribute, Tag, Product, Shippment,
+    FeatureCategory, Attribute, Tag, Product, Shipment,
     ProductTag, ProductAttribute, ProductCategory,
-    Media, Offer, OfferItem, Order, OrderItem,
-    ShoppingCartItem, Hero, HeroItem
+    Media, Offer, OfferProduct, Order, OrderItem,
+    ShoppingCart, Hero, HeroItem
 )
 
 
@@ -53,9 +53,9 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
                   'order']
 
 
-class ShippmentSerializer(serializers.HyperlinkedModelSerializer):
+class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Shippment
+        model = Shipment
         fields = ['url', 'product', 'stock', 'shipment_date']
 
 

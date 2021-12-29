@@ -7,11 +7,12 @@
 {% url 'shop:brand-list' as brand_list %}
 {% url 'shop:feature-list' as feature_list %}
 {% url 'shop:product-list' as product_list %}
-{% url 'shop:shippment-list' as shippment_list %}
+{% url 'shop:shipment-list' as shipment_list %}
 {% url 'shop:hero-list' as hero_list %}
 {% url 'shop:offer-list' as offer_list %}
 {% url 'shop:address-list' as address_list %}
 {% url 'shop:order-list' as order_list %}
+{% url 'shop:attribute-list' as attribute_list %}
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
   <div class="position-sticky pt-3">
     <ul class="nav flex-column">
@@ -28,6 +29,11 @@
       <li class="nav-item">
         <a class="nav-link {% if request.path == category_list %}active {% endif %}" aria-current="page" href="{{category_list}}">
           Categories
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if request.path == attribute_list %}active {% endif %}" aria-current="page" href="{{attribute_list}}">
+          Attributes
         </a>
       </li>
       <li class="nav-item">
@@ -61,8 +67,8 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == shippment_list %}active {% endif %}" aria-current="page" href="{{shippment_list}}">
-          Shippments
+        <a class="nav-link {% if request.path == shipment_list %}active {% endif %}" aria-current="page" href="{{shipment_list}}">
+          Shipments
         </a>
       </li>
       <li class="nav-item">
