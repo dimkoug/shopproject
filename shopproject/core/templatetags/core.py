@@ -36,3 +36,8 @@ def get_template_name(context, *args):
     lower_name = model.__name__.lower()
     template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
     return template_name
+
+
+@register.simple_tag
+def get_model(obj):
+    return obj.__class__.__name__.lower()

@@ -20,6 +20,7 @@ from .cms_views import (
     AddressListView, AddressDetailView, AddressCreateView, AddressUpdateView,
     AddressDeleteView, OrderListView as CmsOrderListView, OrderDetailView,
     OrderCreateView, OrderUpdateView, OrderDeleteView,
+    model_order
 )
 
 from .views import (
@@ -181,6 +182,7 @@ urlpatterns = [
          OrderUpdateView.as_view(), name='order-update'),
     path('cms/orders/delete/<int:pk>/',
          OrderDeleteView.as_view(), name='order-delete'),
+    path('cms/model/order/', model_order, name='model-order'),
 ]
 
 urlpatterns += [
