@@ -11,14 +11,16 @@
     <table class="table table-bordered">
       <thead>
         <tr>
+          <th>sort</th>
           <th>Name</th>
           <th>Suppliers</th>
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="order">
         {% for obj in object_list %}
-        <tr>
+        <tr class="item" data-pk={{obj.pk}} data-model={% get_model obj %}>
+          <td><i class="bi bi-list"></i></td>
           <td>{{obj.name}}</td>
           <td>
             <ul>
