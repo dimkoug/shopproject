@@ -46,6 +46,7 @@ class IndexView(LoginRequiredMixin, BaseIndexView):
 class CategoryListView(LoginRequiredMixin, BaseListView):
     model = Category
     queryset = Category.objects.prefetch_related('children')
+    paginate_by = 50
 
 
 class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
@@ -123,6 +124,7 @@ class CategoryDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class TagListView(LoginRequiredMixin, BaseListView):
     model = Tag
+    paginate_by = 50
 
 
 class TagDetailView(LoginRequiredMixin, BaseDetailView):
@@ -147,6 +149,7 @@ class TagDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class SupplierListView(LoginRequiredMixin, BaseListView):
     model = Supplier
+    paginate_by = 50
 
 
 class SupplierDetailView(LoginRequiredMixin, BaseDetailView):
@@ -171,6 +174,7 @@ class SupplierDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class WareHouseListView(LoginRequiredMixin, BaseListView):
     model = WareHouse
+    paginate_by = 50
 
 
 class WareHouseDetailView(LoginRequiredMixin, BaseDetailView):
@@ -196,6 +200,7 @@ class WareHouseDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 class BrandListView(LoginRequiredMixin, BaseListView):
     model = Brand
     queryset = Brand.objects.prefetch_related('suppliers')
+    paginate_by = 50
 
 
 class BrandDetailView(LoginRequiredMixin, BaseDetailView):
@@ -274,6 +279,7 @@ class BrandDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 class FeatureListView(LoginRequiredMixin, BaseListView):
     model = Feature
     queryset = Feature.objects.prefetch_related('categories')
+    paginate_by = 50
 
 
 class FeatureDetailView(LoginRequiredMixin, BaseDetailView):
@@ -352,6 +358,7 @@ class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 class AttributeListView(LoginRequiredMixin, BaseListView):
     model = Attribute
     queryset = Attribute.objects.prefetch_related('features')
+    paginate_by = 50
 
 
 class AttributeDetailView(LoginRequiredMixin, BaseDetailView):
@@ -428,6 +435,7 @@ class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class ProductListView(LoginRequiredMixin, BaseListView):
     model = Product
+    paginate_by = 50
 
 
 class ProductDetailView(LoginRequiredMixin, BaseDetailView):
@@ -611,6 +619,7 @@ class ProductDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class MediaListView(LoginRequiredMixin, BaseListView):
     model = Media
+    paginate_by = 50
 
 
 class MediaDetailView(LoginRequiredMixin, BaseDetailView):
@@ -635,6 +644,7 @@ class MediaDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class LogoListView(LoginRequiredMixin, BaseListView):
     model = Logo
+    paginate_by = 50
 
 
 class LogoDetailView(LoginRequiredMixin, BaseDetailView):
@@ -659,6 +669,7 @@ class LogoDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class StockListView(LoginRequiredMixin, BaseListView):
     model = Stock
+    paginate_by = 50
 
 
 class StockDetailView(LoginRequiredMixin, BaseDetailView):
@@ -683,6 +694,7 @@ class StockDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class ShipmentListView(LoginRequiredMixin, BaseListView):
     model = Shipment
+    paginate_by = 50
 
 
 class ShipmentDetailView(LoginRequiredMixin, BaseDetailView):
@@ -707,6 +719,7 @@ class ShipmentDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class HeroListView(LoginRequiredMixin, BaseListView):
     model = Hero
+    paginate_by = 50
 
 
 class HeroDetailView(LoginRequiredMixin, BaseDetailView):
@@ -784,6 +797,7 @@ class HeroDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class OfferListView(LoginRequiredMixin, BaseListView):
     model = Offer
+    paginate_by = 50
 
 
 class OfferDetailView(LoginRequiredMixin, BaseDetailView):
@@ -861,6 +875,7 @@ class OfferDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class AddressListView(LoginRequiredMixin, BaseListView):
     model = Address
+    paginate_by = 50
 
 
 class AddressDetailView(LoginRequiredMixin, BaseDetailView):
@@ -885,6 +900,7 @@ class AddressDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class OrderListView(LoginRequiredMixin, BaseListView):
     model = Order
+    paginate_by = 50
 
 
 class OrderDetailView(LoginRequiredMixin, BaseDetailView):

@@ -21,6 +21,7 @@ class Category(Timestamped, Ordered, Published):
         default_related_name = 'categories'
         verbose_name = 'category'
         verbose_name_plural = 'categories'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -34,6 +35,7 @@ class ChildCategory(Timestamped, Ordered, Published):
 
     class Meta:
         unique_together = (('source', 'target'),)
+        ordering = ['order']
         indexes = [
             models.Index(fields=['source', 'target']),
         ]
@@ -46,6 +48,7 @@ class Tag(Timestamped, Ordered, Published):
         default_related_name = 'tags'
         verbose_name = 'tag'
         verbose_name_plural = 'tags'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -58,6 +61,7 @@ class Supplier(Timestamped, Ordered, Published):
         default_related_name = 'suppliers'
         verbose_name = 'supplier'
         verbose_name_plural = 'suppliers'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -70,6 +74,7 @@ class WareHouse(Timestamped, Ordered, Published):
         default_related_name = 'warehouses'
         verbose_name = 'ware house'
         verbose_name_plural = 'ware houses'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -86,6 +91,7 @@ class Brand(Timestamped, Ordered, Published):
         default_related_name = 'brands'
         verbose_name = 'brand'
         verbose_name_plural = 'brands'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -100,6 +106,7 @@ class BrandSupplier(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['brand', 'supplier']),
         ]
+        ordering = ['order']
 
 
 class Feature(Timestamped, Ordered, Published):
@@ -113,6 +120,7 @@ class Feature(Timestamped, Ordered, Published):
         default_related_name = 'features'
         verbose_name = 'feature'
         verbose_name_plural = 'features'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -127,6 +135,7 @@ class FeatureCategory(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['feature', 'category']),
         ]
+        ordering = ['order']
 
 
 class Attribute(Timestamped, Ordered, Published):
@@ -137,6 +146,7 @@ class Attribute(Timestamped, Ordered, Published):
         default_related_name = 'attributes'
         verbose_name = 'attribute'
         verbose_name_plural = 'attributes'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -177,6 +187,7 @@ class Product(Timestamped, Ordered, Published):
         default_related_name = 'products'
         verbose_name = 'product'
         verbose_name_plural = 'products'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -192,6 +203,7 @@ class ProductCategory(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['product', 'category']),
         ]
+        ordering = ['order']
 
 
 class ProductTag(Timestamped, Ordered, Published):
@@ -204,6 +216,7 @@ class ProductTag(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['product', 'tag']),
         ]
+        ordering = ['order']
 
 
 class ProductRelated(Timestamped, Ordered, Published):
@@ -218,6 +231,7 @@ class ProductRelated(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['source', 'target']),
         ]
+        ordering = ['order']
 
 
 class Media(Timestamped, Ordered, Published):
@@ -228,6 +242,7 @@ class Media(Timestamped, Ordered, Published):
         default_related_name = 'media'
         verbose_name = 'media'
         verbose_name_plural = 'media'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.image.name}"
@@ -241,6 +256,7 @@ class Logo(Timestamped, Ordered, Published):
         default_related_name = 'logos'
         verbose_name = 'logo'
         verbose_name_plural = 'logos'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.image.name}"
@@ -259,6 +275,7 @@ class Stock(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['warehouse', 'product']),
         ]
+        ordering = ['order']
 
     def __str__(self):
         return f"{str(self.stock)}"
@@ -274,6 +291,7 @@ class Shipment(Timestamped, Ordered, Published):
         default_related_name = 'shipments'
         verbose_name = 'shipment'
         verbose_name_plural = 'shipments'
+        ordering = ['order']
 
     def __str__(self):
         return f"{str(self.stock)}"
@@ -290,6 +308,7 @@ class ProductAttribute(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['product', 'attribute']),
         ]
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.attribute.name}"
@@ -302,6 +321,7 @@ class Hero(Timestamped, Ordered, Published):
         default_related_name = 'heroes'
         verbose_name = 'hero'
         verbose_name_plural = 'heroes'
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -319,6 +339,7 @@ class HeroItem(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['hero', 'product']),
         ]
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.hero.name}"

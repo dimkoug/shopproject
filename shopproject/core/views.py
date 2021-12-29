@@ -9,7 +9,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
-from .mixins import ModelMixin
+from .mixins import ModelMixin, PaginationMixin
 
 
 class BaseIndexView(TemplateView):
@@ -18,7 +18,7 @@ class BaseIndexView(TemplateView):
                 self.app)]
 
 
-class BaseListView(ModelMixin, ListView):
+class BaseListView(ModelMixin, PaginationMixin, ListView):
     def get_template_names(self):
         return ['{}/cms/{}_list.html'.format(
                 self.model._meta.app_label, self.model.__name__)]
