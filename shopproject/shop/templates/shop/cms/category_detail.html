@@ -10,17 +10,15 @@
     <table class="table table-bordered">
       <thead>
         <tr>
+          <th>sort</th>
           <th>Name</th>
-          <th></th>
         </tr>
       </thead>
       <tbody class="order">
         {% for obj in object.children.all %}
         <tr class="item" data-pk={{obj.pk}} data-model='childcategory'>
+          <td><i class="bi bi-list"></i></td>
           <td>{{obj.name}}</td>
-          <td>
-            {% include 'partials/action_buttons.html' with obj=obj %}
-          </td>
         </tr>
         {% endfor %}
       </tbody>
