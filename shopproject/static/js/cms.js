@@ -23,6 +23,9 @@
       });
      }
     });
+
+    $("[id$='_date']").datepicker();
+    $("select").select2();
   })/*document ready */
 
 })(window,document,jQuery)
