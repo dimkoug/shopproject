@@ -1,6 +1,12 @@
+import os
+import hashlib
+import datetime
 from django.utils import timezone
 from django.db import models
-
+from django.core.files.storage import FileSystemStorage
+from django.db.models.signals import post_delete, pre_delete
+from django.dispatch.dispatcher import receiver
+from django.utils.html import format_html, mark_safe
 from profiles.models import Profile
 
 
@@ -9,13 +15,51 @@ from core.models import (
 )
 
 
-class Category(Timestamped, Ordered, Published):
+class MediaFileSystemStorage(FileSystemStorage):
+    def get_available_name(self, name, max_length=None):
+        if max_length and len(name) > max_length:
+            raise(Exception("name's length is greater than max_length"))
+        return name
+
+    def _save(self, name, content):
+        if self.exists(name):
+            # if the file exists, do not call the superclasses _save method
+            return name
+        # if the file is new, DO call it
+        return super(MediaFileSystemStorage, self)._save(name, content)
+
+
+class ImageModel(models.Model):
+    image = models.ImageField(upload_to='',
+                              storage=MediaFileSystemStorage(),max_length=500, null=True, blank=True)
+    md5sum = models.CharField(blank=True, max_length=255, null=True)
+
+    class Meta:
+        abstract = True
+
+    def get_thumb(self):
+        if self.image:
+            return format_html("<img src='{}' width='100' height='auto'>",
+                               self.image.url)
+        return ''
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # file is new
+            if self.image:
+                md5 = hashlib.md5()
+                for chunk in self.image.chunks():
+                    md5.update(chunk)
+                self.md5sum = md5.hexdigest()
+        super().save(*args, **kwargs)
+
+
+
+class Category(Timestamped, ImageModel, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
     url = models.URLField(blank=True, null=True)
     children = models.ManyToManyField("self", through='ChildCategory',
                                       symmetrical=False, blank=True)
-    image = models.ImageField(upload_to="category/heroes/",
-                              null=True, blank=True)
+
 
     class Meta:
         default_related_name = 'categories'
@@ -25,6 +69,8 @@ class Category(Timestamped, Ordered, Published):
 
     def __str__(self):
         return f"{self.name}"
+
+
 
 
 class ChildCategory(Timestamped, Ordered, Published):
@@ -80,12 +126,10 @@ class WareHouse(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class Brand(Timestamped, Ordered, Published):
+class Brand(Timestamped, ImageModel, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
     url = models.URLField(blank=True, null=True)
     suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
-    image = models.ImageField(upload_to="brand/logos/",
-                              null=True, blank=True)
 
     class Meta:
         default_related_name = 'brands'
@@ -109,12 +153,10 @@ class BrandSupplier(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class Feature(Timestamped, Ordered, Published):
+class Feature(Timestamped, ImageModel, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
     url = models.URLField(blank=True, null=True)
     categories = models.ManyToManyField(Category, through='FeatureCategory')
-    image = models.ImageField(upload_to="feature/logos/",
-                              null=True, blank=True)
 
     class Meta:
         default_related_name = 'features'
@@ -140,7 +182,7 @@ class FeatureCategory(Timestamped, Ordered, Published):
 
 class Attribute(Timestamped, Ordered, Published):
     name = models.TextField()
-    features = models.ManyToManyField(Feature, through='AttributeFeature')
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
 
     class Meta:
         default_related_name = 'attributes'
@@ -152,23 +194,7 @@ class Attribute(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class AttributeFeature(Timestamped, Ordered, Published):
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
-    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
-    order = models.PositiveIntegerField(default=0, db_index=True)
-
-    class Meta:
-        default_related_name = 'attributefeatures'
-        verbose_name = 'attribute feature'
-        verbose_name_plural = 'attribute features'
-        ordering = ['order']
-        unique_together = (('attribute', 'feature'),)
-        indexes = [
-            models.Index(fields=['attribute', 'feature']),
-        ]
-
-
-class Product(Timestamped, Ordered, Published):
+class Product(Timestamped, ImageModel, Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
@@ -176,10 +202,9 @@ class Product(Timestamped, Ordered, Published):
     tags = models.ManyToManyField(Tag, through='ProductTag')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
                                              symmetrical=False, blank=True)
-    image = models.ImageField(upload_to="product/logos/",
-                              null=True, blank=True)
     name = models.CharField(max_length=100, unique=True)
-    price = models.DecimalField(max_digits=18, decimal_places=2)
+    price_str = models.CharField(max_length=255, null=True, blank=True)
+    price = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
     subtitle = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
@@ -234,8 +259,7 @@ class ProductRelated(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class Media(Timestamped, Ordered, Published):
-    image = models.ImageField(upload_to="product/media/")
+class Media(Timestamped, ImageModel, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta:
@@ -248,8 +272,7 @@ class Media(Timestamped, Ordered, Published):
         return f"{self.image.name}"
 
 
-class Logo(Timestamped, Ordered, Published):
-    image = models.ImageField(upload_to="product/logo/")
+class Logo(Timestamped, ImageModel, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     class Meta:

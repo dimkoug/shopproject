@@ -11,7 +11,6 @@ from .models import (
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
-    AttributeFeature
 )
 
 from .forms import (
@@ -23,7 +22,7 @@ from .forms import (
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
-    AttributeFeatureForm, AttributeFeatureFormSet, OfferProductForm, OfferProductFormSet
+    OfferProductForm, OfferProductFormSet
 )
 
 
@@ -34,12 +33,6 @@ class ChildCategoryInline(admin.TabularInline):
     extra = 1
     autocomplete_fields = ['target']
 
-
-class AttributeFeatureInline(admin.TabularInline):
-    model = AttributeFeature
-    extra = 1
-    fk_name = 'attribute'
-    autocomplete_fields = ['feature']
 
 
 class SupplierInline(admin.TabularInline):
@@ -198,20 +191,14 @@ class FeatureAdmin(admin.ModelAdmin):
 class AttributeAdmin(admin.ModelAdmin):
     model = Attribute
     form = AttributeForm
-    list_display = ('name', 'is_published', 'get_features')
+    list_display = ('name', 'is_published', 'feature')
     search_fields = ['name']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.prefetch_related('features')
+        queryset = queryset.select_related('feature')
         return queryset
 
-    def get_features(self, obj):
-        return "\n".join([p.name for p in obj.features.all()])
-
-    inlines = [
-        AttributeFeatureInline
-    ]
 
 
 class ProductAdmin(admin.ModelAdmin):

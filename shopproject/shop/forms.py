@@ -9,7 +9,7 @@ from .models import (
     ProductCategory, ProductTag, ProductRelated, Media, Logo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,
-    AttributeFeature, OfferProduct
+    OfferProduct
 )
 
 
@@ -91,27 +91,14 @@ CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
 class AttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Attribute
-        fields = ('name', 'is_published', 'order')
+        fields = ('name', 'is_published', 'feature', 'order')
 
 
-class AttributeFeatureForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = AttributeFeature
-        fields = ('attribute', 'feature', 'is_published', 'order')
-
-
-AttributeFeatureFormSet = inlineformset_factory(Attribute, AttributeFeature,
-                                                form=AttributeFeatureForm,
-                                                formset=BootstrapFormSet,
-                                                can_delete=True,
-                                                fk_name='attribute')
-
-
-# AttributeFormSet = inlineformset_factory(Feature, Attribute,
-#                                          form=AttributeForm,
-#                                          formset=BootstrapFormSet,
-#                                          can_delete=True,
-#                                          fk_name='feature')
+AttributeFormSet = inlineformset_factory(Feature, Attribute,
+                                         form=AttributeForm,
+                                         formset=BootstrapFormSet,
+                                         can_delete=True,
+                                         fk_name='feature')
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):

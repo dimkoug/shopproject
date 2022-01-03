@@ -38,8 +38,7 @@ from .forms import (
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     OfferProductFormSet, AddressForm, OrderForm, OrderItemFormSet,
-    MediaFormSet, LogoFormSet, StockFormSet, AttributeFeatureForm,
-    AttributeFeatureFormSet
+    MediaFormSet, LogoFormSet, StockFormSet,
 )
 
 
@@ -374,63 +373,11 @@ class AttributeCreateView(LoginRequiredMixin, FormMixin,
     model = Attribute
     form_class = AttributeForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Features',
-                'formset': AttributeFeatureFormSet(self.request.POST or None)
-            }
-        ]
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                AttributeFeatureFormSet(self.request.POST, instance=obj)
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
-
 
 class AttributeUpdateView(LoginRequiredMixin, FormMixin,
                           SuccessUrlMixin, BaseUpdateView):
     model = Attribute
     form_class = AttributeForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Features',
-                'formset': AttributeFeatureFormSet(self.request.POST or None, instance=self.get_object())
-            }
-        ]
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                AttributeFeatureFormSet(self.request.POST, instance=obj)
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
 
 
 class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
