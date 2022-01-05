@@ -25,7 +25,7 @@
               <label for="{{attr.pk}}">
                 <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
                 <span>{{attr}}</span>
-                <span class="badge bg-light text-dark">{{attr.attr_list.0.product_count}}</span>
+                <span class="badge bg-light text-dark">{{attr.attr_list.0.product_counter}}</span>
               </label>
             </div>
             {% endfor %}
