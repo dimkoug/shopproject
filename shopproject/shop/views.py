@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
 from django.http import JsonResponse
+from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django import template
 from django.template.loader import render_to_string
@@ -14,6 +15,7 @@ from django.views.generic.list import ListView
 
 from profiles.views import ProtectProfile
 
+from .functions import create_query_string
 
 from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
@@ -21,7 +23,7 @@ from core.mixins import (
 from .models import (
     ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
-    Media, ProductAttribute
+    Media, ProductAttribute, Category
 )
 
 from .forms import (
@@ -47,16 +49,15 @@ class CatalogListView(PaginationMixin, ListView):
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
     queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
-        Prefetch('productcategories',
-                 queryset=ProductCategory.objects.select_related(
-                    'product', 'category'), to_attr='productcategory_list'),
-        Prefetch('producttags',
-                 queryset=ProductTag.objects.select_related(
-                    'product', 'tag'), to_attr='producttag_list'),
-        Prefetch('productattributes',
-                 queryset=ProductAttribute.objects.select_related(
-                    'product', 'attribute'), to_attr='productattribute_list')
+        'categories',
+        'tags',
+        'productattributes',
     )
+
+    def dispatch(self, *args, **kwargs):
+        if 'category' in self.request.GET:
+            return super().dispatch(*args, **kwargs)
+        raise Http404
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -69,35 +70,19 @@ class CatalogListView(PaginationMixin, ListView):
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            p = Prefetch(
-                'productcategories',
-                queryset=ProductCategory.objects.select_related(
-                        'product', 'category').filter(category_id=category),
-            )
-            queryset = Product.objects.select_related(
-                'brand').prefetch_related(p).filter(categories__in=category)
+            queryset = queryset.filter(categories__in=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
-            p = Prefetch('producttags',
-                         queryset=ProductTag.objects.select_related(
-                            'product', 'tag').filter(
-                                tag_id=tag))
-            queryset = Product.objects.select_related(
-                'brand').prefetch_related(p).filter(producttags__in=tag)
+            queryset = queryset.filter(producttags__in=tag)
         if q and q != '':
             queryset = queryset.filter(name__icontains=q)
         if len(attrs) > 0:
             for attr in attrs:
-                p = Prefetch('productattributes',
-                             queryset=ProductAttribute.objects.select_related(
-                                'product', 'attribute').filter(
-                                    attribute_id__in=attr),
-                             to_attr='productattribute_list')
-                queryset = Product.objects.select_related(
-                    'brand').prefetch_related(p).filter(
+                queryset = queryset.filter(
                         productattributes__in=attr)
         return queryset
+
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -115,6 +100,9 @@ class CatalogListView(PaginationMixin, ListView):
         attrs = []
         attrs_checked = []
         features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
+        category = Category.objects.get(id=self.request.GET['category'])
+        context['category'] = category
+        context['query_string'] = create_query_string(self.request)
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         for arrt in attrs:
@@ -130,7 +118,7 @@ class CatalogListView(PaginationMixin, ListView):
                                         'product', 'attribute').annotate(
                                         product_counter=counter),
                                      to_attr='attr_list'))
-                     , to_attr='attribute_list')).all()
+                     , to_attr='attributes_list')).all()
         context['products_count'] = self.get_queryset().count()
         return context
 

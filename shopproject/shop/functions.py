@@ -5,6 +5,21 @@ from django.template.loader import render_to_string
 from .models import ShoppingCart
 
 
+def create_query_string(request):
+    query_string = ''
+    for key in request.GET.keys():
+        if key != 'page':
+            value = request.GET.getlist(key)
+            if len(value) > 0:
+                for item in value:
+                    if value != '':
+                        query_string += "&{}={}".format(key, item)
+            else:
+                if value != '':
+                    query_string += "&{}={}".format(key, value)
+    return query_string
+
+
 def ajax_basket(request):
     context = {}
     template_name = 'shop/partials/basket_partial.html'

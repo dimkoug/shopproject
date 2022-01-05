@@ -19,22 +19,22 @@
               {{feature}}
             </div>
             <hr>
-            {% for attr in feature.attributes.all %}
+            {% for attr in feature.attributes_list %}
               {% is_checked attr as checked %}
               <div class="ck-button {% if checked %} checked {% endif %}">
               <label for="{{attr.pk}}">
                 <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
                 <span>{{attr}}</span>
-                <span class="badge bg-light text-dark">{{attr.productattributes.count}}</span>
+                <span class="badge bg-light text-dark">{{attr.attr_list.0.product_count}}</span>
               </label>
             </div>
             {% endfor %}
-          {% endfor %}
         </div>
+        {% endfor %}
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">
-        <a href="{{request.path}}">Reset filters</a>
+        <a href="{{request.path}}?category={{category.id}}">Reset filters</a>
         <input type="submit" class="btn btn-primary" name="submit" value="submit">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
