@@ -1,44 +1,22 @@
 {% load static shop %}
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Filters
-</button>
-<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <form class="" action="" method="get" id='filters-form'>
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Search</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <!-- Modal body -->
-      <div class="modal-body">
-          {% for feature in specification_list %}
-          <div class="form-group">
-            <div class="filter-header">
-              {{feature}}
-            </div>
-            <hr>
-            {% for attr in feature.attributes_list %}
-              {% is_checked attr as checked %}
-              <div class="ck-button {% if checked %} checked {% endif %}">
-              <label for="{{attr.pk}}">
-                <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
-                <span>{{attr}}</span>
-                <span class="badge bg-light text-dark">{{attr.attr_list.0.product_counter}}</span>
-              </label>
-            </div>
-            {% endfor %}
-        </div>
-        {% endfor %}
-      </div>
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <a href="{{request.path}}?category={{category.id}}">Reset filters</a>
-        <input type="submit" class="btn btn-primary" name="submit" value="submit">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </form>
-  </div>
-  </div>
+<form class="" action="" method="get" id='filters-form'>
+  {% for feature in specification_list %}
+  <div class="form-group">
+    <div class="filter-header">
+      {{feature}}
+    </div>
+    <hr>
+    {% for attr in feature.attributes_list %}
+      {% is_checked attr as checked %}
+      <div class="ck-button {% if checked %} checked {% endif %}">
+      <label for="{{attr.pk}}" style="display:block;">
+        <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+        <span>{{attr}}</span>
+        <span class="badge bg-light text-dark">{{attr.attr_list.0.product_counter}}</span>
+      </label>
+    </div>
+    {% endfor %}
 </div>
+{% endfor %}
+<input type="submit" class="btn btn-primary" name="submit" value="submit">
+</form>

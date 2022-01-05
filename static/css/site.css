@@ -79,7 +79,7 @@ div[class*="mega-menu-container-"]{
 .ck-button {
     margin:4px;
     overflow:auto;
-    display:inline-block;
+    /*display:inline-block;*/
     background-color:#f0f0f0;
     padding:0.4rem;
 }

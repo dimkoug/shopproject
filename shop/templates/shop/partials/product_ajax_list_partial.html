@@ -10,20 +10,21 @@
 <div class="row py-2">
   <div class="col-2">
     {% include 'shop/partials/tags_partial.html' %}
+    {% if specification_list %}
+    {% include 'shop/partials/filters_partial.html' %}
+    {% endif %}
   </div>
   <div class="col-10">
-    {% if specification_list %}
     <div class="row py-2">
       <div class="col-12">
-        {% include 'shop/partials/filters_partial.html' %}
+          <h1 style="text-align:center;">{{category}}</h1>
       </div>
     </div>
-    {% endif %}
-<div class="row py-2">
-  <div class="col">
-    <img src="{% static 'img/loading.svg' %}" class="loading">
-  </div>
-</div>
+    <div class="row py-2">
+      <div class="col">
+        <img src="{% static 'img/loading.svg' %}" class="loading">
+      </div>
+    </div>
     {% include 'shop/partials/product_list_partial.html' with product_list=object_list %}
   </div>
 </div>

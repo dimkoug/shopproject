@@ -3,10 +3,11 @@
     Tags
   </div>
   <hr>
+    {% for tag in tags %}
   <div class="item">
-  {% for tag in tags %}
-      <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.id}}">{{tag.name}}</a>
-  {% endfor %}
+    <div class="">
+        <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.id}}&category={{category.id}}">{{tag.name}}</a>
+    </div>
   </div>
-
+    {% endfor %}
 {% endif %}
