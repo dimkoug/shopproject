@@ -21,16 +21,18 @@
           </a>
           </li>
         {% endif %}
+        {% if category %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Brands
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
             {% for brand in brands %}
-              <a class="dropdown-item" href="{% url 'shop:catalog' %}?brand={{brand.id}}">{{brand.name}}</a>
+              <a class="dropdown-item" href="{% url 'shop:catalog' %}?brand={{brand.id}}&category={{category.id}}">{{brand.name}}</a>
             {% endfor %}
           </div>
         </li>
+        {% endif %}
       </ul>
       <form class="d-flex  me-auto flex-grow-1" action="{% url 'shop:catalog' %}">
         <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
