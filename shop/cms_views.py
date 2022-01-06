@@ -360,7 +360,7 @@ class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
 
 class AttributeListView(LoginRequiredMixin, BaseListView):
     model = Attribute
-    queryset = Attribute.objects.prefetch_related('features')
+    queryset = Attribute.objects.select_related('feature')
     paginate_by = 50
 
 

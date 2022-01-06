@@ -51,7 +51,7 @@ class CatalogListView(PaginationMixin, ListView):
     queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
         'categories',
         'tags',
-        'productattributes',
+        'attributes',
     )
 
     def dispatch(self, *args, **kwargs):
@@ -74,13 +74,13 @@ class CatalogListView(PaginationMixin, ListView):
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
-            queryset = queryset.filter(producttags__in=tag)
+            queryset = queryset.filter(tags__in=tag)
         if q and q != '':
             queryset = queryset.filter(name__icontains=q)
         if len(attrs) > 0:
             for attr in attrs:
                 queryset = queryset.filter(
-                        productattributes__in=attr)
+                        attributes__in=attr)
         return queryset
 
 

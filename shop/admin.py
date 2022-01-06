@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.utils.html import format_html
 # Register your models here.
+
+from core.actions import make_draft, make_published
+
 from .models import (
     Category, ChildCategory, Tag,
     Supplier, WareHouse, Brand,
@@ -121,9 +124,11 @@ class OrderItemInline(admin.TabularInline):
     fk_name = 'order'
 
 
+class BaseAdmin(admin.ModelAdmin):
+    actions = [make_draft, make_published]
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(BaseAdmin):
     model = Category
     form = CategoryForm
     list_display = ('name', 'thumbnail', 'is_published', 'get_categories')
@@ -151,16 +156,26 @@ class CategoryAdmin(admin.ModelAdmin):
         return "\n".join([p.name for p in obj.children.all()])
 
 
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseAdmin):
     model = Tag
     form = TagForm
+    list_display = ['name', 'is_published']
     search_fields = ['name']
 
 
-class SupplierAdmin(admin.ModelAdmin):
+class SupplierAdmin(BaseAdmin):
     model = Supplier
     form = SupplierForm
+    list_display = ['name', 'is_published', 'get_brands']
     search_fields = ['name']
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('brandsupplier_set')
+        return queryset
+
+    def get_brands(self, obj):
+        return "\n".join([p.brand.name for p in obj.brandsupplier_set.all()])
 
 
 class WareHouseAdmin(admin.ModelAdmin):
@@ -169,26 +184,44 @@ class WareHouseAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class BrandAdmin(admin.ModelAdmin):
+class BrandAdmin(BaseAdmin):
     model = Brand
     form = BrandForm
+    list_display = ['name', 'is_published', 'get_suppliers']
 
     inlines = [
         SupplierInline,
     ]
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('brandsupplier_set')
+        return queryset
 
-class FeatureAdmin(admin.ModelAdmin):
+    def get_suppliers(self, obj):
+        return "\n".join([p.supplier.name for p in obj.brandsupplier_set.all()])
+
+
+class FeatureAdmin(BaseAdmin):
     model = Feature
     form = FeatureForm
     search_fields = ['name']
+    list_display = ['name', 'is_published', 'get_categories']
 
     inlines = [
         CategoryInline,
     ]
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.prefetch_related('featurecategory_set')
+        return queryset
 
-class AttributeAdmin(admin.ModelAdmin):
+    def get_categories(self, obj):
+        return "\n".join([p.category.name for p in obj.featurecategory_set.all()])
+
+
+class AttributeAdmin(BaseAdmin):
     model = Attribute
     form = AttributeForm
     list_display = ('name', 'is_published', 'feature')
@@ -201,10 +234,11 @@ class AttributeAdmin(admin.ModelAdmin):
 
 
 
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(BaseAdmin):
     model = Product
     form = ProductForm
     search_fields = ['name']
+    list_display = ['name', 'brand', 'is_published']
 
     inlines = [
         ProductCategoryInline,
@@ -216,15 +250,50 @@ class ProductAdmin(admin.ModelAdmin):
         StockInline
     ]
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('brand')
+        return queryset
 
-class MediaAdmin(admin.ModelAdmin):
+
+class MediaAdmin(BaseAdmin):
     model = Media
     form = MediaForm
+    list_display = ['product', 'thumbnail', 'is_published']
+
+    def thumbnail(self, obj):
+        try:
+            return format_html('<img src="{}" style="width: 130px; \
+                               height: 100px"/>'.format(obj.image.url))
+        except:
+            return ''
+
+    thumbnail.short_description = 'thumbnail'
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('product')
+        return queryset
 
 
-class LogoAdmin(admin.ModelAdmin):
+class LogoAdmin(BaseAdmin):
     model = Logo
     form = LogoForm
+    list_display = ['product', 'thumbnail', 'is_published']
+
+    def thumbnail(self, obj):
+        try:
+            return format_html('<img src="{}" style="width: 130px; \
+                               height: 100px"/>'.format(obj.image.url))
+        except:
+            return ''
+
+    thumbnail.short_description = 'thumbnail'
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('product')
+        return queryset
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -237,9 +306,10 @@ class ShipmentAdmin(admin.ModelAdmin):
     form = ShipmentForm
 
 
-class HeroAdmin(admin.ModelAdmin):
+class HeroAdmin(BaseAdmin):
     model = Hero
     form = HeroForm
+    list_display = ['name', 'is_published']
 
     inlines = [
         HeroItemInline,

@@ -200,6 +200,7 @@ class Product(Timestamped, ImageModel, Ordered, Published):
                                null=True, blank=True, related_name='children')
     categories = models.ManyToManyField(Category, through='ProductCategory')
     tags = models.ManyToManyField(Tag, through='ProductTag')
+    attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
                                              symmetrical=False, blank=True)
     name = models.CharField(max_length=100, unique=True)
@@ -328,6 +329,7 @@ class ProductAttribute(Timestamped, Ordered, Published):
         default_related_name = 'productattributes'
         verbose_name = 'product attribute'
         verbose_name_plural = 'product attributes'
+        unique_together = (('product', 'attribute'),)
         indexes = [
             models.Index(fields=['product', 'attribute']),
         ]
