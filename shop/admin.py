@@ -187,6 +187,7 @@ class WareHouseAdmin(admin.ModelAdmin):
 class BrandAdmin(BaseAdmin):
     model = Brand
     form = BrandForm
+    search_fields = ['name']
     list_display = ['name', 'is_published', 'get_suppliers']
 
     inlines = [
@@ -226,6 +227,7 @@ class AttributeAdmin(BaseAdmin):
     form = AttributeForm
     list_display = ('name', 'is_published', 'feature')
     search_fields = ['name']
+    autocomplete_fields = ['feature']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -239,6 +241,7 @@ class ProductAdmin(BaseAdmin):
     form = ProductForm
     search_fields = ['name']
     list_display = ['name', 'brand', 'is_published']
+    autocomplete_fields = ['brand']
 
     inlines = [
         ProductCategoryInline,
@@ -260,6 +263,7 @@ class MediaAdmin(BaseAdmin):
     model = Media
     form = MediaForm
     list_display = ['product', 'thumbnail', 'is_published']
+    autocomplete_fields = ['product']
 
     def thumbnail(self, obj):
         try:
@@ -280,6 +284,7 @@ class LogoAdmin(BaseAdmin):
     model = Logo
     form = LogoForm
     list_display = ['product', 'thumbnail', 'is_published']
+    autocomplete_fields = ['product']
 
     def thumbnail(self, obj):
         try:
@@ -299,11 +304,25 @@ class LogoAdmin(BaseAdmin):
 class StockAdmin(admin.ModelAdmin):
     model = Stock
     form = StockForm
+    list_display = ['stock', 'product', 'warehouse']
+    autocomplete_fields = ['product', 'warehouse']
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('product', 'warehouse')
+        return queryset
 
 
 class ShipmentAdmin(admin.ModelAdmin):
     model = Shipment
     form = ShipmentForm
+    list_display = ['stock', 'product', 'warehouse', 'date']
+    autocomplete_fields = ['product', 'warehouse']
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('product', 'warehouse')
+        return queryset
 
 
 class HeroAdmin(BaseAdmin):

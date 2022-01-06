@@ -15,6 +15,12 @@ from core.models import (
 )
 
 
+def _delete_file(path):
+    """ Deletes file from filesystem. """
+    if os.path.isfile(path):
+        os.remove(path)
+
+
 class MediaFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         if max_length and len(name) > max_length:
@@ -29,8 +35,16 @@ class MediaFileSystemStorage(FileSystemStorage):
         return super(MediaFileSystemStorage, self)._save(name, content)
 
 
+def get_upload_path(instance, filename):
+    name = instance.__class__.__name__.lower()
+    return os.path.join('{}_{}_{}/{}/{}'.format(
+        datetime.datetime.now().day,
+        datetime.datetime.now().month,
+        datetime.datetime.now().year, name, filename))
+
+
 class ImageModel(models.Model):
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to=get_upload_path,
                               storage=MediaFileSystemStorage(),max_length=500, null=True, blank=True)
     md5sum = models.CharField(blank=True, max_length=255, null=True)
 
@@ -52,6 +66,12 @@ class ImageModel(models.Model):
                 self.md5sum = md5.hexdigest()
         super().save(*args, **kwargs)
 
+
+@receiver(models.signals.pre_delete, sender=ImageModel)
+def delete_file(sender, instance, *args, **kwargs):
+    """ Deletes image files on `post_delete` """
+    if instance.image:
+        _delete_file(instance.image.path)
 
 
 class Category(Timestamped, ImageModel, Ordered, Published):
