@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 # Register your models here.
 
 from core.actions import make_draft, make_published
@@ -9,7 +10,7 @@ from .models import (
     Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory,
     Attribute, Product,
-    ProductCategory, ProductTag, ProductRelated,
+    ProductTag, ProductRelated,
     Media, Logo, Stock, Shipment, ProductAttribute,
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
@@ -21,7 +22,7 @@ from .forms import (
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
     MediaFormSet, LogoFormSet, StockFormSet,
-    ProductForm, ProductCategoryFormSet, ProductTagFormSet,
+    ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
@@ -29,16 +30,15 @@ from .forms import (
 )
 
 
-class ChildCategoryInline(admin.TabularInline):
-    model = ChildCategory
-    formset = ChildCategoryFormSet
+class ChildCategoryInline(SortableInlineAdminMixin, admin.TabularInline):
+    model = Category.children.through
     fk_name = 'source'
     extra = 1
     autocomplete_fields = ['target']
 
 
 
-class SupplierInline(admin.TabularInline):
+class SupplierInline(SortableInlineAdminMixin, admin.TabularInline):
     model = BrandSupplier
     formset = SupplierFormSet
     fk_name = 'brand'
@@ -46,7 +46,7 @@ class SupplierInline(admin.TabularInline):
     autocomplete_fields = ['supplier']
 
 
-class CategoryInline(admin.TabularInline):
+class CategoryInline(SortableInlineAdminMixin, admin.TabularInline):
     model = FeatureCategory
     formset = CategoryFormSet
     fk_name = 'feature'
@@ -54,15 +54,8 @@ class CategoryInline(admin.TabularInline):
     autocomplete_fields = ['category']
 
 
-class ProductCategoryInline(admin.TabularInline):
-    model = ProductCategory
-    formset = ProductCategoryFormSet
-    fk_name = 'product'
-    extra = 1
-    autocomplete_fields = ['category']
 
-
-class ProductTagInline(admin.TabularInline):
+class ProductTagInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductTag
     formset = ProductTagFormSet
     fk_name = 'product'
@@ -70,7 +63,7 @@ class ProductTagInline(admin.TabularInline):
     autocomplete_fields = ['tag']
 
 
-class ProductRelatedInline(admin.TabularInline):
+class ProductRelatedInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductRelated
     formset = ProductRelatedFormSet
     fk_name = 'source'
@@ -78,7 +71,7 @@ class ProductRelatedInline(admin.TabularInline):
     autocomplete_fields = ['target']
 
 
-class ProductAttributeInline(admin.TabularInline):
+class ProductAttributeInline(SortableInlineAdminMixin, admin.TabularInline):
     model = ProductAttribute
     formset = ProductAttributeFormSet
     fk_name = 'product'
@@ -86,14 +79,14 @@ class ProductAttributeInline(admin.TabularInline):
     autocomplete_fields = ['attribute']
 
 
-class MediaInline(admin.TabularInline):
+class MediaInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Media
     formset = MediaFormSet
     fk_name = 'product'
     extra = 1
 
 
-class LogoInline(admin.TabularInline):
+class LogoInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Logo
     formset = LogoFormSet
     fk_name = 'product'
@@ -101,7 +94,7 @@ class LogoInline(admin.TabularInline):
 
 
 
-class StockInline(admin.TabularInline):
+class StockInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Stock
     formset = StockFormSet
     fk_name = 'product'
@@ -109,7 +102,7 @@ class StockInline(admin.TabularInline):
     autocomplete_fields = ['warehouse']
 
 
-class HeroItemInline(admin.TabularInline):
+class HeroItemInline(SortableInlineAdminMixin, admin.TabularInline):
     model = HeroItem
     formset = HeroItemFormSet
     fk_name = 'hero'
@@ -118,7 +111,7 @@ class HeroItemInline(admin.TabularInline):
 
 
 
-class OrderItemInline(admin.TabularInline):
+class OrderItemInline(SortableInlineAdminMixin, admin.TabularInline):
     model = OrderItem
     formset = OrderItemFormSet
     fk_name = 'order'
@@ -128,7 +121,7 @@ class BaseAdmin(admin.ModelAdmin):
     actions = [make_draft, make_published]
 
 
-class CategoryAdmin(BaseAdmin):
+class CategoryAdmin(SortableAdminMixin, BaseAdmin):
     model = Category
     form = CategoryForm
     list_display = ('name', 'thumbnail', 'is_published', 'get_categories')
@@ -156,14 +149,14 @@ class CategoryAdmin(BaseAdmin):
         return "\n".join([p.name for p in obj.children.all()])
 
 
-class TagAdmin(BaseAdmin):
+class TagAdmin(SortableAdminMixin, BaseAdmin):
     model = Tag
     form = TagForm
     list_display = ['name', 'is_published']
     search_fields = ['name']
 
 
-class SupplierAdmin(BaseAdmin):
+class SupplierAdmin(SortableAdminMixin, BaseAdmin):
     model = Supplier
     form = SupplierForm
     list_display = ['name', 'is_published', 'get_brands']
@@ -178,13 +171,13 @@ class SupplierAdmin(BaseAdmin):
         return "\n".join([p.brand.name for p in obj.brandsupplier_set.all()])
 
 
-class WareHouseAdmin(admin.ModelAdmin):
+class WareHouseAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = WareHouse
     form = WareHouseForm
     search_fields = ['name']
 
 
-class BrandAdmin(BaseAdmin):
+class BrandAdmin(SortableAdminMixin, BaseAdmin):
     model = Brand
     form = BrandForm
     search_fields = ['name']
@@ -203,7 +196,7 @@ class BrandAdmin(BaseAdmin):
         return "\n".join([p.supplier.name for p in obj.brandsupplier_set.all()])
 
 
-class FeatureAdmin(BaseAdmin):
+class FeatureAdmin(SortableAdminMixin, BaseAdmin):
     model = Feature
     form = FeatureForm
     search_fields = ['name']
@@ -222,7 +215,7 @@ class FeatureAdmin(BaseAdmin):
         return "\n".join([p.category.name for p in obj.featurecategory_set.all()])
 
 
-class AttributeAdmin(BaseAdmin):
+class AttributeAdmin(SortableAdminMixin, BaseAdmin):
     model = Attribute
     form = AttributeForm
     list_display = ('name', 'is_published', 'feature')
@@ -236,15 +229,14 @@ class AttributeAdmin(BaseAdmin):
 
 
 
-class ProductAdmin(BaseAdmin):
+class ProductAdmin(SortableAdminMixin, BaseAdmin):
     model = Product
     form = ProductForm
     search_fields = ['name']
-    list_display = ['name', 'brand', 'is_published']
-    autocomplete_fields = ['brand']
+    list_display = ['name', 'parent', 'brand', 'category', 'is_published']
+    autocomplete_fields = ['brand', 'parent', 'category']
 
     inlines = [
-        ProductCategoryInline,
         ProductTagInline,
         ProductRelatedInline,
         ProductAttributeInline,
@@ -255,11 +247,11 @@ class ProductAdmin(BaseAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('brand')
+        queryset = queryset.select_related('brand', 'category')
         return queryset
 
 
-class MediaAdmin(BaseAdmin):
+class MediaAdmin(SortableAdminMixin, BaseAdmin):
     model = Media
     form = MediaForm
     list_display = ['product', 'thumbnail', 'is_published']
@@ -280,7 +272,7 @@ class MediaAdmin(BaseAdmin):
         return queryset
 
 
-class LogoAdmin(BaseAdmin):
+class LogoAdmin(SortableAdminMixin, BaseAdmin):
     model = Logo
     form = LogoForm
     list_display = ['product', 'thumbnail', 'is_published']
@@ -301,7 +293,7 @@ class LogoAdmin(BaseAdmin):
         return queryset
 
 
-class StockAdmin(admin.ModelAdmin):
+class StockAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = Stock
     form = StockForm
     list_display = ['stock', 'product', 'warehouse']
@@ -313,7 +305,7 @@ class StockAdmin(admin.ModelAdmin):
         return queryset
 
 
-class ShipmentAdmin(admin.ModelAdmin):
+class ShipmentAdmin(SortableAdminMixin, admin.ModelAdmin):
     model = Shipment
     form = ShipmentForm
     list_display = ['stock', 'product', 'warehouse', 'date']
@@ -325,7 +317,7 @@ class ShipmentAdmin(admin.ModelAdmin):
         return queryset
 
 
-class HeroAdmin(BaseAdmin):
+class HeroAdmin(SortableAdminMixin, BaseAdmin):
     model = Hero
     form = HeroForm
     list_display = ['name', 'is_published']
@@ -334,7 +326,7 @@ class HeroAdmin(BaseAdmin):
         HeroItemInline,
     ]
 
-class OfferProductInline(admin.TabularInline):
+class OfferProductInline(SortableInlineAdminMixin, admin.TabularInline):
     model = OfferProduct
     extra = 1
     fk_name = 'offer'

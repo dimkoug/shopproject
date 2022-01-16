@@ -23,7 +23,7 @@ from core.functions import is_ajax
 
 from .models import (
     Category, ChildCategory, Tag, Supplier, WareHouse, Brand, BrandSupplier,
-    Feature, FeatureCategory, Attribute, Product, ProductCategory,
+    Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, Logo, Stock, Shipment,
     ProductAttribute, Hero, HeroItem, Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem
@@ -34,7 +34,7 @@ from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
-    ProductForm, ProductCategoryFormSet, ProductTagFormSet,
+    ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     OfferProductFormSet, AddressForm, OrderForm, OrderItemFormSet,
@@ -402,13 +402,6 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
         context = super().get_context_data(**kwargs)
         context['formsets'] = [
             {
-                'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(
-                        self.request.POST or None,
-                        queryset=ProductCategory.objects.select_related(
-                            'product', 'category'))
-            },
-            {
                 'title': 'Product Tags',
                 'formset': ProductTagFormSet(
                         self.request.POST or None,
@@ -455,7 +448,6 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductAttributeFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),
@@ -486,13 +478,6 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
         context = super().get_context_data(**kwargs)
         context['formsets'] = [
             {
-                'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(
-                        self.request.POST or None, instance=self.get_object(),
-                        queryset=ProductCategory.objects.select_related(
-                            'product', 'category'))
-            },
-            {
                 'title': 'Product Tags',
                 'formset': ProductTagFormSet(
                         self.request.POST or None, instance=self.get_object(),
@@ -542,7 +527,6 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductAttributeFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),

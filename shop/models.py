@@ -218,7 +218,7 @@ class Product(Timestamped, ImageModel, Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
-    categories = models.ManyToManyField(Category, through='ProductCategory')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',

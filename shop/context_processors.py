@@ -2,14 +2,14 @@ from django.db.models import Prefetch, Count
 from shop.models import (
     ShoppingCart, Brand,
     Category, ProductCategory,
-    Tag, Hero, HeroItem
+    Tag, Hero, HeroItem, Product
 )
 
 
 def get_context_data(request):
-    product_categories = ProductCategory.objects.select_related(
-        'product').values_list('category_id', flat=True).filter(
-            product__is_published=True)
+    product_categories = Product.objects.select_related(
+        'category').values_list('category_id', flat=True).filter(
+            is_published=True)
     third_categories = Category.objects.values_list(
         'id', flat=True).filter(id__in=product_categories)
     second_categories = Category.objects.filter(children__in=third_categories)

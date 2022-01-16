@@ -48,8 +48,7 @@ class CatalogListView(PaginationMixin, ListView):
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
-    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
-        'categories',
+    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'attributes',
     )
@@ -70,7 +69,7 @@ class CatalogListView(PaginationMixin, ListView):
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            queryset = queryset.filter(categories__in=category)
+            queryset = queryset.filter(category=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
@@ -211,19 +210,10 @@ class BasketView(TemplateView):
 class CatalogProductDetailView(DetailView):
     model = Product
     template_name = 'shop/site/product_detail.html'
-    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
-        Prefetch('productcategories',
-                 queryset=ProductCategory.objects.select_related(
-                    'category', 'product'), to_attr='productcategory_list'),
-        Prefetch('producttags',
-                 queryset=ProductTag.objects.select_related(
-                    'tag', 'product'), to_attr='producttag_list'),
-        Prefetch('media',
-                 queryset=Media.objects.select_related(
-                     'product'), to_attr='productmedia_list'),
-        Prefetch('productattributes',
-                 queryset=ProductAttribute.objects.select_related(
-                     'attribute', 'product'), to_attr='productattribute_list'),
+    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
+        'tags',
+        'media',
+        'productattributes'
     )
 
     def get_context_data(self, **kwargs):

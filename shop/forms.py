@@ -104,21 +104,8 @@ AttributeFormSet = inlineformset_factory(Feature, Attribute,
 class ProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'brand', 'parent', 'image', 'subtitle',
+        fields = ('name', 'brand','category', 'parent', 'image', 'subtitle',
                   'description', 'price', 'is_published', 'order')
-
-
-class ProductCategoryForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = ProductCategory
-        fields = ('product', 'category', 'is_published', 'order')
-
-
-ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
-                                               form=ProductCategoryForm,
-                                               formset=BootstrapFormSet,
-                                               can_delete=True,
-                                               fk_name='product')
 
 
 class ProductTagForm(BootstrapForm, forms.ModelForm):

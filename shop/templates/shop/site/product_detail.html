@@ -23,15 +23,13 @@
           </div>
           <div class="">
             Product Tags :
-            {% for tag in object.producttag_list %}
+            {% for tag in object.tags.all %}
                 <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.tag.id}}">{{tag.tag.name}}</a>
             {% endfor %}
           </div>
           <div class="">
-            Product Categories :
-            {% for category in object.productcategory_list %}
-                <a class="tag-link" href="{% url 'shop:catalog' %}?category={{category.category.id}}">{{category.category.name}}</a>
-            {% endfor %}
+            Product Category:
+              <a class="tag-link" href="{% url 'shop:catalog' %}?category={{object.category.id}}">{{object.category.name}}</a>
           </div>
           <div class="">
             Product Description
@@ -53,7 +51,7 @@
             <div class="">
               <div class="swiper-container mySwiper">
                 <div class="swiper-wrapper">
-                  {% for media in object.productmedia_list %}
+                  {% for media in object.media.all %}
                     <div class="swiper-slide">
                         <img src="{{ media.image.url }}">
                     </div>
