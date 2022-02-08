@@ -3,7 +3,7 @@ from rest_framework import serializers
 from shop.models import (
     Category, Supplier, Brand, BrandSupplier, Feature,
     FeatureCategory, Attribute, Tag, Product, Shipment,
-    ProductTag, ProductAttribute, ProductCategory,
+    ProductTag, ProductAttribute,
     Media, Offer, OfferProduct, Order, OrderItem,
     ShoppingCart, Hero, HeroItem
 )

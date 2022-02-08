@@ -239,17 +239,17 @@ class Product(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class ProductCategory(Timestamped, Ordered, Published):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-        default_related_name = 'productcategories'
-        unique_together = (('product', 'category'),)
-        indexes = [
-            models.Index(fields=['product', 'category']),
-        ]
-        ordering = ['order']
+# class ProductCategory(Timestamped, Ordered, Published):
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#
+#     class Meta:
+#         default_related_name = 'productcategories'
+#         unique_together = (('product', 'category'),)
+#         indexes = [
+#             models.Index(fields=['product', 'category']),
+#         ]
+#         ordering = ['order']
 
 
 class ProductTag(Timestamped, Ordered, Published):
