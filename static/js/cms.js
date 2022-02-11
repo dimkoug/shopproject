@@ -1,13 +1,12 @@
 'use strict';
-'use strict';
 (function(w,d,$){
   $(d).ready(function(){
     $(".order").sortable({
      /*placeholder : "ui-state-highlight",*/
      update  : function(event, ui)
      {
-      var page_id_array = new Array();
-      var model_name = '';
+      let page_id_array = new Array();
+      let model_name = '';
       $('.item').each(function(){
        page_id_array.push($(this).data("pk"));
        model_name = $(this).data("model");

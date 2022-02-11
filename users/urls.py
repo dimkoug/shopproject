@@ -3,24 +3,24 @@ from django.urls import path
 from rest_framework.authtoken import views
 
 from .views import (
-    UserLoginView, UserLogoutView, UserPasswordResetView,
-    UserPasswordResetCompleteView, UserPasswordResetDoneView,
-    UserPasswordResetConfirmView, AccountActivationSent, activate, SignupView
+    LoginView, LogoutView, PasswordResetView,
+    PasswordResetCompleteView, PasswordResetDoneView,
+    PasswordResetConfirmView, AccountActivationSent, activate, SignupView
 )
 
 
 urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('password_reset', UserPasswordResetView.as_view(),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('password_reset', PasswordResetView.as_view(),
          name='password_reset'),
-    path('password_reset/done', UserPasswordResetDoneView.as_view(),
+    path('password_reset/done', PasswordResetDoneView.as_view(),
          name='password_reset_done'),
     path('reset/<str:uidb64>/<str:token>/',
-         UserPasswordResetConfirmView.as_view(),
+         PasswordResetConfirmView.as_view(),
          name='password_reset_confirm'),
-    path('reset/done', UserPasswordResetCompleteView.as_view(),
+    path('reset/done', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
     path('account_activation_sent', AccountActivationSent.as_view(),
          name='account_activation_sent'),

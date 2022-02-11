@@ -7,11 +7,8 @@ from shop.models import (
 
 
 def get_context_data(request):
-    product_categories = Product.objects.select_related(
-        'category').values_list('category_id', flat=True).filter(
-            is_published=True)
-    third_categories = Category.objects.values_list(
-        'id', flat=True).filter(id__in=product_categories)
+    third_categories = ProductCategory.objects.select_related(
+        'category').values_list('category_id', flat=True)
     second_categories = Category.objects.filter(children__in=third_categories)
     first_categories = Category.objects.filter(children__in=second_categories)
     shopping_cart_id = request.session.get('shopping_cart_id')

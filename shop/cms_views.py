@@ -26,7 +26,7 @@ from .models import (
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, Logo, Stock, Shipment,
     ProductAttribute, Hero, HeroItem, Offer, OfferProduct, ShoppingCart,
-    Address, Order, OrderItem
+    Address, Order, OrderItem, ProductCategory
 )
 
 
@@ -38,7 +38,7 @@ from .forms import (
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     OfferProductFormSet, AddressForm, OrderForm, OrderItemFormSet,
-    MediaFormSet, LogoFormSet, StockFormSet,
+    MediaFormSet, LogoFormSet, StockFormSet, ProductCategoryFormSet
 )
 
 
@@ -416,6 +416,13 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
                             'product', 'attribute'))
             },
             {
+                'title': 'Product Categories',
+                'formset': ProductCategoryFormSet(
+                        self.request.POST or None,
+                        queryset=ProductCategory.objects.select_related(
+                            'product', 'category'))
+            },
+            {
                 'title': 'Related Products',
                 'formset': ProductRelatedFormSet(
                         self.request.POST or None,
@@ -449,6 +456,7 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
             obj = form.save(commit=False)
             formsets = [
                 ProductAttributeFormSet(self.request.POST, instance=obj),
+                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),
                 MediaFormSet(self.request.POST, self.request.FILES,
@@ -492,6 +500,13 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
                             'product', 'attribute'))
             },
             {
+                'title': 'Product Categories',
+                'formset': ProductCategoryFormSet(
+                        self.request.POST or None, instance=self.get_object(),
+                        queryset=ProductCategory.objects.select_related(
+                            'product', 'category'))
+            },
+            {
                 'title': 'Related Products',
                 'formset': ProductRelatedFormSet(
                         self.request.POST or None, instance=self.get_object(),
@@ -528,6 +543,7 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
             obj = form.save(commit=False)
             formsets = [
                 ProductAttributeFormSet(self.request.POST, instance=obj),
+                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),
                 MediaFormSet(self.request.POST, self.request.FILES,

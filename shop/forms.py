@@ -9,6 +9,7 @@ from .models import (
     ProductTag, ProductRelated, Media, Logo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,
+    ProductCategory,
     OfferProduct
 )
 
@@ -22,7 +23,7 @@ class CategoryForm(BootstrapForm, forms.ModelForm):
 class ChildCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ChildCategory
-        fields = ('source', 'target', 'is_published', 'order')
+        fields = ('source', 'target', 'order')
 
 
 ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
@@ -59,7 +60,7 @@ class BrandForm(BootstrapForm, forms.ModelForm):
 class BrandSupplierForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = BrandSupplier
-        fields = ('brand', 'supplier', 'is_published', 'order')
+        fields = ('brand', 'supplier', 'order')
 
 
 SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
@@ -78,7 +79,7 @@ class FeatureForm(BootstrapForm, forms.ModelForm):
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = FeatureCategory
-        fields = ('feature', 'category', 'is_published', 'order')
+        fields = ('feature', 'category', 'order')
 
 
 CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
@@ -104,14 +105,27 @@ AttributeFormSet = inlineformset_factory(Feature, Attribute,
 class ProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'brand','category', 'parent', 'image', 'subtitle',
+        fields = ('name', 'brand', 'parent', 'image', 'subtitle',
                   'description', 'price', 'is_published', 'order')
+
+
+class ProductCategoryForm(BootstrapForm, forms.ModelForm):
+    class Meta:
+        model = ProductCategory
+        fields = ('product', 'category', 'order')
+
+
+ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
+                                               form=ProductCategoryForm,
+                                               formset=BootstrapFormSet,
+                                               can_delete=True,
+                                               fk_name='product')
 
 
 class ProductTagForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductTag
-        fields = ('product', 'tag', 'is_published', 'order')
+        fields = ('product', 'tag', 'order')
 
 
 ProductTagFormSet = inlineformset_factory(Product, ProductTag,
@@ -124,7 +138,7 @@ ProductTagFormSet = inlineformset_factory(Product, ProductTag,
 class ProductRelatedForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductRelated
-        fields = ('source', 'target', 'is_published', 'order')
+        fields = ('source', 'target', 'order')
 
 
 ProductRelatedFormSet = inlineformset_factory(Product, ProductRelated,

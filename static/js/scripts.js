@@ -3,7 +3,7 @@ $(document).ready(function(){
   $(".loading").hide();
   $("div[class*='basket-container']").hide();
   $("body").on("click", "[id^='mega-menu-']", function(e){
-       var id = $(this).attr('id').split("-")[2];
+       let id = $(this).attr('id').split("-")[2];
        console.info(id);
        $("div[class*='basket-container']").hide();
        console.info("class:not(mega-menu-container-"+id+")");
@@ -40,7 +40,7 @@ $('body').on("click",'.close', function(e){
 })
 
 
-var swiper = new Swiper(".mySwiper", {
+let swiper = new Swiper(".mySwiper", {
   navigation: {
     nextEl: ".swiper-button-next",
     prevEl: ".swiper-button-prev",
@@ -68,9 +68,9 @@ $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
     return false;
 })
 
-$("body").on("submit", '#filters-form', function(e){
+/*$("body").on("submit", '#filters-form', function(e){
     e.preventDefault();
-    var data = $(this).serialize();
+    let data = $(this).serialize();
     $.when($.ajax({
              url: $(this).attr("href"),
              method: 'GET',
@@ -90,6 +90,6 @@ $("body").on("submit", '#filters-form', function(e){
          })
 
     return false;
-})
+})*/
 
 })

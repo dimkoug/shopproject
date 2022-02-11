@@ -15,6 +15,7 @@ from .models import (
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
+    ProductCategory
 )
 
 from .forms import (
@@ -26,7 +27,8 @@ from .forms import (
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
-    OfferProductForm, OfferProductFormSet
+    OfferProductForm, OfferProductFormSet,
+    ProductCategoryFormSet
 )
 
 
@@ -61,6 +63,14 @@ class ProductTagInline(SortableInlineAdminMixin, admin.TabularInline):
     fk_name = 'product'
     extra = 1
     autocomplete_fields = ['tag']
+
+
+class ProductCategoryInline(SortableInlineAdminMixin, admin.TabularInline):
+    model = ProductCategory
+    formset = ProductCategoryFormSet
+    fk_name = 'product'
+    extra = 1
+    autocomplete_fields = ['category']
 
 
 class ProductRelatedInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -233,12 +243,13 @@ class ProductAdmin(SortableAdminMixin, BaseAdmin):
     model = Product
     form = ProductForm
     search_fields = ['name']
-    list_display = ['name', 'parent', 'brand', 'category', 'is_published']
-    autocomplete_fields = ['brand', 'parent', 'category']
+    list_display = ['name', 'parent', 'brand', 'is_published']
+    autocomplete_fields = ['brand', 'parent']
 
     inlines = [
         ProductTagInline,
         ProductRelatedInline,
+        ProductCategoryInline,
         ProductAttributeInline,
         MediaInline,
         LogoInline,
@@ -247,7 +258,7 @@ class ProductAdmin(SortableAdminMixin, BaseAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.select_related('brand', 'category')
+        queryset = queryset.select_related('brand')
         return queryset
 
 

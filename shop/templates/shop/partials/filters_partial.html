@@ -1,22 +1,41 @@
 {% load static shop %}
-<form class="" action="" method="get" id='filters-form'>
+{% if specification_list %}
+<form class="overflow-auto" action="" method="get" id='filters-form'>
+  <input type="hidden" name="category" value="{{category.pk}}">
   {% for feature in specification_list %}
-  <div class="form-group">
+  <div class="form-group grouper" data-id={{feature.pk}}>
     <div class="filter-header">
       {{feature}}
     </div>
-    <hr>
+    <hr class="hr">
     {% for attr in feature.attributes_list %}
-      {% is_checked attr as checked %}
-      <div class="ck-button {% if checked %} checked {% endif %}">
-      <label for="{{attr.pk}}" style="display:block;">
-        <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
-        <span>{{attr}}</span>
-        <span class="badge bg-light text-dark">{{attr.attr_list.0.product_counter}}</span>
-      </label>
-    </div>
+        {% is_checked attr as checked %}
+        <div class="ck-button {% if checked %} checked {% endif %} bug_{{feature.pk}}">
+        <label for="{{attr.pk}}" style="display:block;">
+          <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+          <span>{{attr}}</span>
+          <span class="badge bg-light text-dark">{{attr.product_counter}}</span>
+        </label>
+      </div>
     {% endfor %}
-</div>
-{% endfor %}
-<input type="submit" class="btn btn-primary" name="submit" value="submit">
+  </div>
+  {% endfor %}
+  <button type="submit" name="">Search</button>
 </form>
+
+
+{% endif %}
+
+<script>
+  'use strict';
+  (function(w,d,$){
+    $(d).ready(function(){
+      $("[class*='bug_']").hide();
+      $('body').on('click', '.grouper',function(e){
+        let id = $(this).data('id');
+        $('.bug_'+id).toggle();
+      })
+    })
+  })(window,document,jQuery)
+
+</script>

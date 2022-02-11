@@ -48,9 +48,10 @@ class CatalogListView(PaginationMixin, ListView):
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
-    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
+    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
         'tags',
         'attributes',
+        'categories',
     )
 
     def dispatch(self, *args, **kwargs):
@@ -69,7 +70,7 @@ class CatalogListView(PaginationMixin, ListView):
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = queryset.filter(categories__in=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:

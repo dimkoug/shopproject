@@ -93,7 +93,7 @@ class Category(Timestamped, ImageModel, Ordered, Published):
 
 
 
-class ChildCategory(Timestamped, Ordered, Published):
+class ChildCategory(Timestamped, Ordered):
     source = models.ForeignKey(Category, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Category, on_delete=models.CASCADE,
@@ -161,7 +161,7 @@ class Brand(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class BrandSupplier(Timestamped, Ordered, Published):
+class BrandSupplier(Timestamped, Ordered):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
@@ -188,7 +188,7 @@ class Feature(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class FeatureCategory(Timestamped, Ordered, Published):
+class FeatureCategory(Timestamped, Ordered):
     feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -218,7 +218,7 @@ class Product(Timestamped, ImageModel, Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    categories = models.ManyToManyField(Category, through='ProductCategory')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
@@ -239,20 +239,20 @@ class Product(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-# class ProductCategory(Timestamped, Ordered, Published):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-#
-#     class Meta:
-#         default_related_name = 'productcategories'
-#         unique_together = (('product', 'category'),)
-#         indexes = [
-#             models.Index(fields=['product', 'category']),
-#         ]
-#         ordering = ['order']
+class ProductCategory(Timestamped, Ordered):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        default_related_name = 'productcategories'
+        unique_together = (('product', 'category'),)
+        indexes = [
+            models.Index(fields=['product', 'category']),
+        ]
+        ordering = ['order']
 
 
-class ProductTag(Timestamped, Ordered, Published):
+class ProductTag(Timestamped, Ordered):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
@@ -265,7 +265,7 @@ class ProductTag(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class ProductRelated(Timestamped, Ordered, Published):
+class ProductRelated(Timestamped, Ordered):
     source = models.ForeignKey(Product, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Product, on_delete=models.CASCADE,
