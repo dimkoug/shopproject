@@ -54,11 +54,6 @@ class CatalogListView(PaginationMixin, ListView):
         'categories',
     )
 
-    def dispatch(self, *args, **kwargs):
-        if 'category' in self.request.GET:
-            return super().dispatch(*args, **kwargs)
-        raise Http404
-
     def get_queryset(self):
         queryset = super().get_queryset()
         attrs = []
@@ -100,8 +95,21 @@ class CatalogListView(PaginationMixin, ListView):
         attrs = []
         attrs_checked = []
         features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
-        category = Category.objects.get(id=self.request.GET['category'])
-        context['category'] = category
+        category_id = self.request.GET.get('category')
+        counter = Count('product', filter=Q(product__in=self.get_queryset()))
+        if category_id:
+            category = Category.objects.get(id=category_id)
+            context['category'] = category
+            specs = Feature.objects.prefetch_related(
+                'categories',
+                Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
+                             product_counter=counter),to_attr='attr_list')).filter(categories=category)
+        else:
+            specs = Feature.objects.prefetch_related(
+                'categories',
+                Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
+                             product_counter=counter),to_attr='attr_list')).all()
+
         context['query_string'] = create_query_string(self.request)
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
@@ -109,12 +117,6 @@ class CatalogListView(PaginationMixin, ListView):
             for item in arrt:
                 attrs_checked.append(item)
         context['attrs_checked'] = attrs_checked
-        counter = Count('product', filter=Q(product__in=self.get_queryset()))
-        specs = Feature.objects.prefetch_related(
-            'categories',
-            Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
-                         product_counter=counter),to_attr='attr_list')).filter(categories=category)
-
         context['specification_list'] = specs
         context['products_count'] = self.get_queryset().count()
         return context

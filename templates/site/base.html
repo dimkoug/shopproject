@@ -50,6 +50,17 @@
         {% endfor %}
       </div>
     </div>
+    <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+          <div class="level-1">Brands</div>
+          <hr>
+            {% for brand in brands %}
+            <div class="col-2">
+              <div class="level-2"><a class="dropdown-item" href="{% url 'shop:catalog' %}?brand={{brand.id}}&category=">{{brand.name}}</a></div>
+            </div>
+            {% endfor %}
+      </div>
+    </div>
     <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         <div class="col">

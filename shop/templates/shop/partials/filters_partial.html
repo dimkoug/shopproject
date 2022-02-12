@@ -1,6 +1,6 @@
 {% load static shop %}
 {% if specification_list %}
-<form class="overflow-auto" action="" method="get" id='filters-form'>
+<form action="" method="get" id='filters-form'>
   <input type="hidden" name="category" value="{{category.pk}}">
   {% for feature in specification_list %}
   <div class="form-group grouper" data-id={{feature.pk}}>
@@ -9,18 +9,20 @@
       <i class="bi bi-chevron-down"></i>
     </div>
     <hr class="hr">
-    {% for attr in feature.attributes.all %}
-      {% for a in attr.attr_list %}
-        {% is_checked a.attribute as checked %}
-        <div class="ck-button {% if checked %} checked {% endif %} bug_{{feature.pk}}">
-        <label for="{{a.attribute.pk}}" style="display:block;">
-          <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{a.attribute.pk}}" value="{{a.attribute.pk}}" {% if checked %} checked {% endif %}>
-          <span>{{attr}}</span>
-          <span class="badge bg-light text-dark">{{a.product_counter}}</span>
-        </label>
-      </div>
+    <div class="bug_{{feature.pk}}" style="display: flex;flex-direction: column;min-height:15rem;height:15rem;overflow:scroll;">
+      {% for attr in feature.attributes.all %}
+        {% for a in attr.attr_list %}
+          {% is_checked a.attribute as checked %}
+          <div class="ck-button {% if checked %} checked {% endif %}">
+          <label for="{{a.attribute.pk}}" style="display:block;">
+            <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{a.attribute.pk}}" value="{{a.attribute.pk}}" {% if checked %} checked {% endif %}>
+            <span>{{attr}}</span>
+            <span class="badge bg-light text-dark">{{a.product_counter}}</span>
+          </label>
+        </div>
+      {% endfor %}
     {% endfor %}
-    {% endfor %}
+    </div>
   </div>
   {% endfor %}
   <button type="submit" name="" class="btn btn-primary">Search</button>
