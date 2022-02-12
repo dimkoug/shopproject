@@ -110,15 +110,12 @@ class CatalogListView(PaginationMixin, ListView):
                 attrs_checked.append(item)
         context['attrs_checked'] = attrs_checked
         counter = Count('product', filter=Q(product__in=self.get_queryset()))
-        context['specification_list'] = Feature.objects.prefetch_related(
-            Prefetch('attributes',
-                     queryset=Attribute.objects.prefetch_related(
-                            Prefetch('productattributes',
-                                     queryset=ProductAttribute.objects.select_related(
-                                        'product', 'attribute').annotate(
-                                        product_counter=counter),
-                                     to_attr='attr_list'))
-                     , to_attr='attributes_list')).all()
+        specs = Feature.objects.prefetch_related(
+            'categories',
+            Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
+                         product_counter=counter),to_attr='attr_list')).filter(categories=category)
+
+        context['specification_list'] = specs
         context['products_count'] = self.get_queryset().count()
         return context
 

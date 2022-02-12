@@ -6,21 +6,24 @@
   <div class="form-group grouper" data-id={{feature.pk}}>
     <div class="filter-header">
       {{feature}}
+      <i class="bi bi-chevron-down"></i>
     </div>
     <hr class="hr">
-    {% for attr in feature.attributes_list %}
-        {% is_checked attr as checked %}
+    {% for attr in feature.attributes.all %}
+      {% for a in attr.attr_list %}
+        {% is_checked a.attribute as checked %}
         <div class="ck-button {% if checked %} checked {% endif %} bug_{{feature.pk}}">
-        <label for="{{attr.pk}}" style="display:block;">
-          <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+        <label for="{{a.attribute.pk}}" style="display:block;">
+          <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{a.attribute.pk}}" value="{{a.attribute.pk}}" {% if checked %} checked {% endif %}>
           <span>{{attr}}</span>
-          <span class="badge bg-light text-dark">{{attr.product_counter}}</span>
+          <span class="badge bg-light text-dark">{{a.product_counter}}</span>
         </label>
       </div>
     {% endfor %}
+    {% endfor %}
   </div>
   {% endfor %}
-  <button type="submit" name="">Search</button>
+  <button type="submit" name="" class="btn btn-primary">Search</button>
 </form>
 
 
@@ -33,6 +36,7 @@
       $("[class*='bug_']").hide();
       $('body').on('click', '.grouper',function(e){
         let id = $(this).data('id');
+        $("i", this).toggleClass("bi-chevron-down bi-chevron-up");
         $('.bug_'+id).toggle();
       })
     })
