@@ -55,8 +55,8 @@ class ImageModel(models.Model):
 
 class Category(Timestamped, ImageModel, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
-    url = models.URLField(blank=True, null=True)
     children = models.ManyToManyField("self", through='ChildCategory',
+                                      through_fields=('source', 'target'),
                                       symmetrical=False, blank=True)
 
     class Meta:
@@ -198,6 +198,8 @@ class Product(Timestamped, ImageModel, Ordered, Published):
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
+                                             through_fields=(
+                                                 'source', 'target'),
                                              symmetrical=False, blank=True)
     name = models.CharField(max_length=100, unique=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)

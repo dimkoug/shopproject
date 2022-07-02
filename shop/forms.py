@@ -16,7 +16,7 @@ from .models import (
 class CategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('name', 'url', 'image', 'is_published', 'order')
+        fields = ('name', 'image', 'is_published', 'order')
 
 
 class ChildCategoryForm(BootstrapForm, forms.ModelForm):
@@ -234,7 +234,8 @@ class OfferForm(BootstrapForm, forms.ModelForm):
 class OfferProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = OfferProduct
-        fields = ('offer', 'product', 'is_complementary', 'is_primary', 'discount_price')
+        fields = ('offer', 'product', 'is_complementary',
+                  'is_primary', 'discount_price')
 
 
 OfferProductFormSet = inlineformset_factory(Offer, OfferProduct,
@@ -242,8 +243,6 @@ OfferProductFormSet = inlineformset_factory(Offer, OfferProduct,
                                             formset=BootstrapFormSet,
                                             can_delete=True,
                                             fk_name='offer')
-
-
 
 
 class AddressForm(BootstrapForm, forms.ModelForm):
@@ -291,8 +290,6 @@ class SiteOrderForm(BootstrapForm, forms.ModelForm):
         self.fields['shipping_address'].queryset = Address.objects.select_related(
             'profile').filter(profile_id=self.request.user.profile.pk,
                               address_type=Address.SHIPPING_ADDRESS)
-
-
 
 
 class OrderItemForm(BootstrapForm, forms.ModelForm):
