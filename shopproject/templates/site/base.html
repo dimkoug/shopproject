@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block page_title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap-icons/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/django_ajax.js' %}"></script>
+    <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.cycle2.min.js' %}"></script>
+    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+    <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
+    <script src="{% static 'js/site.js' %}"></script>
+  </head>
+  <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
+    {% include 'site/navbar.html' %}
+    <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        {% for category in categories %}
+        {% if category.children %}
+        <div class="col">
+          <div class="level-1">{{category}}</div>
+          <hr>
+          {% if category.children.all %}
+            {% for child in category.children.all %}
+            <div class="col">
+              <div class="level-2">{{child}}</div>
+              {% if child.children.all %}
+              <div class="row">
+                {% for ch in child.children.all %}
+                <div class="col" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        <div class="col">
+          <img src="{% static 'img/loading.svg' %}" class="loading">
+        </div>
+      </div>
+      <div class="row py-2 basket_res"></div>
+    </div>
+    <main class="container-fluid">
+        <div class="row py-2">
+          <div class="col-12">
+              {% include 'alerts.html' %}
+          </div>
+        </div>
+    </main>
+    {% block content %}{% endblock %}
+    {% block body_scripts %}{% endblock %}
+  </body>
+</html>

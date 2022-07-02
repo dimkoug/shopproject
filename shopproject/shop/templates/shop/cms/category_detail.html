@@ -1,0 +1,28 @@
+{% extends "cms/base.html" %}
+{% load core %}
+{% block section_title %}
+  {{page_title}}
+{% endblock %}
+
+{% block content %}
+<div class="row py-2">
+  <div class="col">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>sort</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody class="order">
+        {% for obj in object.children.all %}
+        <tr class="item" data-pk={{obj.pk}} data-model='childcategory'>
+          <td><i class="bi bi-list"></i></td>
+          <td>{{obj.name}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

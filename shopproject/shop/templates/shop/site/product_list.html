@@ -1,0 +1,11 @@
+{% extends "site/base.html" %}
+{% load static shop %}
+{% block content %}
+<div class="container wrapper">
+  <div class="products">
+      {% include 'shop/partials/product_ajax_list_partial.html' %}
+  </div>
+
+</div>
+
+{% endblock %}

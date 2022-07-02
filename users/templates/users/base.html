@@ -1,0 +1,18 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+    <meta name="author" content="{% block meta_author %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
+    <title>{% block page_title %}{% endblock %}</title>
+    {% block head %}{% endblock %}
+  </head>
+  <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
+    {% block content %}{% endblock %}
+    {% block body_scripts %}{% endblock %}
+  </body>
+</html>

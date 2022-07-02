@@ -1,0 +1,6 @@
+{% load core %}
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm" class="btn btn-danger">
+    {% include 'partials/back_button.html' %}
+</form>
