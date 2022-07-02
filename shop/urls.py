@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .cms import (
+from .cms_views import (
     IndexView as CmsIndexView, CategoryListView, CategoryDetailView,
     CategoryCreateView, CategoryUpdateView, CategoryDeleteView,
     TagListView, TagDetailView, TagCreateView, TagUpdateView, TagDeleteView,

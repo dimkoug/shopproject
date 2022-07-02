@@ -1,47 +1,44 @@
 {% load static shop %}
-{% if specification_list %}
-<form action="" method="get" id='filters-form'>
-  <input type="hidden" name="category" value="{{category.pk}}">
-  {% for feature in specification_list %}
-  <div class="form-group grouper" data-id={{feature.pk}}>
-    <div class="filter-header">
-      {{feature}}
-      <i class="bi bi-chevron-down"></i>
-    </div>
-    <hr class="hr">
-    <div class="bug_{{feature.pk}}" style="display: flex;flex-direction: column;min-height:15rem;height:15rem;overflow:scroll;">
-      {% for attr in feature.attributes.all %}
-        {% for a in attr.attr_list %}
-          {% is_checked a.attribute as checked %}
-          <div class="ck-button {% if checked %} checked {% endif %}">
-          <label for="{{a.attribute.pk}}" style="display:block;">
-            <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{a.attribute.pk}}" value="{{a.attribute.pk}}" {% if checked %} checked {% endif %}>
-            <span>{{attr}}</span>
-            <span class="badge bg-light text-dark">{{a.product_counter}}</span>
-          </label>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Filters
+</button>
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <form class="" action="" method="get" id='filters-form'>
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Search</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+          {% for feature in specification_list %}
+          <div class="form-group">
+            <div class="filter-header">
+              {{feature}}
+            </div>
+            <hr>
+            {% for attr in feature.attributes.all %}
+              {% is_checked attr as checked %}
+              <div class="ck-button {% if checked %} checked {% endif %}">
+              <label for="{{attr.pk}}">
+                <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+                <span>{{attr}}</span>
+                <span class="badge bg-light text-dark">{{attr.productattributes.count}}</span>
+              </label>
+            </div>
+            {% endfor %}
+          {% endfor %}
         </div>
-      {% endfor %}
-    {% endfor %}
-    </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <a href="{{request.path}}">Reset filters</a>
+        <input type="submit" class="btn btn-primary" name="submit" value="submit">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </form>
   </div>
-  {% endfor %}
-  <button type="submit" name="" class="btn btn-primary">Search</button>
-</form>
-
-
-{% endif %}
-
-<script>
-  'use strict';
-  (function(w,d,$){
-    $(d).ready(function(){
-      $("[class*='bug_']").hide();
-      $('body').on('click', '.grouper',function(e){
-        let id = $(this).data('id');
-        $("i", this).toggleClass("bi-chevron-down bi-chevron-up");
-        $('.bug_'+id).toggle();
-      })
-    })
-  })(window,document,jQuery)
-
-</script>
+  </div>
+</div>

@@ -5,7 +5,7 @@
    $(".loading").hide();
    $("div[class*='basket-container']").hide();
    $("body").on("click", "[id^='mega-menu-']", function(e){
-        let id = $(this).attr('id').split("-")[2];
+        var id = $(this).attr('id').split("-")[2];
         console.info(id);
         $("div[class*='basket-container']").hide();
         console.info("class:not(mega-menu-container-"+id+")");
@@ -42,7 +42,7 @@
  })
 
 
- let swiper = new Swiper(".mySwiper", {
+ var swiper = new Swiper(".mySwiper", {
    navigation: {
      nextEl: ".swiper-button-next",
      prevEl: ".swiper-button-prev",
@@ -70,7 +70,7 @@
      return false;
  })
 
- /*$("body").on("submit", '#filters-form', function(e){
+ $("body").on("submit", '#filters-form', function(e){
      e.preventDefault();
      var data = $(this).serialize();
      $.when($.ajax({
@@ -92,7 +92,7 @@
           })
 
      return false;
- })*/
+ })
 
 
 

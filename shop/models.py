@@ -15,12 +15,6 @@ from core.models import (
 )
 
 
-def _delete_file(path):
-    """ Deletes file from filesystem. """
-    if os.path.isfile(path):
-        os.remove(path)
-
-
 class MediaFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         if max_length and len(name) > max_length:
@@ -35,17 +29,9 @@ class MediaFileSystemStorage(FileSystemStorage):
         return super(MediaFileSystemStorage, self)._save(name, content)
 
 
-def get_upload_path(instance, filename):
-    name = instance.__class__.__name__.lower()
-    return os.path.join('{}_{}_{}/{}/{}'.format(
-        datetime.datetime.now().day,
-        datetime.datetime.now().month,
-        datetime.datetime.now().year, name, filename))
-
-
 class ImageModel(models.Model):
-    image = models.ImageField(upload_to=get_upload_path,
-                              storage=MediaFileSystemStorage(),max_length=500, null=True, blank=True)
+    image = models.ImageField(upload_to='',
+                              storage=MediaFileSystemStorage(), max_length=500, null=True, blank=True)
     md5sum = models.CharField(blank=True, max_length=255, null=True)
 
     class Meta:
@@ -67,19 +53,11 @@ class ImageModel(models.Model):
         super().save(*args, **kwargs)
 
 
-@receiver(models.signals.pre_delete, sender=ImageModel)
-def delete_file(sender, instance, *args, **kwargs):
-    """ Deletes image files on `post_delete` """
-    if instance.image:
-        _delete_file(instance.image.path)
-
-
 class Category(Timestamped, ImageModel, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
     url = models.URLField(blank=True, null=True)
     children = models.ManyToManyField("self", through='ChildCategory',
                                       symmetrical=False, blank=True)
-
 
     class Meta:
         default_related_name = 'categories'
@@ -91,9 +69,7 @@ class Category(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-
-
-class ChildCategory(Timestamped, Ordered):
+class ChildCategory(Timestamped, Ordered, Published):
     source = models.ForeignKey(Category, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Category, on_delete=models.CASCADE,
@@ -161,7 +137,7 @@ class Brand(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class BrandSupplier(Timestamped, Ordered):
+class BrandSupplier(Timestamped, Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
@@ -188,7 +164,7 @@ class Feature(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class FeatureCategory(Timestamped, Ordered):
+class FeatureCategory(Timestamped, Ordered, Published):
     feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -219,13 +195,14 @@ class Product(Timestamped, ImageModel, Ordered, Published):
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
     categories = models.ManyToManyField(Category, through='ProductCategory')
-    tags = models.ManyToManyField(Tag, through='ProductTag')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
+    tags = models.ManyToManyField(Tag, through='ProductTag')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
                                              symmetrical=False, blank=True)
     name = models.CharField(max_length=100, unique=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)
-    price = models.DecimalField(max_digits=18, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(
+        max_digits=18, decimal_places=2, null=True, blank=True)
     subtitle = models.CharField(max_length=255)
     description = models.TextField(blank=True)
 
@@ -239,7 +216,7 @@ class Product(Timestamped, ImageModel, Ordered, Published):
         return f"{self.name}"
 
 
-class ProductCategory(Timestamped, Ordered):
+class ProductCategory(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -252,7 +229,7 @@ class ProductCategory(Timestamped, Ordered):
         ordering = ['order']
 
 
-class ProductTag(Timestamped, Ordered):
+class ProductTag(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
@@ -265,7 +242,7 @@ class ProductTag(Timestamped, Ordered):
         ordering = ['order']
 
 
-class ProductRelated(Timestamped, Ordered):
+class ProductRelated(Timestamped, Ordered, Published):
     source = models.ForeignKey(Product, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Product, on_delete=models.CASCADE,
@@ -349,7 +326,6 @@ class ProductAttribute(Timestamped, Ordered, Published):
         default_related_name = 'productattributes'
         verbose_name = 'product attribute'
         verbose_name_plural = 'product attributes'
-        unique_together = (('product', 'attribute'),)
         indexes = [
             models.Index(fields=['product', 'attribute']),
         ]
@@ -410,7 +386,8 @@ class OfferProduct(Timestamped, Published):
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
     is_primary = models.BooleanField(default=False)
     is_complementary = models.BooleanField(default=False)
-    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    discount_price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True)
     order = models.PositiveIntegerField(default=0, db_index=True)
 
     class Meta:
@@ -418,9 +395,11 @@ class OfferProduct(Timestamped, Published):
         verbose_name = 'offer product'
         verbose_name_plural = 'offer products'
         ordering = ['order']
-        unique_together = (('product', 'offer', 'is_primary', 'is_complementary'),)
+        unique_together = (
+            ('product', 'offer', 'is_primary', 'is_complementary'),)
         indexes = [
-            models.Index(fields=['product', 'offer', 'is_primary', 'is_complementary']),
+            models.Index(fields=['product', 'offer',
+                         'is_primary', 'is_complementary']),
         ]
 
 
@@ -428,8 +407,10 @@ class ShoppingCart(Timestamped):
     shopping_cart_id = models.CharField(max_length=255)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True)
+    discount_price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True)
 
 
 class Address(Timestamped):
@@ -461,7 +442,8 @@ class Address(Timestamped):
 
 class Order(Timestamped):
     order_registration = models.CharField(max_length=255)
-    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='billing_address')
+    billing_address = models.ForeignKey(
+        Address, on_delete=models.CASCADE, related_name='billing_address')
     shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=8, decimal_places=2)
     comments = models.TextField(blank=True, null=True)
@@ -479,8 +461,10 @@ class OrderItem(Timestamped):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    discount_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True)
+    discount_price = models.DecimalField(
+        max_digits=8, decimal_places=2, null=True, blank=True)
 
     class Meta:
         default_related_name = 'orderitems'

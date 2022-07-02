@@ -4,27 +4,26 @@
     Products <span class="badge bg-light text-dark">{{products_count}}</span>
   </div>
   <div class="">
-    <a href="{{request.path}}?category={{category.id}}" class="text-danger remove-filter-link">Remove Filters</a>
+    <a href="{{request.path}}" class="remove-filter-link">Remove Filters</a>
   </div>
 </div>
 <div class="row py-2">
   <div class="col-2">
     {% include 'shop/partials/tags_partial.html' %}
-    {% if specification_list %}
-    {% include 'shop/partials/filters_partial.html' %}
-    {% endif %}
   </div>
   <div class="col-10">
+    {% if specification_list %}
     <div class="row py-2">
       <div class="col-12">
-          <h1 style="text-align:center;">{{category}}</h1>
+        {% include 'shop/partials/filters_partial.html' %}
       </div>
     </div>
-    <div class="row py-2">
-      <div class="col">
-        <img src="{% static 'img/loading.svg' %}" class="loading">
-      </div>
-    </div>
+    {% endif %}
+<div class="row py-2">
+  <div class="col">
+    <img src="{% static 'img/loading.svg' %}" class="loading">
+  </div>
+</div>
     {% include 'shop/partials/product_list_partial.html' with product_list=object_list %}
   </div>
 </div>

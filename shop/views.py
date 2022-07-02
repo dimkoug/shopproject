@@ -3,7 +3,6 @@ from django.urls import reverse_lazy
 from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
 from django.http import JsonResponse
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from django import template
 from django.template.loader import render_to_string
@@ -15,15 +14,14 @@ from django.views.generic.list import ListView
 
 from profiles.views import ProtectProfile
 
-from .functions import create_query_string
 
 from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
 from .models import (
-    Feature, Product, ProductTag, Order, OrderItem,
+    ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
-    Media, ProductAttribute, Category
+    Media, ProductAttribute
 )
 
 from .forms import (
@@ -49,9 +47,9 @@ class CatalogListView(PaginationMixin, ListView):
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
     queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
+        'categories',
         'tags',
         'attributes',
-        'categories',
     )
 
     def get_queryset(self):
@@ -61,23 +59,23 @@ class CatalogListView(PaginationMixin, ListView):
         q = self.request.GET.get('q')
         brand = self.request.GET.get('brand')
         tag = self.request.GET.get('tag')
-        features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
+        features = [feature for feature in self.request.GET.keys()
+                    if feature.startswith('feature')]
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            queryset = queryset.filter(categories__in=category)
+            queryset = queryset.filter(categories__in=[category])
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
-            queryset = queryset.filter(tags__in=tag)
+            queryset = queryset.filter(tags__in=[tag])
         if q and q != '':
             queryset = queryset.filter(name__icontains=q)
         if len(attrs) > 0:
             for attr in attrs:
                 queryset = queryset.filter(
-                        attributes__in=attr)
+                    attributes__in=[attr])
         return queryset
-
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -94,30 +92,23 @@ class CatalogListView(PaginationMixin, ListView):
         context = super().get_context_data(**kwargs)
         attrs = []
         attrs_checked = []
-        features = [feature for feature in self.request.GET.keys() if feature.startswith('feature')]
-        category_id = self.request.GET.get('category')
-        counter = Count('product', filter=Q(product__in=self.get_queryset()))
-        if category_id:
-            category = Category.objects.get(id=category_id)
-            context['category'] = category
-            specs = Feature.objects.prefetch_related(
-                'categories',
-                Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
-                             product_counter=counter),to_attr='attr_list')).filter(categories=category)
-        else:
-            specs = Feature.objects.prefetch_related(
-                'categories',
-                Prefetch('attributes__productattributes', queryset=ProductAttribute.objects.select_related('product', 'attribute').distinct().annotate(
-                             product_counter=counter),to_attr='attr_list')).all()
-
-        context['query_string'] = create_query_string(self.request)
+        features = [feature for feature in self.request.GET.keys()
+                    if feature.startswith('feature')]
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         for arrt in attrs:
             for item in arrt:
                 attrs_checked.append(item)
         context['attrs_checked'] = attrs_checked
-        context['specification_list'] = specs
+        counter = Count('product', filter=Q(product__in=self.get_queryset()))
+        context['specification_list'] = Feature.objects.prefetch_related(
+            Prefetch('attributes',
+                     queryset=Attribute.objects.prefetch_related(
+                         Prefetch('productattributes',
+                                  queryset=ProductAttribute.objects.select_related(
+                                      'product', 'attribute').annotate(
+                                      product_counter=counter),
+                                  to_attr='attr_list')), to_attr='attribute_list')).all()
         context['products_count'] = self.get_queryset().count()
         return context
 
@@ -133,7 +124,7 @@ class OrderListView(LoginRequiredMixin, ListView):
         queryset = queryset.select_related('billing_address', 'shipping_address').prefetch_related(
             Prefetch('orderitems',
                      queryset=OrderItem.objects.select_related(
-                        'product', 'order')
+                         'product', 'order')
                      )).filter(billing_address__profile=self.request.user.profile)
         return queryset
 
@@ -175,7 +166,8 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
             detail.product = item.product
             detail.quantity = item.quantity
             detail.save()
-            ShoppingCart.objects.filter(shopping_cart_id=shopping_cart_id).delete()
+            ShoppingCart.objects.filter(
+                shopping_cart_id=shopping_cart_id).delete()
             messages.success(self.request, 'The order is placed successfully!')
         return super().form_valid(form)
 
@@ -210,10 +202,11 @@ class BasketView(TemplateView):
 class CatalogProductDetailView(DetailView):
     model = Product
     template_name = 'shop/site/product_detail.html'
-    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
+    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
+        'categories',
         'tags',
         'media',
-        'productattributes'
+        'attributes',
     )
 
     def get_context_data(self, **kwargs):

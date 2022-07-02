@@ -21,37 +21,48 @@ from .forms import (
 User = get_user_model()
 
 
-class LoginView(auth_views.LoginView):
+class UserLoginView(auth_views.LoginView):
+    template_name = 'users/login.html'
     form_class = UserAuthenticationForm
 
 
-class LogoutView(auth_views.LogoutView):
-    pass
+class UserLogoutView(auth_views.LogoutView):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(settings.LOGOUT_REDIRECT_URL)
 
 
-class PasswordResetView(auth_views.PasswordResetView):
+class UserPasswordResetView(auth_views.PasswordResetView):
+    email_template_name = 'users/password_reset_email.html'
     form_class = UserPasswordResetForm
+    subject_template_name = 'users/password_reset_subject.txt'
+    success_url = reverse_lazy('password_reset_done')
+    template_name = 'users/password_reset_form.html'
 
 
-class PasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    pass
+class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    template_name = 'users/password_reset_complete.html'
+    title = 'Password reset complete'
 
 
-class PasswordResetDoneView(auth_views.PasswordResetDoneView):
-    pass
+class UserPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    template_name = 'users/password_reset_done.html'
+    title = 'Password reset sent'
 
 
-class PasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    pass
+class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    success_url = reverse_lazy('password_reset_complete')
+    template_name = 'users/password_reset_confirm.html'
+    title = 'Enter new password'
 
 
 class AccountActivationSent(TemplateView):
-    template_name = 'registration/account_activation_sent.html'
+    template_name = 'users/account_activation_sent.html'
 
 
 class SignupView(FormView):
     form_class = UserCreationForm
-    template_name = 'registration/signup.html'
+    template_name = 'users/signup.html'
 
     def form_valid(self, form):
         if form.is_valid():
@@ -63,7 +74,7 @@ class SignupView(FormView):
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
             subject = 'Activate Your MySite Account'
-            message = render_to_string('registration/account_activation_email.html', {
+            message = render_to_string('users/account_activation_email.html', {
                     'user': user,
                     'domain': current_site.domain,
                     'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -86,6 +97,6 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
-        return redirect(settings.LOGIN_REDIRECT_URL)
+        return redirect('home')
     else:
-        return render(request, 'registration/account_activation_invalid.html')
+        return render(request, 'users/account_activation_invalid.html')

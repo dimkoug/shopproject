@@ -8,5 +8,4 @@ venv
 virtualenv
 env
 .venv
-*.bat
 migrations
