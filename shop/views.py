@@ -18,13 +18,13 @@ from profiles.views import ProtectProfile
 from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
-from .models import (
+from shop.models import (
     ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
     Media, ProductAttribute
 )
 
-from .forms import (
+from shop.forms import (
     SiteOrderForm, SiteAddressForm
 )
 
