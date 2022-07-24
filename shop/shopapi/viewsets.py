@@ -45,7 +45,11 @@ class AttributeViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
+        'categories',
+        'tags',
+        'attributes',
+    )
     serializer_class = ProductSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

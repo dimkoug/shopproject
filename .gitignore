@@ -10,3 +10,4 @@ env
 .venv
 migrations
 *.json
+management
