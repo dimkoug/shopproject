@@ -29,7 +29,7 @@ from shop.forms import TagForm
 
 class TagListView(LoginRequiredMixin, BaseListView):
     model = Tag
-    paginate_by = 50
+    paginate_by = 2
 
 
 class TagDetailView(LoginRequiredMixin, BaseDetailView):

@@ -1,25 +1,32 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
 
 
 class ModelMixin:
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['app'] = self.model._meta.app_label
-        context['model'] = self.model
-        context['model_name'] = self.model.__name__.lower()
-        title = self.model.__name__.capitalize()
-        if 'List' in self.__class__.__name__:
-            title += ' List'
-        if 'Detail' in self.__class__.__name__:
+        model = self.model
+        app = model._meta.app_label
+        model_name = self.model.__name__.lower()
+        context['app'] = app
+        context['model'] = model
+        context['model_name'] = model_name
+        title = model._meta.verbose_name.capitalize()
+        if 'list' in self.__class__.__name__.lower():
+            title = model._meta.verbose_name_plural.capitalize()
+        if 'detail' in self.__class__.__name__.lower():
             title += ' Detail'
-        if 'Create' in self.__class__.__name__:
+        if 'create' in self.__class__.__name__.lower():
             title += ' Create'
-        if 'Update' in self.__class__.__name__:
+        if 'update' in self.__class__.__name__.lower():
             title += ' Update {}'.format(self.get_object())
-        if 'Delete' in self.__class__.__name__:
+        if 'delete' in self.__class__.__name__.lower():
             title += ' Delete {}'.format(self.get_object())
         context['page_title'] = title
+        back_url = reverse("{}:{}-list".format(app, model_name))
+        create_url = reverse("{}:{}-create".format(app, model_name))
+        context['back_url'] = back_url
+        context['create_url'] = create_url
         return context
 
 

@@ -114,8 +114,8 @@ class WareHouse(Timestamped, Ordered, Published):
 
     class Meta:
         default_related_name = 'warehouses'
-        verbose_name = 'ware house'
-        verbose_name_plural = 'ware houses'
+        verbose_name = 'warehouse'
+        verbose_name_plural = 'warehouses'
         ordering = ['order']
 
     def __str__(self):

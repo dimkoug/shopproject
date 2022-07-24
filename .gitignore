@@ -9,3 +9,4 @@ virtualenv
 env
 .venv
 migrations
+*.json
