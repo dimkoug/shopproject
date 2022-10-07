@@ -21,15 +21,8 @@
           </a>
           </li>
         {% endif %}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Brands
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
-            {% for brand in brands %}
-              <a class="dropdown-item" href="{% url 'shop:catalog' %}?brand={{brand.id}}">{{brand.name}}</a>
-            {% endfor %}
-          </div>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="mega-menu-2">Brands</a>
         </li>
       </ul>
       <form class="d-flex  me-auto flex-grow-1" action="{% url 'shop:catalog' %}">

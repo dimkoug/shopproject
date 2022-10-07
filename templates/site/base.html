@@ -27,27 +27,35 @@
       <div class="row py-2">
         {% for category in categories %}
         {% if category.children %}
-        <div class="col">
-          <div class="level-1">{{category}}</div>
+        <div class="col-3 my-0 g-0">
+          <div class="level-1 fs-6">{{category}}</div>
           <hr>
           {% if category.children.all %}
             {% for child in category.children.all %}
-            <div class="col">
-              <div class="level-2">{{child}}</div>
+            <div class="col-12 my-0 g-0">
+              <div class="level-2 fs-6 ">{{child}}</div>
+            </div>
               {% if child.children.all %}
-              <div class="row">
+              <div class="row my-0 g-0">
                 {% for ch in child.children.all %}
-                <div class="col" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
+                <div class="col-12 my-0 g-0 fs-6" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
                 </div>
                 {% endfor %}
               </div>
               {% endif %}
-            </div>
             {% endfor %}
           {% endif %}
         </div>
         {% endif %}
         {% endfor %}
+      </div>
+    </div>
+    <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        {% for brand in brands %}
+        <div class="col-2"><a href="{% url 'shop:catalog' %}?brand={{brand.id}}">{{brand.name}}</a></div>
+      {% endfor %}
+        
       </div>
     </div>
     <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
