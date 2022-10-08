@@ -3,9 +3,7 @@
     <div class="row py-2">
       <div class="col">
         <h2 class="text-center">{{page_title}}</h2>
-
       </div>
-
     </div>
     {% for product in product_list %}
     <div class="row py-2">
@@ -19,7 +17,7 @@
           <a href="{% url 'shop:catalog-product-detail' product.id %}" class="link">{{product.name}}</a>
         </div>
         <div class="">
-          Brand : <a href="{% url 'shop:catalog' %}?brand={{product.brand_id}}" class="link">{{product.brand__name}}</a>
+          Brand : <a href="{% url 'shop:catalog' %}?brand={{product.brand_id}}" class="link">{{product.brand.name}}</a>
         </div>
         <div class="">
           <p>{{product.description|safe}}</p>
@@ -36,4 +34,4 @@
       {% include 'pagination.html' %}
     </div>
   </div>
-</div>
+

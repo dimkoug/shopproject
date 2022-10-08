@@ -43,7 +43,7 @@ class IndexView(TemplateView):
 class CatalogListView(PaginationMixin, ListView):
 
     model = Product
-    paginate_by = 100  # if pagination is desired
+    paginate_by = 10  # if pagination is desired
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
@@ -75,8 +75,9 @@ class CatalogListView(PaginationMixin, ListView):
         if len(attrs) > 0:
             for attr in attrs:
                 queryset = queryset.filter(
-                    attributes__in=[attr])
-        return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
+                    attributes__in=attr)
+        # return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
+        return queryset
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -109,15 +110,19 @@ class CatalogListView(PaginationMixin, ListView):
             page_title = Brand.objects.get(id=brand).name
         context['page_title'] = page_title
         context['attrs_checked'] = attrs_checked
-        counter = Count('product', filter=Q(product__in=self.get_queryset()))
-        # context['specification_list'] = Feature.objects.prefetch_related(
-        #     Prefetch('attributes',
-        #              queryset=Attribute.objects.prefetch_related(
-        #                  Prefetch('productattributes',
-        #                           queryset=ProductAttribute.objects.select_related(
-        #                               'product', 'attribute').annotate(
-        #                               product_counter=counter),
-        #                           to_attr='attr_list')))).filter(attributes__productattributes__product__in=self.get_queryset())
+        counter = Count('productattributes', filter=Q(
+            products__in=self.get_queryset()))
+        features_items = set()
+        attribute_items = set()
+        for p in self.get_queryset().all():
+            for a in p.attributes.all():
+                features_items.add(a.feature_id)
+                attribute_items.add(a.id)
+
+        feature_list = Feature.objects.prefetch_related(Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items).annotate(
+            product_count=counter), to_attr='attrs')).filter(
+            id__in=features_items).distinct()
+        context['specification_list'] = feature_list
         context['products_count'] = self.get_queryset().count()
         context['query_string'] = create_query_string(self.request)
         return context
