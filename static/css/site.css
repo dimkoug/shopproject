@@ -43,6 +43,10 @@ div[class*="mega-menu-container-"]{
       min-height: 200px;
     }
 
+    .modal-body {
+      max-height: 500px; overflow-y: auto;
+  }
+
 
   a.link, a.tag-link {
       text-decoration: none;

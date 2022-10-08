@@ -165,8 +165,10 @@ class Feature(Timestamped, ImageModel, Ordered, Published):
 
 
 class FeatureCategory(Timestamped, Ordered, Published):
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    feature = models.ForeignKey(
+        Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    filter_display = models.BooleanField(null=True, blank=True)
 
     class Meta:
         unique_together = (('feature', 'category'),)

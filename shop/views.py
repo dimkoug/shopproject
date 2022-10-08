@@ -114,14 +114,19 @@ class CatalogListView(PaginationMixin, ListView):
             products__in=self.get_queryset()))
         features_items = set()
         attribute_items = set()
+        # for a in Attribute.objects.all():
+        #     if a.name == '-':
+        #         a.delete()
+        #     if a.name == '---':
+        #         a.delete()
         for p in self.get_queryset().all():
             for a in p.attributes.all():
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
 
-        feature_list = Feature.objects.prefetch_related(Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items).annotate(
+        feature_list = Feature.objects.prefetch_related('featurecategories', Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items).annotate(
             product_count=counter), to_attr='attrs')).filter(
-            id__in=features_items).distinct()
+            id__in=features_items, featurecategories__filter_display=True).distinct()
         context['specification_list'] = feature_list
         context['products_count'] = self.get_queryset().count()
         context['query_string'] = create_query_string(self.request)
