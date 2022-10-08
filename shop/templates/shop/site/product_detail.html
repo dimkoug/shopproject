@@ -72,7 +72,7 @@
             <div class="">
               {% for attr in object.attributes.all %}
               <div class="">
-                <span style="font-weight:bold;">{{attr.attribute.feature}}</span> : {{attr.attribute}}
+                <span style="font-weight:bold;">{{attr.feature}}</span> : {{attr|safe}}
               </div>
               <hr>
               {% endfor %}
