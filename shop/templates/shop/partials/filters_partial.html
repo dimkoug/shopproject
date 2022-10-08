@@ -6,22 +6,16 @@
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <form class="" action="" method="get" id='filters-form'>
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Search</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div> <!--modal header-->
             <!-- Modal body -->
             <div class="modal-body">
               {% for feature in specification_list %}
-                <div class="form-group">
+                <div class="form-group py-2">
                   <div class="filter-header">
                     {{feature}}
                   </div>
-                  <hr>
-                  {% for attr in feature.attrs %}
+                   {% for attr in feature.attrs %}
                     {% is_checked attr as checked %}
-                      <div class="ck-button {% if checked %} checked {% endif %}">
+                      <div class="ck-button {% if checked %} checked {% endif %}" style="font-size:0.8rem;">
                         <label for="{{attr.pk}}">
                         <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
                         <span>{{attr|safe}}</span>
