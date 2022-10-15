@@ -1,13 +1,9 @@
 {% load static shop %}
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Filters
-    </button>
-    <div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
+    <a href="" class="btn btn-primary filters">Filters</a>
+    <div class="container" id="filter-container">
+      <div class="row">
+        <div class="col-12">
           <form class="" action="" method="get" id='filters-form'>
-            <!-- Modal body -->
-            <div class="modal-body">
               {% for feature in specification_list %}
                 <div class="form-group py-2">
                   <div class="filter-header">
@@ -26,15 +22,10 @@
                 {% endfor %}
               </div>
               {% endfor %}
-            </div> <!--modal body-->
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <a href="{{request.path}}">Reset filters</a>
+              <a href="{{request.path}}" id="reset-filters">Reset filters</a>
               <input type="submit" class="btn btn-primary" name="submit" value="submit">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div> <!--modal footer-->
           </form>
-        </div> <!--model content-->
+        </div>
     </div>
   </div>
 

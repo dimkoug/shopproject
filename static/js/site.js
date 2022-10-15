@@ -61,9 +61,11 @@
               },
               complete: function(){
                 $(".loading").hide();
+                
               }
           })).then(function( resp, textStatus, jqXHR ) {
             $(".products").html(resp.html);
+            $('#filter-container').hide();
             $(".loading").hide();
           })
 
@@ -80,13 +82,11 @@
               datatype: 'json',
               beforeSend: function(){
                 $(".loading").show();
-                  $('#exampleModal').modal('hide');
               },
               complete: function(){
                 $(".loading").hide();
               }
           })).then(function( resp, textStatus, jqXHR ) {
-           $('#exampleModal').modal('hide');
             $(".products").html(resp.html);
             $(".loading").hide();
           })
@@ -94,6 +94,23 @@
      return false;
  })
 
+ $('#filter-container').hide();
+
+ $('body').on('click', '.filters', function(e){
+    e.preventDefault();
+    $('#filter-container').fadeToggle();
+
+
+    return false;
+
+
+ })
+
+ $('body').on('click', '#reset-filters', function(e){
+  e.preventDefault();
+  w.location.reload();
+  return false;
+})
 
 
 
