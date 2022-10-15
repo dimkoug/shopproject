@@ -4,24 +4,30 @@
       <div class="row">
         <div class="col-12">
           <form class="" action="" method="get" id='filters-form'>
-              {% for feature in specification_list %}
-                <div class="form-group py-2">
-                  <div class="filter-header">
-                    {{feature}}
+              <div class="row">
+                {% for feature in specification_list %}
+                <div class="col-3">
+                  <div class="form-group py-2">
+                    <div class="filter-header">
+                      {{feature}}
+                    </div>
+                     {% for attr in feature.attrs %}
+                      {% is_checked attr as checked %}
+                        <div class="ck-button {% if checked %} checked {% endif %}" style="font-size:0.8rem;">
+                          <label for="{{attr.pk}}">
+                          <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+                          <span>{{attr|safe}}</span>
+                          <span class="badge bg-light text-dark">{{attr.product_count}}</span>
+                          </label>
+                        </div>
+                      {% endfor %}
                   </div>
-                   {% for attr in feature.attrs %}
-                    {% is_checked attr as checked %}
-                      <div class="ck-button {% if checked %} checked {% endif %}" style="font-size:0.8rem;">
-                        <label for="{{attr.pk}}">
-                        <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
-                        <span>{{attr|safe}}</span>
-                        <span class="badge bg-light text-dark">{{attr.product_count}}</span>
-                        </label>
-                      </div>
-                    
-                {% endfor %}
-              </div>
+                </div>
               {% endfor %}
+
+
+              </div>
+
               <a href="{{request.path}}" id="reset-filters">Reset filters</a>
               <input type="submit" class="btn btn-primary" name="submit" value="submit">
           </form>
