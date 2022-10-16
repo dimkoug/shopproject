@@ -20,9 +20,9 @@ from django.conf.urls.static import static
 
 from rest_framework.authtoken import views as api_views
 
-from rest_framework_jwt.views import (
-  obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-)
+# from rest_framework_jwt.views import (
+#   obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+# )
 
 from shop.views import IndexView
 
@@ -36,9 +36,9 @@ urlpatterns = [
     path('profiles/', include('profiles.urls')),
     path('api-token-auth/', api_views.obtain_auth_token, name='api-token'),
     path('api-auth/', include('rest_framework.urls')),
-    path('api-token-auth/', obtain_jwt_token),
-    path('api-token-refresh/', refresh_jwt_token),
-    path('api-token-verify/', verify_jwt_token),
+    # path('api-token-auth/', obtain_jwt_token),
+    # path('api-token-refresh/', refresh_jwt_token),
+    #path('api-token-verify/', verify_jwt_token),
     path('admin/', admin.site.urls),
     path('pages/', include('django.contrib.flatpages.urls')),
 ]
