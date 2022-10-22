@@ -171,9 +171,9 @@ class FeatureCategory(Timestamped, Ordered, Published):
     filter_display = models.BooleanField(null=True, blank=True)
 
     class Meta:
-        unique_together = (('feature', 'category'),)
+        unique_together = (('feature', 'category', 'filter_display'),)
         indexes = [
-            models.Index(fields=['feature', 'category']),
+            models.Index(fields=['feature', 'category', 'filter_display']),
         ]
         ordering = ['order']
 

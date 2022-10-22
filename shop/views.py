@@ -14,13 +14,13 @@ from django.views.generic.list import ListView
 
 from profiles.views import ProtectProfile
 
-from core.functions import create_query_string
+from core.functions import create_query_string, is_ajax
 
 from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
 from shop.models import (
-    ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
+    FeatureCategory, ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
     Media, ProductAttribute, Category, Brand
 )
@@ -82,7 +82,7 @@ class CatalogListView(PaginationMixin, ListView):
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         context = self.get_context_data()
-        if request.is_ajax():
+        if is_ajax(request):
             context['ajax'] = True
             html = render_to_string(
                 self.ajax_partial, context, request)
@@ -124,7 +124,7 @@ class CatalogListView(PaginationMixin, ListView):
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
 
-        feature_list = Feature.objects.prefetch_related('featurecategories', Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items).annotate(
+        feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(filter_display=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
             product_count=counter), to_attr='attrs')).filter(
             id__in=features_items, featurecategories__filter_display=True).distinct()
         context['specification_list'] = feature_list
@@ -198,7 +198,7 @@ class BasketView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        if request.is_ajax():
+        if is_ajax(request):
             context['ajax'] = True
             html = render_to_string(
                 self.ajax_partial, context, request)
