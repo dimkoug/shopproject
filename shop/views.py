@@ -51,7 +51,7 @@ class CatalogListView(PaginationMixin, ListView):
         'categories',
         'tags',
         'attributes',
-    )
+    ).filter(price__gt=0)
 
     def get_queryset(self):
         queryset = super().get_queryset()
