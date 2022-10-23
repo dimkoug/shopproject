@@ -1,3 +1,6 @@
+{% load core %}
+
+
 {% for formset in formsets %}
   {{ formset.formset.management_form }}
   {{formset.formset.non_form_errors}}
@@ -29,6 +32,10 @@
                   {% endif %}
                   {{ field.errors }}
                 </div>
+                <div class="col">
+                  {% get_formset_img field field.value %}
+                </div>
+                
             {% endfor %}
             <div class="col">
               {% if formset.formset.can_delete %}

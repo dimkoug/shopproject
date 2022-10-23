@@ -50,3 +50,18 @@ def get_boolean_img(value):
     if value:
         return format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
     return format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
+
+
+@register.simple_tag
+def get_formset_img(obj, value):
+    print(type(value), value.__class__.__name__)
+    if value.__class__.__name__ == 'ImageFieldFile':
+        print(obj.field.widget.__class__.__name__, value)
+        return format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
+
+        
+    #print(obj.field.__class__.__name__, obj.value)
+    return ""
+    # if value:
+    #     return format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
+    # return format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
