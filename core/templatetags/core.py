@@ -48,5 +48,5 @@ def get_model(obj):
 @register.simple_tag
 def get_boolean_img(value):
     if value:
-        return format_html(mark_safe('<i class="bi bi-check-lg"></i>'))
-    return format_html(mark_safe('<i class="bi bi-x"></i>'))
+        return format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
+    return format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
