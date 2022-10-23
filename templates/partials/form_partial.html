@@ -1,3 +1,4 @@
+{% load core %}
 {% for field in form %}
   <div class="row g-3">
     <div class="col">
@@ -9,6 +10,11 @@
       {% if field.help_text %}
         <p class="help">{{ field.help_text|safe }}</p>
       {% endif %}
+    </div>
+  </div>
+  <div class="row g-3">
+    <div class="col">
+      {% get_formset_img field field.value %}
     </div>
   </div>
 {% endfor %}
