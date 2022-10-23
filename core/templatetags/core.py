@@ -1,5 +1,7 @@
 from django import template
 from django.urls import reverse_lazy
+from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 register = template.Library()
 
 
@@ -41,3 +43,10 @@ def get_template_name(context, *args):
 @register.simple_tag
 def get_model(obj):
     return obj.__class__.__name__.lower()
+
+
+@register.simple_tag
+def get_boolean_img(value):
+    if value:
+        return format_html(mark_safe('<i class="bi bi-check-lg"></i>'))
+    return format_html(mark_safe('<i class="bi bi-x"></i>'))
