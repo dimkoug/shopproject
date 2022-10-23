@@ -8,11 +8,13 @@
     <link rel="stylesheet" href="{% static 'bootstrap5/bootstrap-icons/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
     <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/django_ajax.js' %}"></script>
     <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
@@ -20,6 +22,20 @@
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
     <script src="{% static 'js/site.js' %}"></script>
+    <style media="screen">
+      .ui-autocomplete {
+          max-height: 500px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow-x: hidden;
+          /* add padding to account for vertical scrollbar */
+          padding-right: 20px;
+      }
+      .ui-widget{
+        max-width:100%;
+        width:100%;
+      }
+      </style>
   </head>
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
     {% include 'site/navbar.html' %}
@@ -75,5 +91,42 @@
     </main>
     {% block content %}{% endblock %}
     {% block body_scripts %}{% endblock %}
+
+    <script>
+      'use strict';
+      (function(w,d,$){
+        $(d).ready(function(){
+          $( "#search" ).autocomplete({
+            open: function() {
+              $("ul.ui-menu").width( $(this).innerWidth() );
+              
+            },
+            source: function(request,response){
+              $.ajax( {
+                url: "/shop/search/",
+                dataType: "json",
+                data: {
+                  term: request.term
+                },
+                success: function( data ) {
+                  response( data.data );
+              },
+            });
+          },
+          minLength: 3,
+          select: function( event, ui ) {
+            window.location.href = ui.item.value;
+          }
+        }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+          return $( "<li>" )
+            .append( "<div><img src="+ item.image + " width='100px'/>" + item.label + "</div>" )
+            .appendTo( ul );
+        }; 
+      }) /* document ready */
+
+      })(window,document,jQuery)
+
+
+    </script>
   </body>
 </html>

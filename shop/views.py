@@ -1,4 +1,5 @@
 import uuid
+from django.urls import reverse
 from django.urls import reverse_lazy
 from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
@@ -272,3 +273,28 @@ class AddressDeleteView(ProtectProfile, FormMixin, DeleteView):
     def get_success_url(self):
         url = reverse_lazy('index')
         return url
+
+
+def search_items(request):
+    search = request.GET.get('term')
+    data = []
+    if search and search != '':
+        posts = Product.objects.select_related('brand', 'parent').prefetch_related(
+        'categories',
+        'tags',
+        'attributes',
+    ).filter(
+        Q(price__gt=0) &
+        (
+            Q(categories__name__icontains=search.strip()) |
+            Q(tags__name__icontains=search.strip()) |
+            Q(attributes__name__icontains=search.strip())
+        ))
+        for post in posts:
+            d = {}
+            d['value'] = reverse("shop:catalog-product-detail", kwargs={"pk":post.id})
+            d['label'] = post.name,
+            d['image'] = request.build_absolute_uri(post.image.url)
+            data.append(d)
+    print(data)
+    return JsonResponse({"data":data})

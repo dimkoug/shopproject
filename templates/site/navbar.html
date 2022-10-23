@@ -26,7 +26,9 @@
         </li>
       </ul>
       <form class="d-flex  me-auto flex-grow-1" action="{% url 'shop:catalog' %}">
-        <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
+        <div class="ui-widget">
+        <input class="form-control me-2" type="search" name="q" placeholder="Search" id="search" aria-label="Search">
+        </div>
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
 

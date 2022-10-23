@@ -28,7 +28,8 @@ from .views import (
     CatalogProductDetailView, OrderListView, BasketView,
     OrderFormView, AddressCreateView as SiteAddressCreateView,
     AddressUpdateView as SiteAddressUpdateView,
-    AddressDeleteView as SiteAddressDeleteView
+    AddressDeleteView as SiteAddressDeleteView,
+    search_items,
 )
 
 from .functions import (
@@ -204,4 +205,5 @@ urlpatterns += [
          name='remove_item_from_basket'),
     path('clear/basket', clear_basket, name='clear-basket'),
     path('order/items/', OrderFormView.as_view(), name='order'),
+    path('search/', search_items, name="search"),
 ]
