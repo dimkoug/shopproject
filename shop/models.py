@@ -13,6 +13,7 @@ from profiles.models import Profile
 from core.models import (
     Timestamped, Ordered, Published
 )
+from core.storage import OverwriteStorage
 
 
 class MediaFileSystemStorage(FileSystemStorage):
@@ -53,8 +54,10 @@ class ImageModel(models.Model):
         super().save(*args, **kwargs)
 
 
-class Category(Timestamped, ImageModel, Ordered, Published):
+class Category(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     children = models.ManyToManyField("self", through='ChildCategory',
                                       through_fields=('source', 'target'),
                                       symmetrical=False, blank=True)
@@ -122,8 +125,10 @@ class WareHouse(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class Brand(Timestamped, ImageModel, Ordered, Published):
+class Brand(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     url = models.URLField(blank=True, null=True)
     suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
 
@@ -149,8 +154,10 @@ class BrandSupplier(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class Feature(Timestamped, ImageModel, Ordered, Published):
+class Feature(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     url = models.URLField(blank=True, null=True)
     categories = models.ManyToManyField(Category, through='FeatureCategory')
 
@@ -192,10 +199,12 @@ class Attribute(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class Product(Timestamped, ImageModel, Ordered, Published):
+class Product(Timestamped,  Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     categories = models.ManyToManyField(Category, through='ProductCategory')
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     tags = models.ManyToManyField(Tag, through='ProductTag')
@@ -261,8 +270,10 @@ class ProductRelated(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class Media(Timestamped, ImageModel, Ordered, Published):
+class Media(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
 
     class Meta:
         default_related_name = 'media'
@@ -274,8 +285,10 @@ class Media(Timestamped, ImageModel, Ordered, Published):
         return f"{self.image.name}"
 
 
-class Logo(Timestamped, ImageModel, Ordered, Published):
+class Logo(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='',
+                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
 
     class Meta:
         default_related_name = 'logos'
