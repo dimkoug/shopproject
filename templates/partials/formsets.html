@@ -71,6 +71,19 @@
                   }
                 }
               });
+              $("select[name*='producttags']" ).select2({
+                ajax: {
+                  url: '/shop/get_tags_for_sb/',
+                  data: function (params) {
+                    var query = {
+                      search: params.term,
+                      type: 'public'
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  }
+                }
+              });
               $("select[name*='target']" ).select2({
                 ajax: {
                   url: '/shop/get_products_for_sb/',
@@ -127,6 +140,19 @@
             $("select[name*='target']" ).select2({
               ajax: {
                 url: '/shop/get_products_for_sb/',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
+            $("select[name*='producttags']" ).select2({
+              ajax: {
+                url: '/shop/get_tags_for_sb/',
                 data: function (params) {
                   var query = {
                     search: params.term,

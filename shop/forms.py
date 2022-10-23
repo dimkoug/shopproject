@@ -154,6 +154,23 @@ class ProductTagForm(BootstrapForm, forms.ModelForm):
         model = ProductTag
         fields = ('product', 'tag', 'order')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.none()
+        self.fields['product'].widget=forms.Select(attrs={'class': 'form-control'})
+        self.fields['tag'].queryset = Tag.objects.none()
+        self.fields['tag'].widget=forms.Select(attrs={'class': 'form-control'})
+
+        if 'product' in self.data:
+            self.fields['product'].queryset = Product.objects.all()
+        
+        if 'tag' in self.data:
+            self.fields['tag'].queryset = Tag.objects.all()
+
+        if self.instance.pk:
+            self.fields['tag'].queryset = Tag.objects.filter(id=self.instance.tag_id)
+            self.fields['product'].queryset = Product.objects.filter(id=self.instance.product_id)
+
 
 ProductTagFormSet = inlineformset_factory(Product, ProductTag,
                                           form=ProductTagForm,
