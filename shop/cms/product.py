@@ -38,6 +38,7 @@ from shop.forms import (
 class ProductListView(LoginRequiredMixin, BaseListView):
     model = Product
     paginate_by = 50
+    queryset = Product.objects.prefetch_related('categories')
 
 
 class ProductDetailView(LoginRequiredMixin, BaseDetailView):
