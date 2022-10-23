@@ -34,7 +34,11 @@ from .views import (
 
 from .functions import (
     remove_from_basket, add_to_basket, clear_basket,
-    remove_item_from_basket
+    remove_item_from_basket, 
+    get_products_for_sb,
+    get_categories_for_sb,
+    get_attributes_for_sb,
+    get_brands_for_sb
 )
 
 
@@ -206,4 +210,9 @@ urlpatterns += [
     path('clear/basket', clear_basket, name='clear-basket'),
     path('order/items/', OrderFormView.as_view(), name='order'),
     path('search/', search_items, name="search"),
+
+    path('get_products_for_sb/',get_products_for_sb, name='get_products_for_sb'),
+    path('get_attributes_for_sb/', get_attributes_for_sb, name='get_attributes_for_sb'),
+    path('get_categories_for_sb/', get_categories_for_sb, name='get_categories_for_sb'),
+    path('get_brands_for_sb/', get_brands_for_sb, name='get_brands_for_sb'),
 ]

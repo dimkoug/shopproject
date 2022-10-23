@@ -51,9 +51,85 @@
               for(item in $allLinks){
                 item.select2('destroy');
               }
-              $("select").select2();
+              $("select[name*='productcategories']" ).select2({
+                ajax: {
+                  url: '/shop/get_categories_for_sb/',
+                  data: function (params) {
+                    var query = {
+                      search: params.term,
+                      type: 'public'
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  }
+                }
+              });
+              $("select[name*='target']" ).select2({
+                ajax: {
+                  url: '/shop/get_products_for_sb/',
+                  data: function (params) {
+                    var query = {
+                      search: params.term,
+                      type: 'public'
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  }
+                }
+              });
+              $("select[name*='productattributes']" ).select2({
+                ajax: {
+                  url: '/shop/get_attributes_for_sb/',
+                  data: function (params) {
+                    var query = {
+                      search: params.term,
+                      type: 'public'
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                  }
+                }
+              });
             })
-            $("select").select2();
+            $("select[name*='productcategories']" ).select2({
+              ajax: {
+                url: '/shop/get_categories_for_sb/',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
+            $("select[name*='productattributes']" ).select2({
+              ajax: {
+                url: '/shop/get_attributes_for_sb/',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
+            $("select[name*='target']" ).select2({
+              ajax: {
+                url: '/shop/get_products_for_sb/',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
           })
       </script>
   </div>

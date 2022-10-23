@@ -1,5 +1,4 @@
 'use strict';
-'use strict';
 (function(w,d,$){
   $(d).ready(function(){
     $(".order").sortable({
@@ -23,9 +22,8 @@
       });
      }
     });
-
     $("[id$='_date']").datepicker();
-    $("select").select2();
+    //$("select").select2();
   })/*document ready */
 
 })(window,document,jQuery)

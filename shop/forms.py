@@ -107,11 +107,39 @@ class ProductForm(BootstrapForm, forms.ModelForm):
         fields = ('name', 'brand', 'parent', 'image', 'subtitle',
                   'description', 'price', 'is_published', 'order')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['brand'].queryset = Brand.objects.none()
+        self.fields['brand'].widget=forms.Select(attrs={'class': 'form-control'})
+        self.fields['parent'].queryset = Product.objects.none()
+        self.fields['parent'].widget=forms.Select(attrs={'class': 'form-control'})
+
+        if 'brand' in self.data:
+            self.fields['brand'].queryset = Brand.objects.all()
+        
+        if 'parent' in self.data:
+            self.fields['parent'].queryset = Product.objects.all()
+
+        if self.instance.pk:
+            self.fields['brand'].queryset = Brand.objects.filter(id=self.instance.brand_id)
+            self.fields['parent'].queryset = Product.objects.filter(id=self.instance.parent_id)
+
 
 class ProductCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductCategory
         fields = ('product', 'category', 'is_published', 'order')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.none()
+        # self.fields['category'].widget=forms.Select(attrs={'class': 'form-control'})
+
+        if 'category' in self.data:
+            self.fields['category'].queryset = Category.objects.all()
+
+        if self.instance.pk:
+            self.fields['category'].queryset = Category.objects.filter(id=self.instance.category_id)
 
 
 ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
@@ -138,6 +166,17 @@ class ProductRelatedForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductRelated
         fields = ('source', 'target', 'is_published', 'order')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['target'].queryset = Product.objects.none()
+        self.fields['target'].widget=forms.Select(attrs={'class': 'form-control'})
+
+        if 'target' in self.data:
+            self.fields['target'].queryset = Product.objects.all()
+        
+        if self.instance.pk:
+            self.fields['target'].queryset = Product.objects.filter(id=self.instance.target_id)
 
 
 ProductRelatedFormSet = inlineformset_factory(Product, ProductRelated,
@@ -197,6 +236,23 @@ class ProductAttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductAttribute
         fields = ('attribute', 'product', 'is_published', 'order')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['product'].queryset = Product.objects.none()
+        self.fields['product'].widget=forms.Select(attrs={'class': 'form-control'})
+        self.fields['attribute'].queryset = Attribute.objects.none()
+        self.fields['attribute'].widget=forms.Select(attrs={'class': 'form-control'})
+
+        if 'product' in self.data:
+            self.fields['product'].queryset = Product.objects.all()
+        
+        if 'attribute' in self.data:
+            self.fields['attribute'].queryset = Attribute.objects.all()
+
+        if self.instance.pk:
+            self.fields['attribute'].queryset = Attribute.objects.filter(id=self.instance.attribute_id)
+            self.fields['product'].queryset = Product.objects.filter(id=self.instance.product_id)
 
 
 ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute,
