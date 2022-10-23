@@ -22,7 +22,7 @@ class CategoryForm(BootstrapForm, forms.ModelForm):
 class ChildCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ChildCategory
-        fields = ('source', 'target', 'is_published', 'order')
+        fields = ('source', 'target', 'order')
 
 
 ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
@@ -59,7 +59,7 @@ class BrandForm(BootstrapForm, forms.ModelForm):
 class BrandSupplierForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = BrandSupplier
-        fields = ('brand', 'supplier', 'is_published', 'order')
+        fields = ('brand', 'supplier', 'order')
 
 
 SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
@@ -78,7 +78,7 @@ class FeatureForm(BootstrapForm, forms.ModelForm):
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = FeatureCategory
-        fields = ('feature', 'category', 'is_published', 'order')
+        fields = ('feature', 'category', 'order')
 
 
 CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
@@ -128,7 +128,7 @@ class ProductForm(BootstrapForm, forms.ModelForm):
 class ProductCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductCategory
-        fields = ('product', 'category', 'is_published', 'order')
+        fields = ('product', 'category', 'order')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -152,7 +152,7 @@ ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
 class ProductTagForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductTag
-        fields = ('product', 'tag', 'is_published', 'order')
+        fields = ('product', 'tag', 'order')
 
 
 ProductTagFormSet = inlineformset_factory(Product, ProductTag,
@@ -165,7 +165,7 @@ ProductTagFormSet = inlineformset_factory(Product, ProductTag,
 class ProductRelatedForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductRelated
-        fields = ('source', 'target', 'is_published', 'order')
+        fields = ('source', 'target', 'order')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -235,7 +235,7 @@ class ShipmentForm(BootstrapForm, forms.ModelForm):
 class ProductAttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductAttribute
-        fields = ('attribute', 'product', 'is_published', 'order')
+        fields = ('attribute', 'product', 'order')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

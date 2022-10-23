@@ -72,7 +72,7 @@ class Category(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class ChildCategory(Timestamped, Ordered, Published):
+class ChildCategory(Timestamped, Ordered):
     source = models.ForeignKey(Category, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Category, on_delete=models.CASCADE,
@@ -142,7 +142,7 @@ class Brand(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class BrandSupplier(Timestamped, Ordered, Published):
+class BrandSupplier(Timestamped, Ordered):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
@@ -171,7 +171,7 @@ class Feature(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class FeatureCategory(Timestamped, Ordered, Published):
+class FeatureCategory(Timestamped, Ordered):
     feature = models.ForeignKey(
         Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -229,7 +229,7 @@ class Product(Timestamped,  Ordered, Published):
         return f"{self.name}"
 
 
-class ProductCategory(Timestamped, Ordered, Published):
+class ProductCategory(Timestamped, Ordered):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -242,7 +242,7 @@ class ProductCategory(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class ProductTag(Timestamped, Ordered, Published):
+class ProductTag(Timestamped, Ordered):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
@@ -255,7 +255,7 @@ class ProductTag(Timestamped, Ordered, Published):
         ordering = ['order']
 
 
-class ProductRelated(Timestamped, Ordered, Published):
+class ProductRelated(Timestamped, Ordered):
     source = models.ForeignKey(Product, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Product, on_delete=models.CASCADE,
@@ -335,7 +335,7 @@ class Shipment(Timestamped, Ordered, Published):
         return f"{str(self.stock)}"
 
 
-class ProductAttribute(Timestamped, Ordered, Published):
+class ProductAttribute(Timestamped, Ordered):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
