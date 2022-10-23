@@ -2,6 +2,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+
+from core.functions import is_ajax
+
 from .models import ShoppingCart
 
 
@@ -36,7 +39,7 @@ def add_to_basket(request, id):
         shopping_items.product_id = id
         shopping_items.save()
     messages.success(request, 'Your basket was updated successfully!')
-    if request.is_ajax():
+    if is_ajax(request):
         return ajax_basket(request)
 
     return redirect('shop:basket')
@@ -56,7 +59,7 @@ def remove_from_basket(request, id):
     except ShoppingCart.DoesNotExist:
         pass
     messages.success(request, 'Your basket was updated successfully!')
-    if request.is_ajax():
+    if is_ajax(request):
         return ajax_basket(request)
     return redirect('shop:basket')
 
@@ -66,7 +69,7 @@ def clear_basket(request):
     ShoppingCart.objects.filter(
         shopping_cart_id=shopping_cart_id).delete()
     messages.success(request, 'Your basket was cleared successfully!')
-    if request.is_ajax():
+    if is_ajax(request):
         return ajax_basket(request)
     return redirect('index')
 
@@ -76,6 +79,6 @@ def remove_item_from_basket(request, id):
     ShoppingCart.objects.filter(
         shopping_cart_id=shopping_cart_id, product_id=id).delete()
     messages.success(request, 'Your basket was cleared successfully!')
-    if request.is_ajax():
+    if is_ajax(request):
         return ajax_basket(request)
     return redirect('shop:basket')
