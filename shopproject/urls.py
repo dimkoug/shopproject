@@ -24,11 +24,13 @@ from rest_framework.authtoken import views as api_views
 #   obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 # )
 
+from .views import TestView
 from shop.views import IndexView
 
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('test/', TestView.as_view(), name='test'),
     path('shop/', include('shop.urls', namespace='shop')),
     path('api/', include('shop.shopapi.routers')),
     path('users/', include('users.urls')),
