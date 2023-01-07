@@ -1,13 +1,11 @@
 from rest_framework import serializers
 
 from shop.models import (
-    Category, Supplier, Brand, BrandSupplier, Feature,
-    FeatureCategory, Attribute, Tag, Product, Shipment,
-    ProductTag, ProductAttribute, ProductCategory,
-    Media, Offer, OfferProduct, Order, OrderItem,
-    ShoppingCart, Hero, HeroItem,WareHouse,Logo,Stock,
-    Address,
-    
+    Category,ChildCategory,Tag, Supplier,WareHouse, Brand, BrandSupplier, Feature,
+    FeatureCategory, Attribute, Product, ProductCategory,ProductTag,ProductRelated,
+    Media,Logo,Stock, Shipment,ProductAttribute,
+    Hero,HeroItem, Offer, OfferProduct, Order, OrderItem,
+    ShoppingCart, Address,
 )
 
 class AddressSerializer(serializers.HyperlinkedModelSerializer):
