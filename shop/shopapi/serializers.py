@@ -5,8 +5,26 @@ from shop.models import (
     FeatureCategory, Attribute, Tag, Product, Shipment,
     ProductTag, ProductAttribute, ProductCategory,
     Media, Offer, OfferProduct, Order, OrderItem,
-    ShoppingCart, Hero, HeroItem
+    ShoppingCart, Hero, HeroItem,WareHouse,Logo,Stock,
+    Address,
+    
 )
+
+class AddressSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['address_type', 'profile', 'first_name', 'last_name','mobile', 'street_name', 'postal_code',
+                  'city','street_number', 'floor_number']
+
+class AttributeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Attribute
+        fields = ['url', 'name', 'feature', 'order']
+
+class BrandSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Brand
+        fields = ['url', 'name', 'image', 'suppliers', 'order']
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -15,28 +33,59 @@ class CategorySerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name', 'image', 'parent', 'order']
 
 
+class FeatureSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Feature
+        fields = ['url', 'name', 'categories', 'order']
+
+class HeroSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Hero
+        fields = ['name',]
+
+class HeroItemSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = HeroItem
+        fields = ['hero', 'product']
+
+
+class LogoSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Logo
+        fields = ['url', 'product', 'image', 'order', 'is_published']
+
+
+class MediaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Media
+        fields = ['url', 'product', 'image', 'order']
+
+
+class OrderSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['order_registration', 'billing_address', 'shipping_address', 'total', 'comments']
+
+
+class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ['order', 'product', 'quantity', 'price']
+
+
 class SupplierSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Supplier
         fields = ['url', 'name', 'order']
 
 
-class BrandSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Brand
-        fields = ['url', 'name', 'image', 'suppliers', 'order']
 
 
-class FeatureSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Feature
-        fields = ['url', 'name', 'categories', 'order']
 
 
-class AttributeSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Attribute
-        fields = ['url', 'name', 'feature', 'order']
+
+
+
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -59,7 +108,28 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'product', 'stock', 'shipment_date']
 
 
-class MediaSerializer(serializers.HyperlinkedModelSerializer):
+
+
+
+
+
+
+class StockSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Media
-        fields = ['url', 'product', 'image', 'order']
+        model = Stock
+        fields = ['warehouse','product', 'stock']
+
+
+
+
+
+class OfferSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Offer
+        fields = ['start_date', 'end_date']
+
+
+class WareHouseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = WareHouse
+        fields = ['name','is_published']
