@@ -1,9 +1,12 @@
 from django.urls import path
+from rest_framework import routers
 
 from . import viewsets
 
+router = routers.DefaultRouter()
 
-urlpatterns = [
+
+urlpatterns = router.urls +  [
     path('address/list/', viewsets.getAddressList, name='address-list'),
     path('address/create/', viewsets.createAddress, name='address-create'),
     path('address/<str:pk>/', viewsets.getAddress, name='address-detail'),

@@ -5,13 +5,18 @@ from rest_framework.response import Response
 from rest_framework import generics, permissions
 from rest_framework.decorators import api_view
 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 User = get_user_model()
 
 
 from .serializers import (
     UserSerializer, GroupSerializer,
-    RegisterSerializer
+    RegisterSerializer,
+    UserSerializerWithToken
 )
+
 
 
 @api_view(['GET'])
@@ -55,3 +60,25 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    # @classmethod
+    # def get_token(cls, user):
+    #     token = super().get_token(user)
+    #     # Add custom claims
+    #     token['usernamename'] = user.username
+        
+
+    #     return token
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        serializer = UserSerializerWithToken(self.user).data
+        for k, v in serializer.items():
+            data[k] = v
+
+        return data
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
