@@ -112,7 +112,15 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
         model = Attribute
         fields = ['url', 'name', 'feature', 'order']
 
+
+class SupplierSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Supplier
+        fields = ['url', 'name', 'order']
+
+
 class BrandSerializer(serializers.HyperlinkedModelSerializer):
+    suppliers = BrandSupplierSerializer(many=True, read_only=True)
     class Meta:
         model = Brand
         fields = ['url', 'name', 'image', 'suppliers', 'order']
@@ -180,11 +188,7 @@ class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['order', 'product', 'quantity', 'price']
 
 
-class SupplierSerializer(serializers.HyperlinkedModelSerializer):
-    brands = BrandSupplierSerializer(source='brandsuppliers',many=True)
-    class Meta:
-        model = Supplier
-        fields = ['url', 'name', 'brands', 'order']
+
 
 
 class TagSerializer(serializers.HyperlinkedModelSerializer):
@@ -193,25 +197,14 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
         model = Tag
         fields = ['url', 'products', 'name', 'order']
 
-class ProductParentSerializer(serializers.HyperlinkedModelSerializer):
-    categories = ProductCategorySerializer(source='productcategories',many=True)
-    tags = ProductTagSerializer(source='producttags',many=True)
-    attributes = ProductAttributeSerializer(source='productattributes',many=True)
-    relatedproducts = ProductRelatedSerializer(many=True)
-    #parent = ProductSerializer(many=True)
-    class Meta:
-        model = Product
-        fields = ['url', 'name', 'image', 'description', 'brand', 'parent',
-                  'price', 'categories', 'tags', 'attributes',
-                  'relatedproducts',
-                  'order']
+
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     categories = ProductCategorySerializer(source='productcategories',many=True)
     tags = ProductTagSerializer(source='producttags',many=True)
     attributes = ProductAttributeSerializer(source='productattributes',many=True)
     relatedproducts = ProductRelatedSerializer(many=True)
-    parent = ProductParentSerializer(many=False)
+
 
 
     class Meta:
@@ -235,8 +228,8 @@ class WareHouseSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class StockSerializer(serializers.HyperlinkedModelSerializer):
-    product = ProductSerializer(many=False)
-    warehouse = WareHouseSerializer(many=False)
+    product = ProductSerializer(many=False, read_only=True)
+    warehouse = WareHouseSerializer(many=False, read_only=True)
     class Meta:
         model = Stock
         fields = ['warehouse','product', 'stock']
