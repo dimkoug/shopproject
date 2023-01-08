@@ -262,7 +262,7 @@ class ProductRelated(Timestamped, Ordered):
                                related_name='target')
 
     class Meta:
-        default_related_name = 'relatedproducts'
+        default_related_name = 'productsrelated'
         unique_together = (('source', 'target'),)
         indexes = [
             models.Index(fields=['source', 'target']),
