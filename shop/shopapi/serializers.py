@@ -25,10 +25,25 @@ class BrandSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name', 'image', 'suppliers', 'order']
 
 
+
+class ChildCategorySerializer(serializers.HyperlinkedModelSerializer):
+    target = serializers.HyperlinkedRelatedField(
+        view_name='category-detail',
+        read_only=True,
+        lookup_field='pk'
+    )
+    class Meta:
+        model = ChildCategory
+        fields = ['target']
+
+
+
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    children = ChildCategorySerializer(source='source', many=True)
+
     class Meta:
         model = Category
-        fields = ['url', 'name', 'image', 'parent', 'order']
+        fields = ['id', 'url', 'children', 'name', 'image', 'order']
 
 
 class FeatureSerializer(serializers.HyperlinkedModelSerializer):

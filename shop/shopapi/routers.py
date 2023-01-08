@@ -21,6 +21,5 @@ router.register(r'suppliers', viewsets.SupplierViewSet)
 router.register(r'tags', viewsets.TagViewSet)
 router.register(r'warehouses', viewsets.WareHouseViewSet)
 
-print(router.urls)
 
 urlpatterns = router.urls 
