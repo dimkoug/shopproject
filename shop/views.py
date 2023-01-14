@@ -287,14 +287,16 @@ def search_items(request):
         Q(price__gt=0) &
         (
             Q(categories__name__icontains=search.strip()) |
-            Q(tags__name__icontains=search.strip()) |
+            Q(brand__name__icontains=search.strip()) |
+            Q(name__icontains=search.strip()) |
             Q(attributes__name__icontains=search.strip())
-        ))
+        )).values('id', 'name','image')
         for post in posts:
+            print(post)
             d = {}
-            d['value'] = reverse("shop:catalog-product-detail", kwargs={"pk":post.id})
-            d['label'] = post.name,
-            d['image'] = request.build_absolute_uri(post.image.url)
+            d['value'] = reverse("shop:catalog-product-detail", kwargs={"pk":post['id']})
+            d['label'] = post['name'],
+            d['image'] = request.build_absolute_uri('/media/'+ post['image'])
             data.append(d)
-    print(data)
+
     return JsonResponse({"data":data})
