@@ -25,11 +25,13 @@ from rest_framework_simplejwt.views import (
 
 from .views import TestView
 from shop.views import IndexView
+from core.functions import get_sb_data
 
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('test/', TestView.as_view(), name='test'),
+    path('sb_data/', get_sb_data, name='sb-data'),
     path('shop/', include('shop.urls', namespace='shop')),
     path('api/', include('shop.shopapi.routers')),
     path('users/', include('users.urls')),

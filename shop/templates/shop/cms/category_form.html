@@ -23,10 +23,12 @@
     $(d).ready(function(){
       $("select[name*='target']" ).select2({
         ajax: {
-          url: '/shop/get_categories_for_sb/',
+          url: '/sb_data/',
           data: function (params) {
             var query = {
               search: params.term,
+              app:"shop",
+              model: "category",
               type: 'public'
             }
             // Query parameters will be ?search=[term]&type=public
@@ -34,21 +36,10 @@
           }
         }
       });
-
-
-
-
     }) /* document ready */
 
 
 
   })(window,document,jQuery)
-
-
 </script>
-
-
-
-
-
 {% endblock scripts %}
