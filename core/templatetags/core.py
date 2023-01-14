@@ -54,6 +54,6 @@ def get_boolean_img(value):
 
 @register.simple_tag
 def get_formset_img(obj, value):
-    if value.__class__.__name__ == 'ImageFieldFile':
+    if value.__class__.__name__ == 'ImageFieldFile' and value:
         return format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
     return ""
