@@ -24,8 +24,8 @@
         <tr class="item" data-pk={{obj.pk}} data-model={% get_model obj %}>
           <td><i class="bi bi-list"></i></td>
           <td>{{obj.id}}</td>
-          <td>{{ob.created_at}}</td>
-          <td>{{ob.updated_at}}</td>
+          <td>{{obj.created_at|date:"d/m/Y"}}</td>
+          <td>{{obj.updated_at|date:"d/m/Y"}}</td>
           <td> {{obj.order}} </td>
           <td>{% get_boolean_img obj.is_published %}</td>
           <td><a href="{% get_url 'detail' obj  %}">{{obj.name}}</a></td>

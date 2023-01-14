@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
@@ -113,11 +114,11 @@ def model_order(request):
     if request.method == 'POST' and is_ajax(request):
         model_name = request.POST['model_name']
         model = apps.get_model('shop', model_name)
-        page_id_array = request.POST.getlist('page_id_array[]')
+        page_id_array = json.loads(request.POST['page_id_array'])
         objs = []
         for index, item in enumerate(page_id_array):
             if model_name == 'childcategory':
-                obj = model.objects.get(target=item)
+                obj = model.objects.get(target=item["pk"],source=item['parent'])
             elif model_name == 'attributefeature':
                 obj = model.objects.get(feature=item)
             elif model_name == 'brandsupplier':
@@ -125,7 +126,7 @@ def model_order(request):
             elif model_name == 'featurecategory':
                 obj = model.objects.get(category=item)
             else:
-                obj = model.objects.get(pk=item)
+                obj = model.objects.get(pk=item["pk"])
             obj.order = index
             objs.append(obj)
             # obj.save()

@@ -40,7 +40,14 @@ class CategoryListView(LoginRequiredMixin, BaseListView):
 
 class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
     model = Category
+    queryset = Category.objects.prefetch_related('children')
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        for c in self.get_object().children.all().order_by('order'):
+            print(c, c.order)
+        context['categories'] = ChildCategory.objects.select_related('target').filter(source=self.get_object()).order_by('order')
+        return context
 
 class CategoryCreateView(LoginRequiredMixin, FormMixin,
                          SuccessUrlMixin, BaseCreateView):

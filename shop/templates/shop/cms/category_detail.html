@@ -14,11 +14,11 @@
           <th>Name</th>
         </tr>
       </thead>
-      <tbody class="order">
-        {% for obj in object.children.all %}
-        <tr class="item" data-pk={{obj.pk}} data-model='childcategory'>
+      <tbody class="order2">
+        {% for obj in categories %}
+        <tr class="item" data-pk={{obj.target.pk}} data-parent={{object.pk}} data-model='childcategory'>
           <td><i class="bi bi-list"></i></td>
-          <td>{{obj.name}}</td>
+          <td>{{obj.target.name}}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -26,3 +26,39 @@
   </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+  'use strict';
+  (function(w,d,$){
+    $(d).ready(function(){
+      $(".order2").sortable({
+       /*placeholder : "ui-state-highlight",*/
+       update  : function(event, ui)
+       {
+        let page_id_array = new Array();
+        let model_name = '';
+        $('.item').each(function(){
+         page_id_array.push({"pk":$(this).data("pk"),"parent":$(this).data("parent")});
+         model_name = $(this).data("model");
+        });
+        $.ajax({
+         url:"/shop/cms/model/order/",
+         method:"POST",
+         data:{"page_id_array":JSON.stringify(page_id_array),model_name:model_name},
+         success:function(data)
+         {
+          console.info(data);
+         }
+        });
+       }
+      });
+    })/*document ready */
+  })(window,document,jQuery)
+</script>
+{% endblock scripts %}
+
+
+
+
+

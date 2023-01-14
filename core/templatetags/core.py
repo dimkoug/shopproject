@@ -61,8 +61,6 @@ def get_formset_img(obj, value):
 
 @register.simple_tag
 def is_active(request , url):
-    print(request.path, url, resolve(request.path).url_name)
-    
     if  resolve(request.path).url_name == url:
         return 'active'
     return ''
