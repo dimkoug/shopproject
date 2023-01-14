@@ -12,3 +12,43 @@
   {% include 'partials/form_buttons.html' with form=form %}
 </form>
 {% endblock %}
+
+
+
+{% block scripts %}
+<script>
+  'use strict';
+  (function(w,d,$){
+
+    $(d).ready(function(){
+      $("select[name*='target']" ).select2({
+        ajax: {
+          url: '/shop/get_categories_for_sb/',
+          data: function (params) {
+            var query = {
+              search: params.term,
+              type: 'public'
+            }
+            // Query parameters will be ?search=[term]&type=public
+            return query;
+          }
+        }
+      });
+
+
+
+
+    }) /* document ready */
+
+
+
+  })(window,document,jQuery)
+
+
+</script>
+
+
+
+
+
+{% endblock scripts %}
