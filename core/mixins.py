@@ -30,6 +30,10 @@ class ModelMixin:
         context['app'] = app
         context['model'] = model
         context['model_name'] = model_name
+        fields = []
+        for f in self.model._meta.fields:
+            fields.append(f.name)
+        context['fields'] = fields
         title = model._meta.verbose_name.capitalize()
         if 'list' in self.__class__.__name__.lower():
             title = model._meta.verbose_name_plural.capitalize()

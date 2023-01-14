@@ -12,8 +12,10 @@
       <thead>
         <tr>
           <th>sort</th>
-          <th>Name</th>
-          <th>Children</th>
+          {% for f in fields %}
+          <th>{{f}}</th>
+          {%endfor %}
+          <th>children</th>
           <th></th>
         </tr>
       </thead>
@@ -21,7 +23,17 @@
         {% for obj in object_list %}
         <tr class="item" data-pk={{obj.pk}} data-model={% get_model obj %}>
           <td><i class="bi bi-list"></i></td>
+          <td>{{obj.id}}</td>
+          <td>{{ob.created_at}}</td>
+          <td>{{ob.updated_at}}</td>
+          <td> {{obj.order}} </td>
+          <td>{% get_boolean_img obj.is_published %}</td>
           <td><a href="{% get_url 'detail' obj  %}">{{obj.name}}</a></td>
+          <td>
+            {%if obj.image %}
+            {{obj.image.url}}
+            {% endif %}
+          </td>
           <td>
             <ul>
               {% for child in obj.children.all %}
