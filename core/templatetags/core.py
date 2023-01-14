@@ -1,5 +1,5 @@
 from django import template
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, resolve
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 register = template.Library()
@@ -57,3 +57,12 @@ def get_formset_img(obj, value):
     if value.__class__.__name__ == 'ImageFieldFile' and value:
         return format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
     return ""
+
+
+@register.simple_tag
+def is_active(request , url):
+    print(request.path, url, resolve(request.path).url_name)
+    
+    if  resolve(request.path).url_name == url:
+        return 'active'
+    return ''

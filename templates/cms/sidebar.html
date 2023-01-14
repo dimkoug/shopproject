@@ -1,3 +1,4 @@
+{% load core %}
 {% url 'shop:cms-index' as cms_index %}
 {% url 'index' as site_index %}
 {% url 'shop:category-list' as category_list %}
@@ -17,77 +18,77 @@
   <div class="position-sticky pt-3">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link {% if request.path == cms_index %}active {% endif %}" aria-current="page" href="{{cms_index}}">
+        <a class="nav-link {% is_active request 'cms-index' %}" aria-current="page" href="{{cms_index}}">
           Dashboard
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == site_index %}active {% endif %}" aria-current="page" href="{{site_index}}" target="_blank" rel="noopener noreferrer">
+        <a class="nav-link {% is_active request 'index' %}" aria-current="page" href="{{site_index}}" target="_blank" rel="noopener noreferrer">
           View site
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == category_list %}active {% endif %} collection" data-model='category' data-collection='categories' aria-current="page" href="{{category_list}}">
+        <a class="nav-link {% is_active request 'category-list' %} collection" data-model='category' data-collection='categories' aria-current="page" href="{{category_list}}">
           Categories
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == attribute_list %}active {% endif %} collection" data-model='attribute' data-collection='attributes' aria-current="page" href="{{attribute_list}}">
+        <a class="nav-link {% is_active request 'attribute-list' %} collection" data-model='attribute' data-collection='attributes' aria-current="page" href="{{attribute_list}}">
           Attributes
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == tag_list %}active {% endif %} collection" data-model='tag' data-collection='tags' aria-current="page" href="{{tag_list}}">
+        <a class="nav-link {% is_active request 'tag-list' %} collection" data-model='tag' data-collection='tags' aria-current="page" href="{{tag_list}}">
           Tags
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == supplier_list %}active {% endif %} collection" data-model='supplier' data-collection='suppliers' aria-current="page" href="{{supplier_list}}">
+        <a class="nav-link {% is_active request 'supplier-list' %} collection" data-model='supplier' data-collection='suppliers' aria-current="page" href="{{supplier_list}}">
           Suppliers
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == warehouse_list %}active {% endif %} collection" data-model='warehouse' data-collection='warehouses' aria-current="page" href="{{warehouse_list}}">
+        <a class="nav-link {% is_active request 'warehouse-list' %}collection" data-model='warehouse' data-collection='warehouses' aria-current="page" href="{{warehouse_list}}">
           WareHouses
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == brand_list %}active {% endif %} collection" data-model='brand' data-collection='brands' aria-current="page" href="{{brand_list}}">
+        <a class="nav-link {% is_active request 'brand-list' %} collection" data-model='brand' data-collection='brands' aria-current="page" href="{{brand_list}}">
           Brands
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == feature_list %}active {% endif %} collection" data-model='feature' data-collection='features' aria-current="page" href="{{feature_list}}">
+        <a class="nav-link {% is_active request 'feature-list' %} collection" data-model='feature' data-collection='features' aria-current="page" href="{{feature_list}}">
           Features
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == product_list %}active {% endif %} collection" data-model='product' data-collection='products' aria-current="page" href="{{product_list}}">
+        <a class="nav-link {% is_active request 'product-list' %} collection" data-model='product' data-collection='products' aria-current="page" href="{{product_list}}">
           Products
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == shipment_list %}active {% endif %} collection" data-model='shipment' data-collection='shipments' aria-current="page" href="{{shipment_list}}">
+        <a class="nav-link {% is_active request 'shipment-list' %} collection" data-model='shipment' data-collection='shipments' aria-current="page" href="{{shipment_list}}">
           Shipments
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == hero_list %}active {% endif %} collection" data-model='hero' data-collection='heroes' aria-current="page" href="{{hero_list}}">
+        <a class="nav-link {% is_active request 'hero-list' %} collection" data-model='hero' data-collection='heroes' aria-current="page" href="{{hero_list}}">
           Heroes
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == offer_list %}active {% endif %} collection" data-model='offer' data-collection='offers' aria-current="page" href="{{offer_list}}">
+        <a class="nav-link {% is_active request 'offer-list' %} collection" data-model='offer' data-collection='offers' aria-current="page" href="{{offer_list}}">
           Offers
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == address_list %}active {% endif %}" aria-current="page" href="{{address_list}}">
+        <a class="nav-link {% is_active request 'address-list' %}" aria-current="page" href="{{address_list}}">
           Address
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {% if request.path == order_list %}active {% endif %}" aria-current="page" href="{{order_list}}">
+        <a class="nav-link {% is_active request 'order-list' %}" aria-current="page" href="{{order_list}}">
           Orders
         </a>
       </li>
