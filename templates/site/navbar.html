@@ -11,8 +11,7 @@
         <li class="nav-item">
           <a class="nav-link" href="#" id="mega-menu-1">Categories</a>
         </li>
-        {% if basket_count > 0 %}
-          <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
+        <li class="nav-item {% if request.path == basket_url %}active {% endif %}">
             <a class="nav-link ajax_basket" href="{{basket_url}}">
               <i class="bi bi-cart"></i>
                <span class="badge bg-light text-dark">
@@ -20,7 +19,6 @@
                </span>
           </a>
           </li>
-        {% endif %}
         <li class="nav-item">
           <a class="nav-link" href="#" id="mega-menu-2">Brands</a>
         </li>
