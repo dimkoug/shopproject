@@ -56,6 +56,7 @@ class ImageModel(models.Model):
 
 class Category(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=255, null=True,blank=True)
     image = models.ImageField(upload_to='',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     children = models.ManyToManyField("self", through='ChildCategory',
@@ -213,6 +214,9 @@ class Product(Timestamped,  Ordered, Published):
                                                  'source', 'target'),
                                              symmetrical=False, blank=True)
     name = models.CharField(max_length=100, unique=True)
+    pdf_guide = models.FileField(upload_to='',
+                                 storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+    code = models.CharField(max_length=255, null=True,blank=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)
     price = models.DecimalField(
         max_digits=18, decimal_places=2, null=True, blank=True)
