@@ -80,7 +80,9 @@ class ChildCategory(Timestamped, Ordered):
                                related_name='target')
 
     class Meta:
-        unique_together = (('source', 'target'),)
+        constraints = [
+            models.UniqueConstraint(fields=['source', 'target'], name="childcategory")
+        ]
         ordering = ['order']
         indexes = [
             models.Index(fields=['source', 'target']),
@@ -148,7 +150,9 @@ class BrandSupplier(Timestamped, Ordered):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = (('brand', 'supplier'),)
+        constraints = [
+            models.UniqueConstraint(fields=['brand', 'supplier'], name="brand_supplier")
+        ]
         indexes = [
             models.Index(fields=['brand', 'supplier']),
         ]
@@ -180,6 +184,9 @@ class FeatureCategory(Timestamped, Ordered):
 
     class Meta:
         unique_together = (('feature', 'category', 'filter_display'),)
+        constraints = [
+            models.UniqueConstraint(fields=['feature', 'category', 'filter_display'], name="feature_category")
+        ]
         indexes = [
             models.Index(fields=['feature', 'category', 'filter_display']),
         ]
@@ -213,7 +220,7 @@ class Product(Timestamped,  Ordered, Published):
                                              through_fields=(
                                                  'source', 'target'),
                                              symmetrical=False, blank=True)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=255, unique=True)
     pdf_guide = models.FileField(upload_to='',
                                  storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     code = models.CharField(max_length=255, null=True,blank=True)
@@ -239,7 +246,9 @@ class ProductCategory(Timestamped, Ordered):
 
     class Meta:
         default_related_name = 'productcategories'
-        unique_together = (('product', 'category'),)
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'category'], name="product_category")
+        ]
         indexes = [
             models.Index(fields=['product', 'category']),
         ]
@@ -252,7 +261,9 @@ class ProductTag(Timestamped, Ordered):
 
     class Meta:
         default_related_name = 'producttags'
-        unique_together = (('product', 'tag'),)
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'tag'], name="product_tag")
+        ]
         indexes = [
             models.Index(fields=['product', 'tag']),
         ]
@@ -267,7 +278,9 @@ class ProductRelated(Timestamped, Ordered):
 
     class Meta:
         default_related_name = 'productsrelated'
-        unique_together = (('source', 'target'),)
+        constraints = [
+            models.UniqueConstraint(fields=['source', 'target'], name="related_ptr")
+        ]
         indexes = [
             models.Index(fields=['source', 'target']),
         ]
@@ -313,7 +326,9 @@ class Stock(Timestamped, Ordered, Published):
         default_related_name = 'stocks'
         verbose_name = 'stock'
         verbose_name_plural = 'stocks'
-        unique_together = (('warehouse', 'product'),)
+        constraints = [
+            models.UniqueConstraint(fields=['warehouse', 'product'], name="warehouse_product")
+        ]
         indexes = [
             models.Index(fields=['warehouse', 'product']),
         ]
@@ -347,6 +362,9 @@ class ProductAttribute(Timestamped, Ordered):
         default_related_name = 'productattributes'
         verbose_name = 'product attribute'
         verbose_name_plural = 'product attributes'
+        constraints = [
+            models.UniqueConstraint(fields=['attribute', 'product'], name="attribute_product")
+        ]
         indexes = [
             models.Index(fields=['product', 'attribute']),
         ]
