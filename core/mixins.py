@@ -38,7 +38,7 @@ class ModelMixin:
         if 'list' in self.__class__.__name__.lower():
             title = model._meta.verbose_name_plural.capitalize()
         if 'detail' in self.__class__.__name__.lower():
-            title += ' Detail'
+            title += ' Detail {}'.format(self.get_object())
         if 'create' in self.__class__.__name__.lower():
             title += ' Create'
         if 'update' in self.__class__.__name__.lower():
