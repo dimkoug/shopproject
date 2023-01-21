@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,7 +51,8 @@ class HeroCreateView(LoginRequiredMixin, FormMixin,
         context['formsets'] = [
             {
                 'title': 'Items',
-                'formset': HeroItemFormSet(self.request.POST or None)
+                'formset': HeroItemFormSet(self.request.POST or None),
+                "sb_url": reverse("shop:get_products_for_sb")
             },
         ]
         return context
@@ -83,7 +85,8 @@ class HeroUpdateView(LoginRequiredMixin, FormMixin,
             {
                 'title': 'Items',
                 'formset': HeroItemFormSet(self.request.POST or None,
-                                           instance=self.get_object())
+                                           instance=self.get_object()),
+                "sb_url": reverse("shop:get_products_for_sb")
             },
         ]
         return context

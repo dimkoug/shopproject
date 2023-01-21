@@ -182,6 +182,7 @@ class FeatureCategory(Timestamped):
     filter_display = models.BooleanField(null=True, blank=True)
 
     class Meta:
+        default_related_name = 'featurecategories'
         unique_together = (('feature', 'category', 'filter_display'),)
         constraints = [
             models.UniqueConstraint(fields=['feature', 'category', 'filter_display'], name="feature_category")
@@ -233,7 +234,7 @@ class Product(Timestamped,  Ordered, Published):
         default_related_name = 'products'
         verbose_name = 'product'
         verbose_name_plural = 'products'
-        ordering = ['order']
+        ordering = ['-pk']
 
     def __str__(self):
         return f"{self.name}"
@@ -386,7 +387,7 @@ class Hero(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class HeroItem(Timestamped, Ordered, Published):
+class HeroItem(Timestamped):
     hero = models.ForeignKey(Hero, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
@@ -398,7 +399,7 @@ class HeroItem(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['hero', 'product']),
         ]
-        ordering = ['order']
+
 
     def __str__(self):
         return f"{self.hero.name}"

@@ -16,7 +16,9 @@ body, html {
 }
 
 
-
+.select2-container {
+  width:100% !important;
+}
 
 
 div[class*="mega-menu-container-"]{

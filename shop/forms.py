@@ -128,11 +128,11 @@ class ProductForm(BootstrapForm, forms.ModelForm):
 class ProductCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductCategory
-        fields = ('product', 'category',)
+        fields = ('category',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.none()
+        self.fields['category'].queryset = Category.objects.all()
         # self.fields['category'].widget=forms.Select(attrs={'class': 'form-control'})
 
         if 'category' in self.data:
@@ -200,7 +200,8 @@ ProductRelatedFormSet = inlineformset_factory(Product, ProductRelated,
                                               form=ProductRelatedForm,
                                               formset=BootstrapFormSet,
                                               can_delete=True,
-                                              fk_name='source')
+                                              fk_name='source'
+                                              )
 
 
 class MediaForm(BootstrapForm, forms.ModelForm):
@@ -287,7 +288,7 @@ class HeroForm(BootstrapForm, forms.ModelForm):
 class HeroItemForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = HeroItem
-        fields = ('hero', 'product', 'is_published', 'order')
+        fields = ('hero', 'product')
 
 
 HeroItemFormSet = inlineformset_factory(Hero, HeroItem,

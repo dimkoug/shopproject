@@ -1,7 +1,4 @@
 {% load core %}
-
-
-{% for formset in formsets %}
   {{ formset.formset.management_form }}
   {{formset.formset.non_form_errors}}
   <div class="row py-2">
@@ -88,4 +85,4 @@
   </div>
 
 </div>
-{% endfor %}
+

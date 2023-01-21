@@ -10,12 +10,98 @@
 {% endblock %}
 
 {% block content %}
-<form method="post" enctype='multipart/form-data'>{% csrf_token %}
-    {% include 'partials/form_partial.html' %}
-  {% include 'partials/formsets.html' %}
-  {% include 'partials/form_buttons.html' with form=form %}
+<form method="post" class="shadow rounded" enctype='multipart/form-data' novalidate>{% csrf_token %}
+  <div class="card">
+    <div class="card-body">
+      {{form.errors}}
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            {{ form.order_registration.label_tag }}
+            {{form.order_registration}}
+            {% if form.order_registration.errors %}
+            <div class="invalid-feedback">
+              {{form.order_registration.errors}}
+            </div>
+            {%endif%}
+            {% if form.order_registration.help_text %}
+              <small class="form-text text-muted">{{ form.order_registration.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            {{ form.billing_address.label_tag }}
+            {{form.billing_address}}
+            {% if form.billing_address.errors %}
+            <div class="invalid-feedback">
+              {{form.billing_address.errors}}
+            </div>
+            {%endif%}
+            {% if form.billing_address.help_text %}
+              <small class="form-text text-muted">{{ form.billing_address.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            {{ form.shipping_address.label_tag }}
+            {{form.shipping_address}}
+            {% if form.shipping_address.errors %}
+            <div class="invalid-feedback">
+              {{form.shipping_address.errors}}
+            </div>
+            {%endif%}
+            {% if form.shipping_address.help_text %}
+              <small class="form-text text-muted">{{ form.shipping_address.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            {{ form.total.label_tag }}
+            {{form.total}}
+            {% if form.total.errors %}
+            <div class="invalid-feedback">
+              {{form.total.errors}}
+            </div>
+            {%endif%}
+            {% if form.total.help_text %}
+              <small class="form-text text-muted">{{ form.total.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            {{ form.comments.label_tag }}
+            {{form.comments}}
+            {% if form.comments.errors %}
+            <div class="invalid-feedback">
+              {{form.comments.errors}}
+            </div>
+            {%endif%}
+            {% if form.comments.help_text %}
+              <small class="form-text text-muted">{{ form.comments.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% include 'partials/formsets.html' %}
+      {% include 'partials/form_buttons.html' with form=form %}
+    </div>
+  </div>
+  
 </form>
+
 {% endblock %}
+
+
+
+
 
 {% block scripts %}
 <script>

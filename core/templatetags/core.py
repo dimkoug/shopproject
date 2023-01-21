@@ -69,3 +69,10 @@ def is_active(request , url):
     if  resolve(request.path).url_name == url:
         return 'active'
     return ''
+
+
+@register.simple_tag
+def get_selected_attr(pk, items):
+    if pk in items:
+        return True
+    return False

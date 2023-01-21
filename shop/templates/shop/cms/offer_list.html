@@ -13,24 +13,28 @@
 {% include 'partials/add_button.html' %}
 <div class="row py-2">
   <div class="col">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for obj in object_list %}
-        <tr>
-          <td>{{obj.name}}</td>
-          <td>
-            {% include 'partials/action_buttons.html' with obj=obj %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="card shadow rounded">
+      <div class="card-body">
+        <table class="table table-stripped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr>
+              <td>{{obj.name}}</td>
+              <td>
+                {% include 'partials/action_buttons.html' with obj=obj %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
 {% include 'pagination.html' %}

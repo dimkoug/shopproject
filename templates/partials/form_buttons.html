@@ -8,9 +8,9 @@
   </div>
   <div class="col">
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <input type="submit" class="btn btn-light me-md-2" value="{% if form.instance.pk %}Update {% else %} Create {% endif %}">
-      <input type="submit" class="btn btn-light" name="new" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Add New">
-      <input type="submit" class="btn btn-light" name="continue" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Continue editing">
+      <input type="submit" class="btn btn-success me-md-2" value="{% if form.instance.pk %}Update {% else %} Create {% endif %}">
+      <input type="submit" class="btn btn-primary" name="new" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Add New">
+      <input type="submit" class="btn btn-warning" name="continue" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Continue editing">
     </div>
   </div>
 </div>

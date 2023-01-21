@@ -24,6 +24,34 @@
     });
     $("[id$='_date']").datepicker();
     //$("select").select2();
+
+    $('.delete-tr').on('click', function(e){
+      e.preventDefault();
+      var that = $(this);
+      var url = $(this).attr('href');
+      var c = confirm("Delete the object");
+      if (c == true) {
+        $.post(url, function( data ) {
+          $(that).parent().parent().fadeOut();
+        });
+      }
+      return false;
+  })
+  $('.delete').on('click', function(e){
+    e.preventDefault();
+    var that = $(this);
+    var url = $(this).attr('href');
+    var c = confirm("Delete the object");
+    if (c == true) {
+      $.post(url, function( data ) {
+        $(that).parent().fadeOut();
+      });
+    }
+    return false;
+})
+
+
+
   })/*document ready */
 
 })(window,document,jQuery)

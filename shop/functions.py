@@ -2,11 +2,12 @@ from django.contrib import messages
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.core import serializers
 from django.template.loader import render_to_string
 
 from core.functions import is_ajax
 
-from .models import ShoppingCart, Product,Category, Attribute, Brand, Tag
+from .models import ShoppingCart, Product,Category, Attribute, Brand, Tag, ProductAttribute
 
 
 def ajax_basket(request):
@@ -179,3 +180,39 @@ def get_tags_for_sb(request):
         # j_data = serializers.serialize("json", data, fields=('erp_code', 'title'))
         # return JsonResponse(j_data, safe=False)
     return JsonResponse({"results": results}, safe=False)
+
+
+def get_attributes(request):
+    id = request.GET.get('id')
+    if id:
+        data = Attribute.objects.filter(feature_id=id)
+        sdata = serializers.serialize("json", data)
+        return JsonResponse(sdata, safe=False)
+    return JsonResponse({})
+
+
+def set_attribute(request):
+    try:
+        product_id = request.POST['product']
+        attribute_id = request.POST['attribute']
+        product_attribute = ProductAttribute.objects.create(product_id=product_id,attribute_id=attribute_id)
+        return JsonResponse({
+            'feature': product_attribute.attribute.feature.name,
+            'name': product_attribute.attribute.name,
+            "product_id": product_attribute.product.id,
+            "attribute_id": product_attribute.attribute.id
+        })
+    except Exception as e:
+        print(e)
+        raise
+        return JsonResponse({})
+
+def delete_attribute(request):
+    try:
+        product_id = request.POST['product']
+        attribute_id = request.POST['attribute']
+        product_attribute = ProductAttribute.objects.get(product_id=product_id,attribute_id=attribute_id)
+        product_attribute.delete()
+    except:
+        pass
+    return JsonResponse({})

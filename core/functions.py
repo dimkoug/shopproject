@@ -66,3 +66,16 @@ def get_sb_data(request):
             "text": d.__str__()
         })
     return JsonResponse({"results": d_objects}, safe=False)
+
+
+def delete_model(request):
+    model_str = request.GET.get('model')
+    app_str = request.GET.get('app')
+    id = request.GET.get('id')
+    model = apps.get_model(app_label=app_str, model_name=model_str)
+    try:
+        data = model.objects.get(id=id)
+        data.delete()
+    except model.DoesNotExist:
+        pass
+    return JsonResponse({}, safe=False)

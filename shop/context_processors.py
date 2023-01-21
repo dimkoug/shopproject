@@ -24,8 +24,7 @@ def get_context_data(request):
     heroes = Hero.objects.prefetch_related(
         Prefetch('heroitems',
                  queryset=HeroItem.objects.select_related(
-                    'product', 'hero').filter(
-                        is_published=True), to_attr='item_list'
+                    'product', 'hero'), to_attr='item_list'
                  )
         ).filter(is_published=True)
     if shopping_cart_id:
@@ -53,7 +52,7 @@ def get_context_data(request):
     return {
         'categories': categories,
         'tags': Tag.objects.filter(is_published=True),
-        'brands': Brand.objects.filter(is_published=True),
+        'brands': Brand.objects.prefetch_related('products').filter(is_published=True,products__isnull=False,products__is_published=True).distinct(),
         'donottrack': request.META.get('HTTP_DNT') == '1',
         'basket_count': basket_count,
         'heroes': heroes
