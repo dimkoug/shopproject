@@ -10,10 +10,64 @@
 {% endblock %}
 
 {% block content %}
-<form method="post" enctype='multipart/form-data'>{% csrf_token %}
-    {% include 'partials/form_partial.html' %}
-  {% include 'partials/formsets.html' %}
-  {% include 'partials/form_buttons.html' with form=form %}
+<form method="post" enctype='multipart/form-data' novalidate>{% csrf_token %}
+  <div class="card">
+    <div class="card-body">
+      {{form.errors}}
+      <div class="row">
+        <div class="col-4">
+          <div class="form-group">
+            
+            {{ form.name.label_tag }}
+            {{form.name}}
+            {% if form.name.errors %}
+            <div class="invalid-feedback">
+              {{form.name.errors}}
+            </div>
+            {%endif%}
+            
+            
+            {% if form.name.help_text %}
+              <small class="form-text text-muted">{{ form.name.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            {{ form.image.errors }}
+            {{ form.image.label_tag }}
+            {{form.image}}
+            {% if form.image.help_text %}
+              <small class="form-text text-muted">{{ form.image.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            {{ form.is_published.errors }}
+            {{ form.is_published.label_tag }}
+            {{form.is_published}}
+            {% if form.is_published.help_text %}
+              <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          {{ form.categories.errors }}
+          {{ form.categories.label_tag }}
+          {{form.categories}}
+          {% if form.categories.help_text %}
+            <small class="form-text text-muted">{{ form.categories.help_text }}</small>
+          {% endif %}
+        </div>
+
+      </div>
+      {% include 'partials/form_buttons.html' with form=form %}
+    </div>
+  </div>
+  
 </form>
 {% endblock %}
 
@@ -24,7 +78,8 @@
   (function(w,d,$){
 
     $(d).ready(function(){
-      $("select[name*='category']" ).select2({
+      $("select[name*='categories']" ).attr( "multiple", true );
+      $("select[name*='categories']" ).select2({
         ajax: {
           url: '/sb_data/',
           data: function (params) {

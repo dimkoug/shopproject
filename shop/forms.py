@@ -53,7 +53,7 @@ class WareHouseForm(BootstrapForm, forms.ModelForm):
 class BrandForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Brand
-        fields = ('name', 'image', 'is_published', 'order')
+        fields = ('name', 'image', 'suppliers', 'is_published', 'order')
 
 
 class BrandSupplierForm(BootstrapForm, forms.ModelForm):
@@ -72,7 +72,7 @@ SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
 class FeatureForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Feature
-        fields = ('name', 'image', 'is_published', 'order')
+        fields = ('name', 'image','categories', 'is_published', 'order')
 
 
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
