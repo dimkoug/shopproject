@@ -47,7 +47,7 @@ class SupplierForm(BootstrapForm, forms.ModelForm):
 class WareHouseForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = WareHouse
-        fields = ('name', 'is_published', 'order')
+        fields = ('name',)
 
 
 class BrandForm(BootstrapForm, forms.ModelForm):
@@ -59,7 +59,7 @@ class BrandForm(BootstrapForm, forms.ModelForm):
 class BrandSupplierForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = BrandSupplier
-        fields = ('brand', 'supplier', 'order')
+        fields = ('brand', 'supplier',)
 
 
 SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
@@ -78,7 +78,7 @@ class FeatureForm(BootstrapForm, forms.ModelForm):
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = FeatureCategory
-        fields = ('feature', 'category', 'order')
+        fields = ('feature', 'category',)
 
 
 CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
@@ -128,7 +128,7 @@ class ProductForm(BootstrapForm, forms.ModelForm):
 class ProductCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductCategory
-        fields = ('product', 'category', 'order')
+        fields = ('product', 'category',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -152,7 +152,7 @@ ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
 class ProductTagForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductTag
-        fields = ('product', 'tag', 'order')
+        fields = ('product', 'tag',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -182,7 +182,7 @@ ProductTagFormSet = inlineformset_factory(Product, ProductTag,
 class ProductRelatedForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductRelated
-        fields = ('source', 'target', 'order')
+        fields = ('source', 'target',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -232,7 +232,7 @@ LogoFormSet = inlineformset_factory(Product, Logo,
 class StockForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ('warehouse', 'product', 'stock', 'is_published', 'order')
+        fields = ('warehouse', 'product', 'stock',)
 
 
 StockFormSet = inlineformset_factory(Product, Stock,
@@ -245,8 +245,7 @@ StockFormSet = inlineformset_factory(Product, Stock,
 class ShipmentForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Shipment
-        fields = ('warehouse', 'product', 'stock', 'date',
-                  'is_published', 'order')
+        fields = ('warehouse', 'product', 'stock', 'date')
 
 
 class ProductAttributeForm(BootstrapForm, forms.ModelForm):

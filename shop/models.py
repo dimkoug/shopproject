@@ -115,14 +115,13 @@ class Supplier(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class WareHouse(Timestamped, Ordered, Published):
+class WareHouse(Timestamped):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         default_related_name = 'warehouses'
         verbose_name = 'warehouse'
         verbose_name_plural = 'warehouses'
-        ordering = ['order']
 
     def __str__(self):
         return f"{self.name}"
@@ -145,7 +144,7 @@ class Brand(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class BrandSupplier(Timestamped, Ordered):
+class BrandSupplier(Timestamped):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
@@ -156,7 +155,7 @@ class BrandSupplier(Timestamped, Ordered):
         indexes = [
             models.Index(fields=['brand', 'supplier']),
         ]
-        ordering = ['order']
+
 
 
 class Feature(Timestamped, Ordered, Published):
@@ -176,7 +175,7 @@ class Feature(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class FeatureCategory(Timestamped, Ordered):
+class FeatureCategory(Timestamped):
     feature = models.ForeignKey(
         Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -190,7 +189,7 @@ class FeatureCategory(Timestamped, Ordered):
         indexes = [
             models.Index(fields=['feature', 'category', 'filter_display']),
         ]
-        ordering = ['order']
+
 
 
 class Attribute(Timestamped, Ordered, Published):
@@ -240,7 +239,7 @@ class Product(Timestamped,  Ordered, Published):
         return f"{self.name}"
 
 
-class ProductCategory(Timestamped, Ordered):
+class ProductCategory(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
@@ -252,10 +251,10 @@ class ProductCategory(Timestamped, Ordered):
         indexes = [
             models.Index(fields=['product', 'category']),
         ]
-        ordering = ['order']
 
 
-class ProductTag(Timestamped, Ordered):
+
+class ProductTag(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
@@ -267,10 +266,10 @@ class ProductTag(Timestamped, Ordered):
         indexes = [
             models.Index(fields=['product', 'tag']),
         ]
-        ordering = ['order']
 
 
-class ProductRelated(Timestamped, Ordered):
+
+class ProductRelated(Timestamped):
     source = models.ForeignKey(Product, on_delete=models.CASCADE,
                                related_name='source')
     target = models.ForeignKey(Product, on_delete=models.CASCADE,
@@ -284,7 +283,7 @@ class ProductRelated(Timestamped, Ordered):
         indexes = [
             models.Index(fields=['source', 'target']),
         ]
-        ordering = ['order']
+
 
 
 class Media(Timestamped, Ordered, Published):
@@ -317,7 +316,7 @@ class Logo(Timestamped, Ordered, Published):
         return f"{self.image.name}"
 
 
-class Stock(Timestamped, Ordered, Published):
+class Stock(Timestamped):
     warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
@@ -332,13 +331,13 @@ class Stock(Timestamped, Ordered, Published):
         indexes = [
             models.Index(fields=['warehouse', 'product']),
         ]
-        ordering = ['order']
+
 
     def __str__(self):
         return f"{str(self.stock)}"
 
 
-class Shipment(Timestamped, Ordered, Published):
+class Shipment(Timestamped):
     warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
@@ -348,7 +347,7 @@ class Shipment(Timestamped, Ordered, Published):
         default_related_name = 'shipments'
         verbose_name = 'shipment'
         verbose_name_plural = 'shipments'
-        ordering = ['order']
+
 
     def __str__(self):
         return f"{str(self.stock)}"
@@ -420,20 +419,19 @@ class Offer(Timestamped):
         return self.name
 
 
-class OfferProduct(Timestamped, Published):
+class OfferProduct(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     offer = models.ForeignKey(Offer, on_delete=models.CASCADE)
     is_primary = models.BooleanField(default=False)
     is_complementary = models.BooleanField(default=False)
     discount_price = models.DecimalField(
         max_digits=8, decimal_places=2, null=True, blank=True)
-    order = models.PositiveIntegerField(default=0, db_index=True)
+
 
     class Meta:
         default_related_name = 'offerproducts'
         verbose_name = 'offer product'
         verbose_name_plural = 'offer products'
-        ordering = ['order']
         unique_together = (
             ('product', 'offer', 'is_primary', 'is_complementary'),)
         indexes = [
