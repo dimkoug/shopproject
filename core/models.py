@@ -10,7 +10,7 @@ class Timestamped(models.Model):
 
 
 class Ordered(models.Model):
-    order = models.PositiveIntegerField(default=0, db_index=True)
+    order = models.PositiveIntegerField(default=0, db_index=True, blank=True)
 
     class Meta:
         abstract = True

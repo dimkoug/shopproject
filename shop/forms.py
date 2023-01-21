@@ -16,7 +16,7 @@ from .models import (
 class CategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('name', 'image', 'is_published', 'order')
+        fields = ('name', 'image', 'is_published', 'order', 'children')
 
 
 class ChildCategoryForm(BootstrapForm, forms.ModelForm):
