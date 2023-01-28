@@ -40,6 +40,15 @@ def get_template_name(context, *args):
     return template_name
 
 
+@register.simple_tag(takes_context=True)
+def get_template_name_cms(context, *args):
+    model = context['model']
+    app = model._meta.app_label
+    lower_name = model.__name__.lower()
+    template_name = "shop/cms/partials/{}_list_partial.html".format(lower_name)
+    return template_name
+
+
 @register.simple_tag
 def get_model(obj):
     return obj.__class__.__name__.lower()

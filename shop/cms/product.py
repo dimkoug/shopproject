@@ -18,6 +18,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -36,7 +37,7 @@ from shop.forms import (
 )
 
 
-class ProductListView(LoginRequiredMixin, BaseListView):
+class ProductListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Product
     paginate_by = 50
     queryset = Product.objects.prefetch_related('categories')

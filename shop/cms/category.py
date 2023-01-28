@@ -16,6 +16,8 @@ from core.views import (
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
+from shop.cms.core import CmsListView
+
 from core.mixins import FormMixin, SuccessUrlMixin
 
 from core.functions import is_ajax
@@ -32,7 +34,7 @@ class IndexView(LoginRequiredMixin, BaseIndexView):
     app = 'shop'
 
 
-class CategoryListView(LoginRequiredMixin, BaseListView):
+class CategoryListView(LoginRequiredMixin, CmsListView, BaseListView):
     model = Category
     queryset = Category.objects.prefetch_related('children')
     paginate_by = 50

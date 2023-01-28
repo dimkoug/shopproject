@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="container-fluid wrapper">
+<div class="container-fluid wrapper rounded shadow">
   <div class="row">
     <div class="col-12">
       <div class="row py-2">
@@ -12,29 +12,27 @@
       </div>
       <hr>
       <div class="row py-2">
-        {% if object.image %}
+        
         <div class="col-2 col-sm-2">
-            <img src="{{ object.image.url }}" class="img-fluid">
-        </div>
-        {% endif %}
-        <div class="col-8 col-sm-8">
-          <div class="">
-            Brand : <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">{{object.brand}}</a>
+          <div class="text-center">
+            <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">{{object.brand}}</a>
           </div>
+          {% if object.image %}
+          <img src="{{ object.image.url }}" class="img-fluid">
+          {% endif %}
+        </div>
+        <div class="col-8 col-sm-8">
+          {% if object.tags.all %}
           <div class="">
-            Product Tags :
             {% for tag in object.tags.all %}
                 <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.id}}">{{tag.name}}</a>
             {% endfor %}
           </div>
+          {% endif %}
           <div class="">
-            Product Categories :
             {% for category in object.categories.all %}
                 <a class="tag-link" href="{% url 'shop:catalog' %}?category={{category.id}}">{{category.name}}</a>
             {% endfor %}
-          </div>
-          <div class="">
-            Product Description
           </div>
           <div class="">
             {{object.description|safe}}
@@ -46,16 +44,12 @@
       </div>
       <hr>
       <div class="row py-2">
-          <div class="col-6 col-sm-6">
-            <div class="">
-              Product Images
-            </div>
-            <div class="">
+          <div class="col-12 col-sm-12">
               <div class="swiper-container mySwiper">
                 <div class="swiper-wrapper">
                   {% for media in object.media.all %}
                     <div class="swiper-slide">
-                        <img src="{{ media.image.url }}">
+                        <img src="{{ media.image.url }}" class="img-thumbnail">
                     </div>
                   {% endfor %}
                 </div>
@@ -63,12 +57,9 @@
                 <div class="swiper-button-next"></div>
               </div>
             </div>
-          </div>
-          <div class="col-6 col-sm-6">
-            <div class="">
-              Product Attributes
-            </div>
-            <hr>
+      </div>
+      <div class="row d-flex justify-content-center">
+          <div class="col-6">
             <div class="">
               {% for attr in object.attributes.all %}
               <div class="">
@@ -81,7 +72,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 

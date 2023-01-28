@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -32,7 +33,7 @@ from shop.forms import (
 )
 
 
-class BrandListView(LoginRequiredMixin, BaseListView):
+class BrandListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Brand
     queryset = Brand.objects.prefetch_related('suppliers')
     paginate_by = 50

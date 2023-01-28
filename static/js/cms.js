@@ -50,6 +50,27 @@
     return false;
 })
 
+$("body").on("click", '.page-link', function(e){
+  e.preventDefault();
+  $.when($.ajax({
+           url: $(this).attr("href"),
+           method: 'GET',
+           datatype: 'json',
+           beforeSend: function(){
+             $(".loading").show();
+           },
+           complete: function(){
+             $(".loading").hide();
+             
+           }
+       })).then(function( resp, textStatus, jqXHR ) {
+         $(".res").html(resp);
+         $(".loading").hide();
+       })
+
+  return false;
+})
+
 
 
   })/*document ready */

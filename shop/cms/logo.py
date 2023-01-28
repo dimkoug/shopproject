@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -31,7 +32,7 @@ from shop.forms import (
 )
 
 
-class LogoListView(LoginRequiredMixin, BaseListView):
+class LogoListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Logo
     paginate_by = 50
 

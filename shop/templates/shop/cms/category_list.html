@@ -13,57 +13,14 @@
 
 {% block content %}
 {% include 'partials/add_button.html' %}
-<div class="row py-2">
-  <div class="col">
-    <div class="card shadow rounded">
-      <div class="card-body">
-        <table class="table table-stripped">
-          <thead>
-            <tr>
-              <th>sort</th>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Children</th>
-              <th>Is published</th>
-              <th>Image</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody class="order">
-            {% for obj in object_list %}
-            <tr class="item" data-pk={{obj.pk}} data-model={% get_model obj %}>
-              <td><i class="bi bi-list"></i></td>
-              <td><a href="{% get_url 'detail' obj  %}">{{obj.name}}</a></td>
-              <td>{{obj.code}}</td>
-              <td>
-                <ul>
-                  {% for child in obj.children.all %}
-                    <li>{{child}}</li>
-                  {% endfor %}
-                </ul>
-              </td>
-              <td>{% get_boolean_img obj.is_published %}</td>
-              <td>
-                {%if obj.image %}
-                {{obj.image.url}}
-                {% endif %}
-              </td>
-    
-              <td>
-                {% include 'partials/action_buttons.html' with obj=obj %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
 
-      </div>
-
-
-
-    </div>
-
-  </div>
+<div class="res">
+  {% get_template_name_cms as template_name %}
+  {% with template=template_name %}
+  {% include  template %}
+{% endwith %}
 </div>
-{% include 'pagination.html' %}
+
+
+
 {% endblock %}
