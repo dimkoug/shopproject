@@ -1,0 +1,25 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block page_title %}
+{{page_title}}
+{% endblock page_title %}
+
+{% block section_title %}
+  {{page_title}}
+{% endblock %}
+
+{% block content %}
+{% include 'partials/add_button.html' %}
+
+
+<div class="res">
+  {% get_template_name_cms as template_name %}
+  {% with template=template_name %}
+  {% include  template %}
+{% endwith %}
+</div>
+
+
+
+{% endblock %}

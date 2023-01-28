@@ -12,3 +12,4 @@ migrations
 *.json
 management
 media/
+shopproject4.py
