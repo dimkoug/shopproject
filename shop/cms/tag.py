@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -27,7 +28,7 @@ from shop.models import Tag
 from shop.forms import TagForm
 
 
-class TagListView(LoginRequiredMixin, BaseListView):
+class TagListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Tag
     paginate_by = 2
 

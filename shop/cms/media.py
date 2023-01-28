@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -31,7 +32,7 @@ from shop.forms import (
 )
 
 
-class MediaListView(LoginRequiredMixin, BaseListView):
+class MediaListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Media
     paginate_by = 50
 

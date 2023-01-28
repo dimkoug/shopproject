@@ -1,4 +1,5 @@
 {% extends "cms/base.html" %}
+{% load static %}
 {% load core %}
 
 {% block page_title %}
@@ -11,50 +12,62 @@
 
 {% block content %}
 {% include 'partials/add_button.html' %}
+
 <div class="row py-2">
   <div class="col">
     <div class="card shadow rounded">
       <div class="card-body">
-        <table class="table table-stripped">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Categories</th>
-              <th>Published</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for obj in object_list %}
-            <tr>
-              <td>
-                {% if obj.image %}
-                  <img src="{{obj.image.url}}" alt="" class="img-thumbnail" width="100px">
-                {% endif %}
+        <form id="search-form" action="." method="get">
+          <div class="mb-3">
+            <label for="search" class="form-label">Search</label>
+            <input type="text" class="form-control" id="search" name="q">
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label for="category" class="form-label">Category</label>
+              <select class="form-select" id="category" data-app="shop" data-model="category" name="category" aria-label="Default select example">
+                <option value="">----</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label for="brand" class="form-label">Brand</label>
+              <select class="form-select" id="brand" data-app="shop" data-model="brand" name="brand" aria-label="Default select example">
+                <option value="">----</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
 
-              </td>
-              <td>{{obj.name}}</td>
-              <td>{{obj.code}}</td>
-              <td>
-                <ul>
-                  {% for c in obj.categories.all %}
-                    <li>{{c}}</li>
-                  {% endfor %}
-                </ul>
-              </td>
-              <td>{% get_boolean_img obj.is_published %}</td>
-              <td>
-                {% include 'partials/action_buttons.html' with obj=obj %}
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          <div class="row py-2">
+            <div class="col">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-warning s-back">Clear Filter</button>
+                <button type="submit" class="btn btn-light">Search</button>
+            </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
-{% include 'pagination.html' %}
+
+{% include 'partials/spiiner_partial.html' %}
+
+
+<div class="res">
+  {% get_template_name_cms as template_name %}
+  {% with template=template_name %}
+  {% include  template %}
+{% endwith %}
+</div>
+
+
+
+
 {% endblock %}

@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -27,7 +28,7 @@ from shop.models import Supplier
 from shop.forms import SupplierForm
 
 
-class SupplierListView(LoginRequiredMixin, BaseListView):
+class SupplierListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Supplier
     paginate_by = 50
 

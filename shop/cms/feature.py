@@ -17,6 +17,7 @@ from core.views import (
 )
 
 from core.mixins import FormMixin, SuccessUrlMixin
+from shop.cms.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -31,10 +32,18 @@ from shop.forms import (
 )
 
 
-class FeatureListView(LoginRequiredMixin, BaseListView):
+class FeatureListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Feature
     queryset = Feature.objects.prefetch_related('categories')
     paginate_by = 50
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category = self.request.GET.get('category')
+        print(category)
+        if category and category != '':
+            queryset = queryset.filter(categories=category)
+        return queryset
 
 
 class FeatureDetailView(LoginRequiredMixin, BaseDetailView):

@@ -1,6 +1,10 @@
 'use strict';
 (function(w,d,$){
   $(d).ready(function(){
+
+    $(".spinner-border").hide();
+
+
     $(".order").sortable({
      /*placeholder : "ui-state-highlight",*/
      update  : function(event, ui)
@@ -49,6 +53,126 @@
     }
     return false;
 })
+
+$("body").on("click", '.page-link', function(e){
+  e.preventDefault();
+  $.when($.ajax({
+           url: $(this).attr("href"),
+           method: 'GET',
+           datatype: 'json',
+           beforeSend: function(){
+             $(".spinner-border").show();
+           },
+           complete: function(){
+             $(".spinner-border").hide();
+             
+           }
+       })).then(function( resp, textStatus, jqXHR ) {
+         $(".res").html(resp);
+         $(".spinner-border").hide();
+       })
+
+  return false;
+})
+
+
+$("#search-form").submit(function(e){
+  e.preventDefault();
+  let form =$(this);
+  let action = form.attr("action");
+  let method = form.attr("method");
+  let data = form.serializeArray();
+  console.info(action,method,data)
+  $.when($.ajax({
+            url: form.attr("action"),
+            data: form.serialize(),
+            type: form.attr("method"),
+            dataType: 'json',
+           beforeSend: function(){
+             $(".spinner-border").show();
+           },
+           complete: function(){
+             $(".spinner-border").hide();
+             
+           }
+       })).then(function( resp, textStatus, jqXHR ) {
+         $(".res").html(resp);
+         $(".spinner-border").hide();
+       })
+
+  return false;
+})
+
+
+
+let form = $("#search-form");
+let action = form.attr("action");
+let method = form.attr("method");
+form.trigger("reset");
+$.when($.ajax({
+        url: form.attr("action"),
+        data: {q: ""},
+        type: form.attr("method"),
+        dataType: 'json',
+         beforeSend: function(){
+           $(".spinner-border").show();
+         },
+         complete: function(){
+           $(".spinner-border").hide();
+           
+         }
+     })).then(function( resp, textStatus, jqXHR ) {
+       $(".res").html(resp);
+       $(".spinner-border").hide();
+     })
+
+
+  $('#search-form select').each(function(){
+      let app = $(this).data("app");
+      let model = $(this).data("model");
+      $(this).select2({
+        ajax: {
+          url: '/sb_data/',
+          data: function (params) {
+            var query = {
+              search: params.term,
+              app:app,
+              model: model,
+              type: 'public'
+            }
+            // Query parameters will be ?search=[term]&type=public
+            return query;
+          }
+        }
+      });
+  });
+
+
+
+$("body").on("click", '.s-back', function(e){
+  e.preventDefault();
+  let form = $("#search-form");
+  form.trigger("reset");
+  $.when($.ajax({
+          url: form.attr("action"),
+          data: {q: ""},
+          type: form.attr("method"),
+          dataType: 'json',
+           beforeSend: function(){
+             $(".spinner-border").show();
+           },
+           complete: function(){
+             $(".spinner-border").hide();
+             
+           }
+       })).then(function( resp, textStatus, jqXHR ) {
+         $(".res").html(resp);
+         $(".spinner-border").hide();
+       })
+
+  return false;
+})
+
 
 
 
