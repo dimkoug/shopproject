@@ -4,9 +4,9 @@ from django.forms import inlineformset_factory
 from core.forms import BootstrapForm, BootstrapFormSet
 
 from .models import (
-    Category, ChildCategory, Tag, Supplier, WareHouse, Brand,
+    Category, ParentCategory, Tag, Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory, Attribute, Product,
-    ProductCategory, ProductTag, ProductRelated, Media, Logo, Stock,
+    ProductTag, ProductRelated, Media, Logo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,
     OfferProduct
@@ -16,20 +16,20 @@ from .models import (
 class CategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('name', 'image', 'is_published', 'order', 'children')
+        fields = ('name', 'image', 'is_published', 'order', 'parents')
 
 
-class ChildCategoryForm(BootstrapForm, forms.ModelForm):
+class ParentCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = ChildCategory
-        fields = ('source', 'target', 'order')
+        model = ParentCategory
+        fields = ('from_category', 'to_category', 'order')
 
 
-ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
-                                             form=ChildCategoryForm,
+ParentCategoryFormSet = inlineformset_factory(Category, ParentCategory,
+                                             form=ParentCategoryForm,
                                              formset=BootstrapFormSet,
                                              can_delete=True,
-                                             fk_name='source')
+                                             fk_name='from_category')
 
 
 class TagForm(BootstrapForm, forms.ModelForm):
@@ -104,7 +104,7 @@ AttributeFormSet = inlineformset_factory(Feature, Attribute,
 class ProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ('name', 'brand', 'parent', 'image', 'subtitle',
+        fields = ('name', 'brand','category', 'parent', 'image', 'subtitle',
                   'description', 'price', 'is_published', 'order')
 
     def __init__(self, *args, **kwargs):
@@ -113,9 +113,14 @@ class ProductForm(BootstrapForm, forms.ModelForm):
         self.fields['brand'].widget=forms.Select(attrs={'class': 'form-control'})
         self.fields['parent'].queryset = Product.objects.none()
         self.fields['parent'].widget=forms.Select(attrs={'class': 'form-control'})
+        self.fields['category'].queryset = Category.objects.none()
+        self.fields['category'].widget=forms.Select(attrs={'class': 'form-control'})
 
         if 'brand' in self.data:
             self.fields['brand'].queryset = Brand.objects.all()
+
+        if 'category' in self.data:
+            self.fields['category'].queryset = Category.objects.all()
         
         if 'parent' in self.data:
             self.fields['parent'].queryset = Product.objects.all()
@@ -123,30 +128,7 @@ class ProductForm(BootstrapForm, forms.ModelForm):
         if self.instance.pk:
             self.fields['brand'].queryset = Brand.objects.filter(id=self.instance.brand_id)
             self.fields['parent'].queryset = Product.objects.filter(id=self.instance.parent_id)
-
-
-class ProductCategoryForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = ProductCategory
-        fields = ('category',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['category'].queryset = Category.objects.all()
-        # self.fields['category'].widget=forms.Select(attrs={'class': 'form-control'})
-
-        if 'category' in self.data:
-            self.fields['category'].queryset = Category.objects.all()
-
-        if self.instance.pk:
             self.fields['category'].queryset = Category.objects.filter(id=self.instance.category_id)
-
-
-ProductCategoryFormSet = inlineformset_factory(Product, ProductCategory,
-                                               form=ProductCategoryForm,
-                                               formset=BootstrapFormSet,
-                                               can_delete=True,
-                                               fk_name='product')
 
 
 class ProductTagForm(BootstrapForm, forms.ModelForm):

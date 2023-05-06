@@ -42,19 +42,18 @@
     <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for category in categories %}
-        {% if category.second_level %}
+        {% if category.to_categories.all %}
         <div class="col-3 my-0 g-0">
           <div class="level-1 fs-6">{{category}}</div>
           <hr>
-           {% for child in category.second_level %}
-            {{child}}
+           {% for child in category.to_categories.all %}
             <div class="col-12 my-0 g-0">
-              <div class="level-2 fs-6 ">{{child}}</div>
+              <div class="level-2 fs-6 ">{{child.from_category}}</div>
             </div>
-              {% if child.third_level %}
+              {% if child.from_category.to_categories.all %}
               <div class="row my-0 g-0">
-                {% for ch in child.third_level %}
-                <div class="col-12 my-0 g-0 fs-6" > <a href="{% url 'shop:catalog' %}?category={{ch.id}}" class="nav-category link">{{ch.name}}</a>
+                {% for ch in child.from_category.to_categories.all %}
+                <div class="col-12 my-0 g-0 fs-6" > <a href="{% url 'shop:catalog' %}?category={{ch.from_category.id}}" class="nav-category link">{{ch.from_category.name}}</a>
                 </div>
                 {% endfor %}
               </div>

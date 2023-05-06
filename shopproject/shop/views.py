@@ -21,7 +21,7 @@ from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
 from shop.models import (
-    FeatureCategory, ProductCategory, Feature, Product, ProductTag, Order, OrderItem,
+    FeatureCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
     Media, ProductAttribute, Category, Brand
 )

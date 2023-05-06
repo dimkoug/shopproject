@@ -24,10 +24,10 @@ from core.functions import is_ajax
 
 
 from shop.models import (
-    Category, ChildCategory
+    Category, ParentCategory
 )
 
-from shop.forms import CategoryForm, ChildCategoryForm, ChildCategoryFormSet
+from shop.forms import CategoryForm, ParentCategoryForm, ParentCategoryFormSet
 
 
 class IndexView(LoginRequiredMixin, BaseIndexView):
@@ -36,19 +36,19 @@ class IndexView(LoginRequiredMixin, BaseIndexView):
 
 class CategoryListView(LoginRequiredMixin, CmsListView, BaseListView):
     model = Category
-    queryset = Category.objects.prefetch_related('children')
+    queryset = Category.objects.prefetch_related('parents')
     paginate_by = 50
 
 
 class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
     model = Category
-    queryset = Category.objects.prefetch_related('children')
+    queryset = Category.objects.prefetch_related('parents')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         for c in self.get_object().children.all().order_by('order'):
             print(c, c.order)
-        context['categories'] = ChildCategory.objects.select_related('target').filter(source=self.get_object()).order_by('order')
+        context['categories'] = ParentCategory.objects.select_related('to_category').filter(from_category=self.get_object()).order_by('order')
         return context
 
 class CategoryCreateView(LoginRequiredMixin, FormMixin,

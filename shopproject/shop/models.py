@@ -59,8 +59,8 @@ class Category(Timestamped, Ordered, Published):
     code = models.CharField(max_length=255, null=True,blank=True)
     image = models.ImageField(upload_to='',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
-    children = models.ManyToManyField("self", through='ChildCategory',
-                                      through_fields=('source', 'target'),
+    parents = models.ManyToManyField("self", through='ParentCategory',
+                                      through_fields=('from_category', 'to_category'),
                                       symmetrical=False, blank=True)
 
     class Meta:
@@ -73,19 +73,19 @@ class Category(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class ChildCategory(Timestamped, Ordered):
-    source = models.ForeignKey(Category, on_delete=models.CASCADE,
-                               related_name='source')
-    target = models.ForeignKey(Category, on_delete=models.CASCADE,
-                               related_name='target')
+class ParentCategory(Timestamped, Ordered):
+    from_category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                      related_name='from_categories', db_index=True)
+    to_category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                               related_name='to_categories', db_index=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['source', 'target'], name="childcategory")
+            models.UniqueConstraint(fields=['from_category', 'to_category'], name="parentcategory")
         ]
         ordering = ['order']
         indexes = [
-            models.Index(fields=['source', 'target']),
+            models.Index(fields=['from_category', 'to_category']),
         ]
 
 
@@ -213,7 +213,7 @@ class Product(Timestamped,  Ordered, Published):
                                null=True, blank=True, related_name='children')
     image = models.ImageField(upload_to='',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
-    categories = models.ManyToManyField(Category, through='ProductCategory')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     tags = models.ManyToManyField(Tag, through='ProductTag')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
@@ -238,21 +238,6 @@ class Product(Timestamped,  Ordered, Published):
 
     def __str__(self):
         return f"{self.name}"
-
-
-class ProductCategory(Timestamped):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    class Meta:
-        default_related_name = 'productcategories'
-        constraints = [
-            models.UniqueConstraint(fields=['product', 'category'], name="product_category")
-        ]
-        indexes = [
-            models.Index(fields=['product', 'category']),
-        ]
-
 
 
 class ProductTag(Timestamped):

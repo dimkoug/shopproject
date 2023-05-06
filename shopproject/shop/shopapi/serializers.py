@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from shop.models import (
-    Category,ChildCategory,Tag, Supplier,WareHouse, Brand, BrandSupplier, Feature,
-    FeatureCategory, Attribute, Product, ProductCategory,ProductTag,ProductRelated,
+    Category,ParentCategory,Tag, Supplier,WareHouse, Brand, BrandSupplier, Feature,
+    FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media,Logo,Stock, Shipment,ProductAttribute,
     Hero,HeroItem, Offer, OfferProduct, Order, OrderItem,
     ShoppingCart, Address,
@@ -39,22 +39,6 @@ class FeatureCategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FeatureCategory
         fields = ['feature', 'category']
-
-
-class ProductCategorySerializer(serializers.HyperlinkedModelSerializer):
-    product = serializers.HyperlinkedRelatedField(
-        view_name='product-detail',
-        read_only=True,
-        lookup_field='pk'
-    )
-    category = serializers.HyperlinkedRelatedField(
-        view_name='category-detail',
-        read_only=True,
-        lookup_field='pk'
-    )
-    class Meta:
-        model = ProductCategory
-        fields = ['product', 'category']
 
 
 class ProductTagSerializer(serializers.HyperlinkedModelSerializer):
@@ -127,24 +111,24 @@ class BrandSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class ChildCategorySerializer(serializers.HyperlinkedModelSerializer):
+class ParentCategorySerializer(serializers.HyperlinkedModelSerializer):
     target = serializers.HyperlinkedRelatedField(
         view_name='category-detail',
         read_only=True,
         lookup_field='pk'
     )
     class Meta:
-        model = ChildCategory
-        fields = ['target']
+        model = ParentCategory
+        fields = ['to_category']
 
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    children = ChildCategorySerializer(source='source', many=True)
+    parents = ParentCategorySerializer(source='from_category', many=True)
 
     class Meta:
         model = Category
-        fields = ['id', 'url', 'children', 'name', 'image', 'order']
+        fields = ['id', 'url', 'parents', 'name', 'image', 'order']
 
 
 class FeatureSerializer(serializers.HyperlinkedModelSerializer):
@@ -200,7 +184,6 @@ class TagSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
-    categories = ProductCategorySerializer(source='productcategories',many=True)
     tags = ProductTagSerializer(source='producttags',many=True)
     attributes = ProductAttributeSerializer(source='productattributes',many=True)
     relatedproducts = ProductRelatedSerializer(many=True)
@@ -209,8 +192,8 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['url', 'name', 'image', 'description', 'brand', 'parent',
-                  'price', 'categories', 'tags', 'attributes',
+        fields = ['url', 'name', 'image', 'description', 'brand','category', 'parent',
+                  'price', 'tags', 'attributes',
                   'relatedproducts',
                   'order']
 

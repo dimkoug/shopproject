@@ -24,7 +24,7 @@ from core.functions import is_ajax
 
 
 from shop.models import (
-    Product, ProductTag, ProductAttribute, ProductCategory, ProductRelated, Media, Logo, Stock,Category
+    Product, ProductTag, ProductAttribute, ProductRelated, Media, Logo, Stock,Category
 
 )
 
@@ -33,14 +33,14 @@ from shop.forms import (
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet,
     ProductAttributeFormSet,
-    MediaFormSet, LogoFormSet, StockFormSet, ProductCategoryFormSet
+    MediaFormSet, LogoFormSet, StockFormSet
 )
 
 
 class ProductListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Product
     paginate_by = 50
-    queryset = Product.objects.select_related('brand').prefetch_related('categories')
+    queryset = Product.objects.select_related('brand', 'category')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -48,7 +48,7 @@ class ProductListView(LoginRequiredMixin,CmsListView, BaseListView):
         brand = self.request.GET.get('brand')
         print(category)
         if category and category != '':
-            queryset = queryset.filter(categories=category)
+            queryset = queryset.filter(category=category)
         if brand and brand != '':
             queryset = queryset.filter(brand=brand)
         return queryset
@@ -75,14 +75,6 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
                 "sb_url": reverse("shop:get_tags_for_sb")
             },
             {
-                'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(
-                    self.request.POST or None,
-                    queryset=ProductCategory.objects.select_related(
-                        'product', 'category')),
-                "sb_url": reverse("shop:get_categories_for_sb")
-            },
-            {
                 'title': 'Related Products',
                 'formset': ProductRelatedFormSet(
                     self.request.POST or None,
@@ -104,7 +96,6 @@ class ProductCreateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),
                 StockFormSet(self.request.POST, self.request.FILES,
@@ -131,7 +122,7 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
                         SuccessUrlMixin, BaseUpdateView):
     model = Product
     form_class = ProductForm
-    queryset = Product.objects.select_related('brand').prefetch_related('categories__featurecategories', 'attributes','tags','relatedproducts')
+    queryset = Product.objects.select_related('brand', 'category').prefetch_related('category__featurecategories', 'attributes','tags','relatedproducts')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -143,14 +134,6 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
                     queryset=ProductTag.objects.select_related(
                         'product', 'tag')),
                 "sb_url": reverse("shop:get_tags_for_sb")
-            },
-            {
-                'title': 'Product Categories',
-                'formset': ProductCategoryFormSet(
-                    self.request.POST or None,instance=self.get_object(),
-                    queryset=ProductCategory.objects.select_related(
-                        'product', 'category')),
-                "sb_url": reverse("shop:get_categories_for_sb")
             },
             {
                 'title': 'Related Products',
@@ -169,9 +152,8 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
             },
         ]
         features = []
-        for category in self.get_object().categories.all():
-            for feature in category.featurecategories.all():
-                features.append(feature.feature)
+        for feature in self.get_object().category.featurecategories.all():
+            features.append(feature.feature)
         context['features'] = set(features)
         return context
 
@@ -179,7 +161,6 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
         if form.is_valid():
             obj = form.save(commit=False)
             formsets = [
-                ProductCategoryFormSet(self.request.POST, instance=obj),
                 ProductTagFormSet(self.request.POST, instance=obj),
                 ProductRelatedFormSet(self.request.POST, instance=obj),
                 StockFormSet(self.request.POST, self.request.FILES,

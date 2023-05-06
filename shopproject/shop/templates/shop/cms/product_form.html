@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-6">
+            <div class="col-4">
               <div class="form-group">
                 {{ form.brand.label_tag }}
                 {{form.brand}}
@@ -77,7 +77,7 @@
                 {% endif %}
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
               <div class="form-group">
                 {{ form.parent.label_tag }}
                 {{form.parent}}
@@ -88,6 +88,20 @@
                 {%endif%}
                 {% if form.parent.help_text %}
                   <small class="form-text text-muted">{{ form.parent.help_text }}</small>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                {{ form.category.label_tag }}
+                {{form.category}}
+                {% if form.category.errors %}
+                <div class="invalid-feedback">
+                  {{form.category.errors}}
+                </div>
+                {%endif%}
+                {% if form.category.help_text %}
+                  <small class="form-text text-muted">{{ form.category.help_text }}</small>
                 {% endif %}
               </div>
             </div>
@@ -302,6 +316,19 @@
             $('#id_parent').select2({
               ajax: {
                 url: '/shop/get_products_for_sb/',
+                data: function (params) {
+                  var query = {
+                    search: params.term,
+                    type: 'public'
+                  }
+                  // Query parameters will be ?search=[term]&type=public
+                  return query;
+                }
+              }
+            });
+            $('#id_category').select2({
+              ajax: {
+                url: '/shop/get_categories_for_sb/',
                 data: function (params) {
                   var query = {
                     search: params.term,

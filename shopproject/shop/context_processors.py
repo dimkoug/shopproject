@@ -1,25 +1,17 @@
 from django.db.models import Prefetch, Count
 from shop.models import (
     ShoppingCart, Brand,
-    Category, ProductCategory,
+    Category, Product,
     Tag, Hero, HeroItem
 )
 
 
 def get_context_data(request):
-    published_products = ProductCategory.objects.select_related(
-        'product', 'category').filter(product__price__gt=0)
-    active_products = Count('productcategories', filter=published_products)
-    third_categories = Category.objects.prefetch_related(
-            Prefetch('productcategories',
-                     queryset=ProductCategory.objects.select_related('category'))
-            ).annotate(count_active_products=Count('productcategories'),
-                       c=active_products).filter(
-                       productcategories__in=published_products)
-    second_categories = Category.objects.prefetch_related('children').filter(
-        children__in=third_categories).distinct()
-    first_categories = Category.objects.prefetch_related('children').filter(
-        children__in=second_categories).distinct()
+    third_categories = Product.objects.values_list('category_id',flat=True).distinct()
+    second_categories = Category.objects.prefetch_related('to_categories').filter(
+        to_categories__from_category__in=third_categories).values_list('id',flat=True).distinct()
+    first_categories = Category.objects.prefetch_related('to_categories').filter(
+        to_categories__from_category__in=second_categories).values_list('id',flat=True).distinct()
     shopping_cart_id = request.session.get('shopping_cart_id')
     heroes = Hero.objects.prefetch_related(
         Prefetch('heroitems',
@@ -33,21 +25,9 @@ def get_context_data(request):
     else:
         basket_count = 0
 
-    p = Prefetch(
-        'children',
-        queryset=Category.objects.prefetch_related(
-                    Prefetch(
-                        'children',
-                        queryset=Category.objects.filter(
-                             id__in=third_categories).order_by('order'),
-                        to_attr='third_level'
-                    )
-                ).filter(id__in=second_categories).order_by('order'),
-        to_attr='second_level'
-    )
-
-    categories = Category.objects.prefetch_related(p).filter(
-        is_published=True, id__in=first_categories).order_by('order')
+    categories = Category.objects.prefetch_related('to_categories__from_category__to_categories__from_category', 'parents').filter(
+        id__in=first_categories, parents__isnull=True).order_by('order').distinct()
+    
 
     return {
         'categories': categories,

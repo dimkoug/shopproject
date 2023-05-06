@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
 import os
-import multiprocessing as mp
 import sys
 
 
 def main():
-    # if 'win' in sys.platform:
-    #     multiprocessing.set_start_method('spawn')
-    # else:
-    #     multiprocessing.set_start_method('fork')
+    """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shopproject.settings')
     try:
         from django.core.management import execute_from_command_line
@@ -24,3 +20,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

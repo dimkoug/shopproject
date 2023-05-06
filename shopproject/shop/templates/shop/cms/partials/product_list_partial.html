@@ -10,7 +10,7 @@
                 <th>Name</th>
                 <th>Brand</th>
                 <th>Code</th>
-                <th>Categories</th>
+                <th>Category</th>
                 <th>Published</th>
                 <th></th>
               </tr>
@@ -27,13 +27,7 @@
                 <td>{{obj.name}}</td>
                 <td>{{obj.brand}}</td>
                 <td>{{obj.code}}</td>
-                <td>
-                  <ul>
-                    {% for c in obj.categories.all %}
-                      <li>{{c}}</li>
-                    {% endfor %}
-                  </ul>
-                </td>
+                <td>{{obj.category}}</td>
                 <td>{% get_boolean_img obj.is_published %}</td>
                 <td>
                   {% include 'partials/action_buttons.html' with obj=obj %}

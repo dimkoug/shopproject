@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 # Register your models here.
 from .models import (
-    Category, ChildCategory, Tag,
+    Category, ParentCategory, Tag,
     Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory,
     Attribute, Product,
-    ProductCategory, ProductTag, ProductRelated,
+    ProductTag, ProductRelated,
     Media, Logo, Stock, Shipment, ProductAttribute,
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
@@ -14,11 +14,11 @@ from .models import (
 )
 
 from .forms import (
-    CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
+    CategoryForm, ParentCategoryForm, ParentCategoryFormSet,
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
     MediaFormSet, LogoFormSet, StockFormSet,
-    ProductForm, ProductCategoryFormSet, ProductTagFormSet,
+    ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
@@ -26,12 +26,12 @@ from .forms import (
 )
 
 
-class ChildCategoryInline(admin.TabularInline):
-    model = ChildCategory
-    formset = ChildCategoryFormSet
-    fk_name = 'source'
+class ParentCategoryInline(admin.TabularInline):
+    model = ParentCategory
+    formset = ParentCategoryFormSet
+    fk_name = 'from_category'
     extra = 1
-    autocomplete_fields = ['target']
+    autocomplete_fields = ['to_category']
 
 
 
@@ -47,14 +47,6 @@ class CategoryInline(admin.TabularInline):
     model = FeatureCategory
     formset = CategoryFormSet
     fk_name = 'feature'
-    extra = 1
-    autocomplete_fields = ['category']
-
-
-class ProductCategoryInline(admin.TabularInline):
-    model = ProductCategory
-    formset = ProductCategoryFormSet
-    fk_name = 'product'
     extra = 1
     autocomplete_fields = ['category']
 
@@ -130,7 +122,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     inlines = [
-        ChildCategoryInline,
+        ParentCategoryInline,
     ]
 
     def thumbnail(self, obj):
@@ -144,11 +136,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.prefetch_related('children')
+        queryset = queryset.prefetch_related('parents')
         return queryset
 
     def get_categories(self, obj):
-        return "\n".join([p.name for p in obj.children.all()])
+        return "\n".join([p.name for p in obj.parents.all()])
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -207,7 +199,6 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     inlines = [
-        ProductCategoryInline,
         ProductTagInline,
         ProductRelatedInline,
         ProductAttributeInline,
