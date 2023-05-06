@@ -48,8 +48,7 @@ class CatalogListView(PaginationMixin, ListView):
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
-    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
-        'categories',
+    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'attributes',
     ).filter(price__gt=0)
@@ -66,7 +65,7 @@ class CatalogListView(PaginationMixin, ListView):
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         if category:
-            queryset = queryset.filter(categories__in=[category])
+            queryset = queryset.filter(category=category)
         if brand:
             queryset = queryset.filter(brand_id=brand)
         if tag:
@@ -223,8 +222,7 @@ class BasketView(TemplateView):
 class CatalogProductDetailView(DetailView):
     model = Product
     template_name = 'shop/site/product_detail.html'
-    queryset = Product.objects.select_related('brand', 'parent').prefetch_related(
-        'categories',
+    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'media',
         'attributes',

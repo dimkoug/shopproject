@@ -30,9 +30,7 @@
           </div>
           {% endif %}
           <div class="">
-            {% for category in object.categories.all %}
-                <a class="tag-link" href="{% url 'shop:catalog' %}?category={{category.id}}">{{category.name}}</a>
-            {% endfor %}
+             <a class="tag-link" href="{% url 'shop:catalog' %}?category={{object.category.id}}">{{object.category.name}}</a>
           </div>
           <div class="">
             {{object.description|safe}}
