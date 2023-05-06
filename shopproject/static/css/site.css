@@ -25,6 +25,11 @@ body, html {
   overflow-y: auto;
 }
 
+.level-2:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 div[class*="mega-menu-container-"]{
     z-index:100;
     position:absolute;
