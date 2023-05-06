@@ -15,7 +15,13 @@
         
         <div class="col-2 col-sm-2">
           <div class="text-center">
-            <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">{{object.brand}}</a>
+            <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">
+              {% if object.brand.image %}
+                <img src="{{object.brand.image.url}}" alt="" class="img-fluid">
+              {% else %}
+                {{object.brand}}
+              {% endif %}
+              </a>
           </div>
           {% if object.image %}
           <img src="{{ object.image.url }}" class="img-fluid">
@@ -39,6 +45,17 @@
         <div class="col-2">
             <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-light float-right ajax_add_to_cart"><i class="bi bi-cart"></i>  &#128;{{object.price}}</a>
         </div>
+      </div>
+      <hr>
+      <div class="row">
+        {% for logo in object.logos.all %}
+          {% if logo.image %}
+          <div class="col-1">
+            <img src="{{logo.image.url}}" alt="">
+
+          </div>
+          {% endif %}
+        {% endfor %}
       </div>
       <hr>
       <div class="row py-2">

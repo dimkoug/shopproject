@@ -50,7 +50,7 @@ class CatalogListView(PaginationMixin, ListView):
 
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
-        'attributes',
+        'attributes__feature',
     ).filter(price__gt=0)
 
     def get_queryset(self):
@@ -71,7 +71,7 @@ class CatalogListView(PaginationMixin, ListView):
         if tag:
             queryset = queryset.filter(tags__in=[tag])
         if q and q != '':
-            queryset = queryset.filter(name__icontains=q)
+            queryset = queryset.filter(Q(name__icontains=q) | Q(code__icontains=q))
         if len(attrs) > 0:
             for attr in attrs:
                 queryset = queryset.filter(
@@ -119,14 +119,14 @@ class CatalogListView(PaginationMixin, ListView):
         #         a.delete()
         #     if a.name == '---':
         #         a.delete()
-        for p in self.get_queryset().all():
+        for p in self.get_queryset():
             for a in p.attributes.all():
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
 
         feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(filter_display=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
             product_count=counter), to_attr='attrs')).filter(
-            id__in=features_items, featurecategories__filter_display=True).distinct()
+            id__in=features_items).distinct()
         context['specification_list'] = feature_list
         context['products_count'] = self.get_queryset().count()
         context['query_string'] = create_query_string(self.request)

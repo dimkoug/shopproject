@@ -69,7 +69,7 @@
         {% for brand in brands %}
         <div class="col-2"><a href="{% url 'shop:catalog' %}?brand={{brand.id}}">
           {% if brand.image %}
-            <img src="{{brand.image.url}}" alt="" />
+            <img src="{{brand.image.url}}" alt="" class="img-fluid"/>
           {% else %}
           {{brand.name}}
           {% endif %}
