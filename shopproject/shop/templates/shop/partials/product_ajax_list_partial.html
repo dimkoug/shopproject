@@ -1,12 +1,10 @@
 {% load static %}
 <div class="row py-2">
-  <div class="col-12">
+    <div class="col-2">
         {% include 'shop/partials/filters_partial.html' %}
-       <div class="row py-2">
-        <div class="col-12">
+    </div>
+    <div class="col-10">
           <img src="{% static 'img/loading.svg' %}" class="loading">
-        </div>
-      </div>
-     {% include 'shop/partials/product_list_partial.html' with product_list=object_list %}
-  </div>
+          {% include 'shop/partials/product_list_partial.html' with product_list=object_list %}
+    </div>
 </div>

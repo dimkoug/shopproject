@@ -26,7 +26,7 @@ def get_context_data(request):
         basket_count = 0
 
     categories = Category.objects.prefetch_related('to_categories__from_category__to_categories__from_category', 'parents').filter(
-        id__in=first_categories, parents__isnull=True).order_by('order').distinct()
+        id__in=first_categories, parents__isnull=True, is_published=True).order_by('order').distinct()
     
 
     return {

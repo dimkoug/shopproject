@@ -20,18 +20,22 @@ body, html {
   width:100% !important;
 }
 
+.scrollable-row {
+  max-height: 200px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
 
 div[class*="mega-menu-container-"]{
     z-index:100;
     position:absolute;
     width:100%;
     overflow-y: scroll;
-    height:500px;
+    /*height:500px;*/
     left:0px;
     right:0px;
     border: 1px solid #f0f0f0;
     background-color: #ffffff;
-    min-height: 500px;
+    /*min-height: 500px;*/
   }
 
   div[class*="basket-container"]{

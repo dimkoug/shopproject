@@ -65,7 +65,7 @@
               }
           })).then(function( resp, textStatus, jqXHR ) {
             $(".products").html(resp.html);
-            $('#filter-container').hide();
+            setFilterHeight()
             $(".loading").hide();
           })
 
@@ -88,28 +88,36 @@
               }
           })).then(function( resp, textStatus, jqXHR ) {
             $(".products").html(resp.html);
+            setFilterHeight()
             $(".loading").hide();
           })
 
      return false;
  })
 
- $('#filter-container').hide();
+ function setFilterHeight(){
+  $('.scrollable-row').css('max-height', $(".results").height() + 'px');
+ }
 
- $('body').on('click', '.filters', function(e){
-    e.preventDefault();
-    $('#filter-container').fadeToggle();
-
-
-    return false;
+ setFilterHeight()
 
 
+ $("body").on('click', '#reset-filters', function(e){
+  e.preventDefault();
+  w.location.reload()
+  setFilterHeight()
  })
 
- $('body').on('click', '#reset-filters', function(e){
+ $('[id^="third"]').hide();
+
+
+$("body").on("click", "[id^='category']",function(e){
   e.preventDefault();
-  w.location.reload();
-  return false;
+  let id = $(this).attr("id").split('-')[1];
+  $('[id^="third"]').slideUp();
+  $("#third-" + id).slideToggle()
+
+
 })
 
 

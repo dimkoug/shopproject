@@ -15,6 +15,11 @@ body, html {
   padding: 0.5rem;
 }
 
+.scrollable-row {
+  max-height: 200px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
 div[class*="mega-menu-container-"]{
     z-index:100;
     position:absolute;
