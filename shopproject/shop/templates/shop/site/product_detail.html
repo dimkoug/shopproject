@@ -37,6 +37,9 @@
           {% endif %}
           <div class="">
              <a class="tag-link" href="{% url 'shop:catalog' %}?category={{object.category.id}}">{{object.category.name}}</a>
+             {% if object.pdf_guide %}
+              <a href="{{object.pdf_guide.url}}"><i class="bi bi-file-pdf-fill" style="font-size:1.4rem;"></i></a>
+            {% endif %}
           </div>
           <div class="">
             {{object.description|safe}}
@@ -47,6 +50,7 @@
         </div>
       </div>
       <hr>
+      {% if  object.logos.all %}
       <div class="row">
         {% for logo in object.logos.all %}
           {% if logo.image %}
@@ -58,6 +62,26 @@
         {% endfor %}
       </div>
       <hr>
+      {% endif %}
+      {% if  object.relatedproducts.all %}
+      <div class="row">
+        {% for item in object.relatedproducts.all %}
+          <div class="col">
+            <div class="card">
+              {% if item.image %}
+              <img src="{{item.image.url}}" class="card-img-top" alt="...">
+              {% endif %}
+              <div class="card-body">
+                <h6 class="card-title">{{item}}</h6>
+                <a href="{% url 'shop:catalog-product-detail' item.pk %}" class="btn btn-primary">Info</a>
+              </div>
+            </div>
+          </div>
+          
+        {% endfor %}
+      </div>
+      <hr>
+      {% endif %}
       <div class="row py-2">
           <div class="col-12 col-sm-12">
               <div class="swiper-container mySwiper">

@@ -225,7 +225,9 @@ class CatalogProductDetailView(DetailView):
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'media',
+        'logos',
         'attributes',
+        'relatedproducts__target'
     )
 
     def get_context_data(self, **kwargs):
