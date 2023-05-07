@@ -46,7 +46,7 @@ class IndexView(TemplateView):
 
 
 
-@method_decorator(cache_page(60 * 5), name='dispatch')
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class CatalogListView(PaginationMixin, ListView):
 
     model = Product
@@ -54,7 +54,7 @@ class CatalogListView(PaginationMixin, ListView):
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
-    @method_decorator(cache_page(60 * 5))
+    @method_decorator(cache_page(60 * 15))
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         response['X-Cache'] = 'HIT' if response.has_header('Expires') else 'MISS'
