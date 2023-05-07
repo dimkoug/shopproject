@@ -1,6 +1,10 @@
 import uuid
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.views.decorators.cache import cache_control
+from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
 from django.http import JsonResponse
@@ -41,12 +45,20 @@ class IndexView(TemplateView):
         return super().dispatch(*args, **kwargs)
 
 
+
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class CatalogListView(PaginationMixin, ListView):
 
     model = Product
     paginate_by = 10  # if pagination is desired
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
+
+    @method_decorator(cache_page(60 * 5))
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
+        response['X-Cache'] = 'HIT' if response.has_header('Expires') else 'MISS'
+        return response
 
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
