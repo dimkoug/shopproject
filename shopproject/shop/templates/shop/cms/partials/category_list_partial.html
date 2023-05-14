@@ -9,7 +9,7 @@
                 <th>sort</th>
                 <th>Name</th>
                 <th>Code</th>
-                <th>Parents</th>
+                <th>Children</th>
                 <th>Is published</th>
                 <th>Image</th>
                 <th></th>
@@ -23,8 +23,8 @@
                 <td>{{obj.code}}</td>
                 <td>
                   <ul>
-                    {% for parent in obj.parents.all %}
-                      <li>{{parent}}</li>
+                    {% for child in obj.children.all %}
+                      <li>{{child}}</li>
                     {% endfor %}
                   </ul>
                 </td>

@@ -57,11 +57,11 @@ class ImageModel(models.Model):
 class Category(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
     code = models.CharField(max_length=255, null=True,blank=True)
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='categories/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
-    parents = models.ManyToManyField("self", through='ParentCategory',
-                                      through_fields=('from_category', 'to_category'),
-                                      symmetrical=False, blank=True)
+    children = models.ManyToManyField("self", through='ChildCategory',
+                                      through_fields=('source', 'target'),
+                                      symmetrical=False, blank=True,related_name='source')
 
     class Meta:
         default_related_name = 'categories'
@@ -73,19 +73,19 @@ class Category(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class ParentCategory(Timestamped, Ordered):
-    from_category = models.ForeignKey(Category, on_delete=models.CASCADE,
-                                      related_name='from_categories', db_index=True)
-    to_category = models.ForeignKey(Category, on_delete=models.CASCADE,
-                               related_name='to_categories', db_index=True)
+class ChildCategory(Timestamped, Ordered):
+    source = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                      related_name='sources', db_index=True)
+    target = models.ForeignKey(Category, on_delete=models.CASCADE,
+                               related_name='targets', db_index=True)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['from_category', 'to_category'], name="parentcategory")
+            models.UniqueConstraint(fields=['source', 'target'], name="childcategory")
         ]
         ordering = ['order']
         indexes = [
-            models.Index(fields=['from_category', 'to_category']),
+            models.Index(fields=['source', 'target']),
         ]
 
 
@@ -129,7 +129,7 @@ class WareHouse(Timestamped):
 
 class Brand(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='brands/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     url = models.URLField(blank=True, null=True)
     suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
@@ -160,7 +160,7 @@ class BrandSupplier(Timestamped):
 
 class Feature(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='features/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     url = models.URLField(blank=True, null=True)
     categories = models.ManyToManyField(Category, through='FeatureCategory')
@@ -211,7 +211,7 @@ class Product(Timestamped,  Ordered, Published):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='products/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
@@ -221,7 +221,7 @@ class Product(Timestamped,  Ordered, Published):
                                                  'source', 'target'),
                                              symmetrical=False, blank=True)
     name = models.CharField(max_length=255, unique=True)
-    pdf_guide = models.FileField(upload_to='',
+    pdf_guide = models.FileField(upload_to='files/',
                                  storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     code = models.CharField(max_length=255, null=True,blank=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)
@@ -274,7 +274,7 @@ class ProductRelated(Timestamped):
 
 class Media(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='media/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
 
     class Meta:
@@ -289,7 +289,7 @@ class Media(Timestamped, Ordered, Published):
 
 class Logo(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='',
+    image = models.ImageField(upload_to='logos/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
 
     class Meta:

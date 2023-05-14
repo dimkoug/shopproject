@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 # Register your models here.
 from .models import (
-    Category, ParentCategory, Tag,
+    Category, ChildCategory, Tag,
     Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory,
     Attribute, Product,
@@ -14,7 +14,7 @@ from .models import (
 )
 
 from .forms import (
-    CategoryForm, ParentCategoryForm, ParentCategoryFormSet,
+    CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
     MediaFormSet, LogoFormSet, StockFormSet,
@@ -26,12 +26,12 @@ from .forms import (
 )
 
 
-class ParentCategoryInline(admin.TabularInline):
-    model = ParentCategory
-    formset = ParentCategoryFormSet
-    fk_name = 'from_category'
+class ChildCategoryInline(admin.TabularInline):
+    model = ChildCategory
+    formset = ChildCategoryFormSet
+    fk_name = 'source'
     extra = 1
-    autocomplete_fields = ['to_category']
+    autocomplete_fields = ['target']
 
 
 
@@ -122,7 +122,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     inlines = [
-        ParentCategoryInline,
+        ChildCategoryInline,
     ]
 
     def thumbnail(self, obj):
@@ -136,11 +136,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.prefetch_related('parents')
+        queryset = queryset.prefetch_related('children')
         return queryset
 
     def get_categories(self, obj):
-        return "\n".join([p.name for p in obj.parents.all()])
+        return "\n".join([p.name for p in obj.children.all()])
 
 
 class TagAdmin(admin.ModelAdmin):

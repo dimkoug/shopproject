@@ -14,6 +14,7 @@ import os
 from django.contrib.messages import constants as messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 PUBLIC_DIR = os.path.abspath(os.path.join(
     os.path.dirname(__file__), '..','..',  'public'))
 VIRTUAL_ENV_DIR = os.path.abspath(os.path.join(
@@ -87,7 +88,7 @@ ROOT_URLCONF = 'shopproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [TEMPLATES_DIR],
         #'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -166,6 +167,10 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+USE_THOUSAND_SEPARATOR = True
+DECIMAL_SEPARATOR = ','
+THOUSAND_SEPARATOR = '.'
 
 
 # Static files (CSS, JavaScript, Images)
