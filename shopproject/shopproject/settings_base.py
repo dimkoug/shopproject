@@ -26,10 +26,12 @@ VIRTUAL_ENV_DIR = os.path.abspath(os.path.join(
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'uwy_#!y0-i8111@it#9!88490@^__rt(i(*1re6anma^%#+c=4'
 
+SESSION_COOKIE_NAME = 'shopproject'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['mysite2.localhost']
+ALLOWED_HOSTS = []
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -123,17 +125,7 @@ WSGI_APPLICATION = 'shopproject.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'shopproject',
-        'USER': 'postgres',
-        'PASSWORD': '1984',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'CONN_MAX_AGE': 60 * 10
-    }
-}
+
 
 
 # Password validation
@@ -192,26 +184,6 @@ STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-SESSION_CACHE_ALIAS = "default"
-
-
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "my_cache_table",
-    }
-}
-
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-#         'TIMEOUT': None,
-#         'LOCATION': '127.0.0.1:11211',
-#     }
-# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
