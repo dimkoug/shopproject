@@ -121,6 +121,19 @@ $("body").on("click", "[id^='category']",function(e){
 })
 
 
+$("[id*='items_']").hide();
+
+
+$('body').on("click","[id*='caret_']", function(e){
+  e.preventDefault();
+  $(this).toggleClass('bi-caret-up-fill bi-caret-down-fill');
+  let id = $(this).attr('id').split('_')[1];
+  console.info(id);
+  $("#items_"+id).toggle();
+  return false;
+})
+
+
 
  }) /* document ready */
 

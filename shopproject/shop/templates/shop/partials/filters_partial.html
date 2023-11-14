@@ -8,11 +8,13 @@
           <div class="col-12">
             <div class="form-group py-2">
               <div class="filter-header">
-                {{feature}}
+                {{feature}} <i class="bi bi-caret-up-fill" id="caret_{{feature.pk}}"></i>
               </div>
+              <hr>
+              <div id="items_{{feature.pk}}">
                 {% for attr in feature.attrs %}
                 {% is_checked attr as checked %}
-                  <div class="ck-button {% if checked %} checked {% endif %}" style="font-size:0.8rem;">
+                  <div style="font-size:0.8rem;">
                     <label for="{{attr.pk}}">
                     <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
                     <span>{{attr|safe}}</span>
@@ -20,6 +22,9 @@
                     </label>
                   </div>
                 {% endfor %}
+
+              </div>
+
             </div>
           </div>
         {% endfor %}

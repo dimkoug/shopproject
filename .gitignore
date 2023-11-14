@@ -13,3 +13,4 @@ migrations
 management
 media/
 shopproject4.py
+*.sqlite
