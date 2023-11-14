@@ -5,6 +5,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.views.decorators.vary import vary_on_cookie
 from django.db.models import Prefetch, Count, Q
 from django.contrib import messages
 from django.http import JsonResponse
@@ -47,6 +48,7 @@ class IndexView(TemplateView):
 
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
+@method_decorator(vary_on_cookie,name='dispatch')
 class CatalogListView(PaginationMixin, ListView):
 
     model = Product
@@ -55,6 +57,7 @@ class CatalogListView(PaginationMixin, ListView):
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
     @method_decorator(cache_page(60 * 15))
+    @method_decorator(vary_on_cookie)
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         response['X-Cache'] = 'HIT' if response.has_header('Expires') else 'MISS'
