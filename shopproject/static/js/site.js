@@ -121,18 +121,31 @@ $("body").on("click", "[id^='category']",function(e){
 })
 
 
-$("[id*='items_']").hide();
-
 
 $('body').on("click","[id*='caret_']", function(e){
   e.preventDefault();
-  $(this).toggleClass('bi-caret-up-fill bi-caret-down-fill');
+  $(this).toggleClass('bi-caret-down-fill bi-caret-up-fill');
   let id = $(this).attr('id').split('_')[1];
   console.info(id);
-  $("#items_"+id).toggle();
+  $(this).parents().find("#items_"+id).toggleClass('active-feature hide-feature');
+  //$("[id*='items_']").removeClass();
+  //$("[id*='items_']").removeClass('hide-feature');
+  //$('.deactivate-'+pk).toggle()
+  //$("#items_"+id).toggle();
+  /*if ( $i.hasClass( 'active-feature' ) ) {
+    alert('active')
+    $i.removeClass( 'active-feature' ).addClass( 'hide-feature' );
+  } else {
+      alert('inactive')
+      $i.removeClass( 'hide-feature' ).addClass( 'active-feature' );
+  }*/
+
+
+
+  //console.info($i.attr('class'))
+  
   return false;
 })
-
 
 
  }) /* document ready */

@@ -159,6 +159,16 @@ div[class*="mega-menu-container-"]{
   object-fit: cover;
 }
 
+.active-feature {
+  display:block;
+}
+
+.hide-feature {
+  display:none;
+}
+
+
+
 @media screen and (max-width: 600px) {
 
   .card {

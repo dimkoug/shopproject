@@ -5,23 +5,21 @@
     <form class="" action="" method="get" id='filters-form'>
         <div class="row">
           {% for feature in specification_list %}
-          <div class="col-12">
+          <div class="col-12 " id="feature-{{feature.pk}}">
             <div class="form-group py-2">
-              <div class="filter-header">
-                {{feature}} <i class="bi bi-caret-up-fill" id="caret_{{feature.pk}}"></i>
-              </div>
+              <h2 style="font-size:1.1rem;">{{feature}}<span><i class="bi bi-caret-up-fill" id="caret_{{feature.pk}}"></i></span></h2>
               <hr>
-              <div id="items_{{feature.pk}}">
+              <div class="{% is_active feature.pk %}" id='items_{{feature.pk}}'>
                 {% for attr in feature.attrs %}
                 {% is_checked attr as checked %}
-                  <div style="font-size:0.8rem;">
-                    <label for="{{attr.pk}}">
-                    <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
-                    <span>{{attr|safe}}</span>
-                    <span class="badge bg-light text-dark">{{attr.product_count}}</span>
-                    </label>
-                  </div>
-                {% endfor %}
+                    <div style="font-size:0.8rem;">
+                      <label for="{{attr.pk}}">
+                      <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
+                      <span>{{attr|safe}}</span>
+                      <span class="badge bg-light text-dark">{{attr.product_count}}</span>
+                      </label>
+                    </div>
+                 {% endfor %}
 
               </div>
 
@@ -39,7 +37,31 @@
 </div>
 
 
+<script>
+  'use strict';
+  (function(w,d,$){
+    $(d).ready(function(){
+      
+      $.each($(".active-feature"),function(index,item){
+        let id = $(item).attr('id').split('_')[1];
+        $(item).parents().find('#caret_'+id).toggleClass('bi-caret-down-fill bi-caret-up-fill')
+      })
+      
+      
+      
+      
 
+
+
+
+    }) /* document ready */
+
+
+
+  })(window,document,jQuery)
+
+
+</script>
 
 
 

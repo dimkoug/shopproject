@@ -111,6 +111,8 @@ class CatalogListView(PaginationMixin, ListView):
         attrs_checked = []
         features = [feature for feature in self.request.GET.keys()
                     if feature.startswith('feature')]
+        selected_features = [f.split('-')[1] for f in features]
+        context['selected_features'] = selected_features
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
         for arrt in attrs:

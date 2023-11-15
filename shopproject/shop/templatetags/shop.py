@@ -11,3 +11,15 @@ def is_checked(context, attr=None):
             return False
         return True
     return False
+
+
+
+
+@register.simple_tag(takes_context=True)
+def is_active(context, pk):
+    selected = context['selected_features']
+    if pk and selected:
+        if not str(pk) in selected:
+            return 'hide-feature'
+        return f'active-feature'
+    return 'hide-feature'
