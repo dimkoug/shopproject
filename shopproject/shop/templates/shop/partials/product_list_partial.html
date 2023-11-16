@@ -10,6 +10,8 @@
       <div class="col-3 col-lg-2">
         {% if product.image %}
             <img src="{{ product.image.url }}" class="img-fluid rounded">
+        {% else %}
+        <img src="/static/img/default.jpg" class="img-fluid rounded">
         {% endif %}
       </div>
       <div class="col-7 col-lg-8">
