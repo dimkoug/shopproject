@@ -1,10 +1,17 @@
 {% extends "site/base.html" %}
 {% load static shop %}
 {% block content %}
-<div class="container wrapper">
-  <div class="products">
-      {% include 'shop/partials/product_ajax_list_partial.html' %}
+<div class="container">
+  <div class="card shadow rounded">
+    <div class="card-body">
+      <div class="products">
+        {% include 'shop/partials/product_ajax_list_partial.html' %}
+    </div>
+    </div> 
+
+
   </div>
+
 
 </div>
 
