@@ -3,37 +3,18 @@
     <div class="col">
       <div class="card shadow rounded">
         <div class="card-body">
-          <table class="table table-stripped">
+          <table class="table table-striped table-sm">
             <thead>
               <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Brand</th>
-                <th>Code</th>
-                <th>Category</th>
-                <th>Published</th>
+                {%for field in fields %}
+                  <th>{{field.verbose_name}}</th>
+                {%endfor%}
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {% for obj in object_list %}
-              <tr>
-                <td>
-                  {% if obj.image %}
-                    <img src="{{obj.image.url}}" alt="" class="img-thumbnail" width="100px">
-                  {% endif %}
-  
-                </td>
-                <td>{{obj.name}}</td>
-                <td>{{obj.brand}}</td>
-                <td>{{obj.code}}</td>
-                <td>{{obj.category}}</td>
-                <td>{% get_boolean_img obj.is_published %}</td>
-                <td>
-                  {% include 'partials/action_buttons.html' with obj=obj %}
-                </td>
-              </tr>
-              {% endfor %}
+              {% get_rows fields object_list %}
+
             </tbody>
           </table>
         </div>

@@ -41,6 +41,32 @@ class ProductListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Product
     paginate_by = 50
     queryset = Product.objects.select_related('brand', 'category')
+    fields = [
+        {
+        'verbose_name': 'Image',
+        'db_name':'image'
+        },
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+        {
+        'verbose_name': 'Brand',
+        'db_name':'brand'
+        },
+        {
+        'verbose_name': 'Code',
+        'db_name':'code'
+        },
+        {
+        'verbose_name': 'Category',
+        'db_name':'category'
+        },
+        {
+        'verbose_name': 'Published',
+        'db_name':'is_published'
+        },
+    ]
 
     def get_queryset(self):
         queryset = super().get_queryset()

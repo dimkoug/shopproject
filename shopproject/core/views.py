@@ -22,6 +22,15 @@ class BaseListView(ModelMixin, PaginationMixin, ListView):
     def get_template_names(self):
         return ['{}/cms/{}_list.html'.format(
                 self.model._meta.app_label, self.model.__name__)]
+    
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        try:
+            context['fields'] = self.fields
+            print(self.fields)
+        except:
+            pass
+        return context
 
 
 class BaseDetailView(ModelMixin, DetailView):

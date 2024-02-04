@@ -220,3 +220,6 @@ websocket-client
 widgetsnbextension
 wrapt
 zope.interface
+uvicorn
+httpx
+daphne
