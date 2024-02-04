@@ -96,6 +96,7 @@ def get_rows(fields, object_list):
     thead += '</tr></thead>'    
     table += thead + '<tbody>'
     for obj in object_list:
+        print(obj._meta.fields)
         app = obj._meta.app_label
         model = obj.__class__.__name__.lower()
         update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
