@@ -106,7 +106,6 @@ class PaginationMixin:
         
         try:
             context['fields'] = self.fields
-            print(super().get_queryset())
             table = get_rows(self.fields,current_page)
             context['table'] = table
         except:
