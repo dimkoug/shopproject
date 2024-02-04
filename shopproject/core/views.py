@@ -12,6 +12,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .mixins import ModelMixin, PaginationMixin
 
 
+
 class BaseIndexView(TemplateView):
     def get_template_names(self):
         return ['{}/cms/index.html'.format(
@@ -27,9 +28,9 @@ class BaseListView(ModelMixin, PaginationMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         try:
             context['fields'] = self.fields
-            print(self.fields)
         except:
-            pass
+            raise
+        
         return context
 
 

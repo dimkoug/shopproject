@@ -1,6 +1,7 @@
 from django.urls import reverse, reverse_lazy
 from django.db.models import Q
 from django.shortcuts import redirect
+from core.functions import get_rows 
 
 
 class QueryListMixin:
@@ -102,6 +103,13 @@ class PaginationMixin:
             pages = [x for x in range(num_pages - 10, num_pages + 1)]
         else:  # case 3
             pages = [x for x in range(page_no - 5, page_no + 6)]
-
+        
+        try:
+            context['fields'] = self.fields
+            print(super().get_queryset())
+            table = get_rows(self.fields,current_page)
+            context['table'] = table
+        except:
+            raise
         context.update({'pages': pages})
         return context

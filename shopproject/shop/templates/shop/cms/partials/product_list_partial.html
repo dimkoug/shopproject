@@ -3,20 +3,7 @@
     <div class="col">
       <div class="card shadow rounded">
         <div class="card-body">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                {%for field in fields %}
-                  <th>{{field.verbose_name}}</th>
-                {%endfor%}
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {% get_rows fields object_list %}
-
-            </tbody>
-          </table>
+          {{table|safe}}
         </div>
       </div>
     </div>

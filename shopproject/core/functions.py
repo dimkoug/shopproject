@@ -5,6 +5,12 @@ from django.apps import apps
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
+from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
+from django.utils.safestring import mark_safe
+from django.apps import apps
+from django.db.models.fields.files import ImageFieldFile, FileField
+from decimal import Decimal
+from django.utils.html import format_html
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -79,3 +85,40 @@ def delete_model(request):
     except model.DoesNotExist:
         pass
     return JsonResponse({}, safe=False)
+
+
+def get_rows(fields, object_list):
+    trs = []
+    print('hi')
+    table = "<table class='table table-striped'>"
+    thead = '<thead><tr>'
+    for field in fields:
+        thead += f"<th>{field['verbose_name']}</th>"
+    thead += '</tr></thead>'    
+    table += thead + '<tbody>'
+    for obj in object_list:
+        app = obj._meta.app_label
+        model = obj.__class__.__name__.lower()
+        update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
+        delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
+        tr = '<tr>'
+        for field in fields:
+            db_name = field['db_name']
+            value = getattr(obj, db_name)
+            if isinstance(value, Decimal):
+                value = round(value,0)
+            if isinstance(value, bool):
+                if value:
+                    value = format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
+                else:
+                    value = format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
+            if isinstance(value,ImageFieldFile):
+                if value and value.url:
+                    value = format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
+            tr += '<td>' + str(value) + '</td>'
+        tr += f"""<td><a href='{update_url}'>{format_html(mark_safe('<i class="bi bi-pencil-square text-warning" style="font-size:1.5rem;"></i>'))}</a><a href='{delete_url}        'class='delete-tr'>{format_html(mark_safe('<i class="bi bi-x text-danger" style="font-size:1.5rem;"></i>'))}</a></td>"""
+        
+        tr += '</tr>'
+        table += tr
+    table += '</tbody></table>'
+    return table
