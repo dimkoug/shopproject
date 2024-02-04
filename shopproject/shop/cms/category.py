@@ -38,6 +38,16 @@ class CategoryListView(LoginRequiredMixin, CmsListView, BaseListView):
     model = Category
     queryset = Category.objects.prefetch_related('children')
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+        {
+        'verbose_name': 'Children',
+        'db_name':'children'
+        },
+    ]
 
 
 class CategoryDetailView(LoginRequiredMixin, BaseDetailView):

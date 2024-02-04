@@ -3,6 +3,7 @@ import random
 import string
 from django.apps import apps
 from django.db.models import Q
+from django.db import models
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
@@ -88,8 +89,6 @@ def delete_model(request):
 
 
 def get_rows(fields, object_list):
-    trs = []
-    print('hi')
     table = "<table class='table table-striped'>"
     thead = '<thead><tr>'
     for field in fields:
@@ -107,12 +106,19 @@ def get_rows(fields, object_list):
             value = getattr(obj, db_name)
             if isinstance(value, Decimal):
                 value = round(value,0)
-            if isinstance(value, bool):
+            elif isinstance(value, bool):
                 if value:
                     value = format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
                 else:
                     value = format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
-            if isinstance(value,ImageFieldFile):
+            elif isinstance(value, models.Manager):
+                print(f"{value} is a related manager.")
+                related_objects = value.get_queryset()
+                value = '<ul>'
+                for obj in related_objects:
+                    value += f'<li>{obj}</li>'
+                value += '</ul>'
+            elif isinstance(value,ImageFieldFile):
                 if value and value.url:
                     value = format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
             tr += '<td>' + str(value) + '</td>'
