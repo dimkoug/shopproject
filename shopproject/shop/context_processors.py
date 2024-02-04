@@ -53,5 +53,6 @@ def get_context_data(request):
         'brands': Brand.objects.prefetch_related('products').filter(is_published=True,products__isnull=False,products__is_published=True).distinct(),
         'donottrack': request.META.get('HTTP_DNT') == '1',
         'basket_count': basket_count,
-        'heroes': heroes
+        'heroes': heroes,
+        'app': 'shop',
     }

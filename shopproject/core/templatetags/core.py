@@ -1,6 +1,7 @@
 from django import template
-from django.urls import reverse_lazy, resolve
+from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
 from django.utils.safestring import mark_safe
+from django.apps import apps
 from django.utils.html import format_html
 register = template.Library()
 
@@ -85,3 +86,35 @@ def is_selected(value, object_list):
     if str(value) in object_list:
         return True
     return False
+
+
+def sortFn(value):
+  return value.__name__
+
+
+@register.simple_tag(takes_context=True)
+def get_generate_sidebar(context):
+    request = context['request']
+    urls = ""
+    app_models = list(apps.get_app_config(context['app']).get_models())
+    app_models.sort(key=sortFn)
+    
+    for model in app_models:
+        try:
+            url_item = reverse(
+                "{}:{}-list".format(model._meta.app_label, model.__name__.lower()))
+        except NoReverseMatch:
+            url_item = None
+        if url_item:
+            lower_model_name = model.__name__.lower()
+            plural_model_name = model._meta.verbose_name_plural.capitalize()
+            item = "<li class='nav-item'><a href='{}'".format(url_item)
+            if url_item == request.path:
+                item += "class='nav-link active collection'"
+            else:
+                item += "class='nav-link collection'"
+            item +=f"data-model='{lower_model_name}' data-collection='{plural_model_name}'"
+            item += ">{}</a></li>".format(plural_model_name)
+            print(item)
+            urls += item
+    return format_html(mark_safe(urls))
