@@ -275,7 +275,7 @@ class ProductRelated(Timestamped):
 class Media(Timestamped, Ordered, Published):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='media/',
-                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+                              storage=OverwriteStorage(), max_length=500)
 
     class Meta:
         default_related_name = 'media'
@@ -288,9 +288,8 @@ class Media(Timestamped, Ordered, Published):
 
 
 class Logo(Timestamped, Ordered, Published):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='logos/',
-                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+                              storage=OverwriteStorage(), max_length=500)
 
     class Meta:
         default_related_name = 'logos'
@@ -301,6 +300,25 @@ class Logo(Timestamped, Ordered, Published):
     def __str__(self):
         return f"{self.image.name}"
 
+class ProductLogo(Timestamped):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    logo = models.ForeignKey(Logo, on_delete=models.CASCADE)
+
+
+    class Meta:
+        default_related_name = 'productlogos'
+        verbose_name = 'product logo'
+        verbose_name_plural = 'product logos'
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'logo'], name="productlogos")
+        ]
+        indexes = [
+            models.Index(fields=['product', 'logo']),
+            models.Index(fields=['product']),
+        ]
+
+    def __str__(self):
+        return f"{self.logo.image.name}"
 
 class Stock(Timestamped):
     warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)

@@ -24,7 +24,7 @@ from core.functions import is_ajax
 
 
 from shop.models import (
-    Product, ProductTag, ProductAttribute, ProductRelated, Media, Logo, Stock,Category
+    Product, ProductTag, ProductAttribute, ProductRelated, Media, ProductLogo,Logo, Stock,Category
 
 )
 
@@ -33,7 +33,7 @@ from shop.forms import (
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet,
     ProductAttributeFormSet,
-    MediaFormSet, LogoFormSet, StockFormSet
+    MediaFormSet, ProductLogoFormSet, StockFormSet
 )
 
 
@@ -184,9 +184,9 @@ class ProductUpdateView(LoginRequiredMixin, FormMixin,
             if logos:
                 for f in logos:
                     l = Logo()
-                    l.product = self.get_object()
                     l.image = f
                     l.save()
+                    ProductLogo.objects.get_or_create(product=self.get_object(),logo=l)
                     print("logo saved")
             media = self.request.FILES.getlist('media')
             if media:

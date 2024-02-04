@@ -6,9 +6,9 @@ from core.forms import BootstrapForm, BootstrapFormSet
 from .models import (
     Category, ChildCategory, Tag, Supplier, WareHouse, Brand,
     BrandSupplier, Feature, FeatureCategory, Attribute, Product,
-    ProductTag, ProductRelated, Media, Logo, Stock,
+    ProductTag, ProductRelated, Media, ProductLogo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
-    Offer, Address, Order, OrderItem,
+    Offer, Address, Order, OrderItem,Logo,
     OfferProduct
 )
 
@@ -192,6 +192,12 @@ class MediaForm(BootstrapForm, forms.ModelForm):
         fields = ('product', 'image', 'is_published', 'order')
 
 
+class LogoForm(BootstrapForm, forms.ModelForm):
+    class Meta:
+        model = Logo
+        fields = ('image', 'is_published', 'order')
+
+
 MediaFormSet = inlineformset_factory(Product, Media,
                                      form=MediaForm,
                                      formset=BootstrapFormSet,
@@ -199,14 +205,14 @@ MediaFormSet = inlineformset_factory(Product, Media,
                                      fk_name='product')
 
 
-class LogoForm(BootstrapForm, forms.ModelForm):
+class ProductLogoForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = Logo
-        fields = ('product', 'image', 'is_published', 'order')
+        model = ProductLogo
+        fields = ('product', 'logo')
 
 
-LogoFormSet = inlineformset_factory(Product, Logo,
-                                    form=MediaForm,
+ProductLogoFormSet = inlineformset_factory(Product, ProductLogo,
+                                    form=ProductLogoForm,
                                     formset=BootstrapFormSet,
                                     can_delete=True,
                                     fk_name='product')

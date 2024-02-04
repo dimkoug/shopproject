@@ -7,7 +7,7 @@ from .models import (
     BrandSupplier, Feature, FeatureCategory,
     Attribute, Product,
     ProductTag, ProductRelated,
-    Media, Logo, Stock, Shipment, ProductAttribute,
+    Media, Logo,ProductLogo, Stock, Shipment, ProductAttribute,
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
@@ -17,9 +17,9 @@ from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
     TagForm, SupplierForm, WareHouseForm, BrandForm,
     SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
-    MediaFormSet, LogoFormSet, StockFormSet,
+    MediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
-    ProductRelatedFormSet, MediaForm, LogoForm, StockForm, ShipmentForm,
+    ProductRelatedFormSet, MediaForm, LogoForm,ProductLogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
     OfferProductForm, OfferProductFormSet
@@ -82,9 +82,9 @@ class MediaInline(admin.TabularInline):
     extra = 1
 
 
-class LogoInline(admin.TabularInline):
-    model = Logo
-    formset = LogoFormSet
+class ProductLogoInline(admin.TabularInline):
+    model = ProductLogo
+    formset = ProductLogoFormSet
     fk_name = 'product'
     extra = 1
 
@@ -203,7 +203,7 @@ class ProductAdmin(admin.ModelAdmin):
         ProductRelatedInline,
         ProductAttributeInline,
         MediaInline,
-        LogoInline,
+        ProductLogoInline,
         StockInline
     ]
 
