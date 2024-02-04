@@ -1,71 +1,52 @@
-{% load static shop %}
+{% load core %}
 
-<div class="row scrollable-row">
-  <div class="col-12">
-    <form class="" action="" method="get" id='filters-form'>
-        <div class="row">
-          {% for feature in specification_list %}
-          <div class="col-12 " id="feature-{{feature.pk}}">
-            <div class="form-group py-2">
-              <h2 style="font-size:1.1rem;">{{feature}}<span><i class="bi bi-caret-up-fill" id="caret_{{feature.pk}}"></i></span></h2>
-              <hr>
-              <div class="{% is_active feature.pk %}" id='items_{{feature.pk}}'>
-                {% for attr in feature.attrs %}
-                {% is_checked attr as checked %}
-                    <div style="font-size:0.8rem;">
-                      <label for="{{attr.pk}}">
-                      <input type="checkbox" name="feature-{{feature.pk}}" class="form-check-input" id="{{attr.pk}}" value="{{attr.pk}}" {% if checked %} checked {% endif %}>
-                      <span>{{attr|safe}}</span>
-                      <span class="badge bg-light text-dark">{{attr.product_count}}</span>
-                      </label>
-                    </div>
-                 {% endfor %}
+<div class="row">
+    <div class="col-12">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
+            Product Filters
+        </button>
 
-              </div>
+        <!-- Modal -->
+    </div>
+</div>    
 
+    <div class="modal" id="modal">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modallabel">Product Filters</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{url}}" method="get" id="filters-form">
+                        {% for feature in specification_list %}
+                        <div class="d-flex flex-row">
+                            <div class="col">
+                                <div class="border-bottom" id="feature_{{feature_id}}">
+                                    <h2 style="font-size:16px;">{{feature}}</h2>
+                                </div>
+                                <div id="attribute_{{feature.pk}}">
+                                    {% for attr in feature.attrs %}
+                                        <div class="ck-button">
+                                            <label  for="attr_{{attr.id}}">
+                                            {% is_selected attr.id attrs_checked as checked %}
+                                            <input type="checkbox" name="feature-{{feature.pk}}" value="{{attr.id}}" id="attr_{{attr.id}}" {% if checked %} checked {%endif%}   />
+                                                <span>{{attr|safe}}  - {{attr.product_count}}</span>
+                                            </label>
+                                        </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <input type="hidden" name="category" value="{{category.id}}">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                          <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                        
+                    </form>
+                </div>
             </div>
-          </div>
-        {% endfor %}
-
-
         </div>
-
-        <a href="{{request.path}}" id="reset-filters">Reset filters</a>
-        <input type="submit" class="btn btn-primary" name="submit" value="submit">
-    </form>
-  </div>
-</div>
-
-
-<script>
-  'use strict';
-  (function(w,d,$){
-    $(d).ready(function(){
-      
-      $.each($(".active-feature"),function(index,item){
-        let id = $(item).attr('id').split('_')[1];
-        $(item).parents().find('#caret_'+id).toggleClass('bi-caret-down-fill bi-caret-up-fill')
-      })
-      
-      
-      
-      
-
-
-
-
-    }) /* document ready */
-
-
-
-  })(window,document,jQuery)
-
-
-</script>
-
-
-
-
-
-
-
+    </div>

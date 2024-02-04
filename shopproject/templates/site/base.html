@@ -81,7 +81,11 @@
     <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         <div class="col">
-          <img src="{% static 'img/loading.svg' %}" class="loading">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="row py-2 basket_res"></div>
@@ -90,6 +94,15 @@
         <div class="row py-2">
           <div class="col-12">
               {% include 'alerts.html' %}
+          </div>
+        </div>
+        <div class="row py-2">
+          <div class="col">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
           </div>
         </div>
     </main>

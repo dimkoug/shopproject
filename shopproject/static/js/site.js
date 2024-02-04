@@ -2,7 +2,7 @@
 (function(w,d,$){
  $(d).ready(function(){
    $("div[class*='mega-menu-container-']").hide();
-   $(".loading").hide();
+   $(".spinner-border").hide();
    $("div[class*='basket-container']").hide();
    $("body").on("click", "[id^='mega-menu-']", function(e){
         var id = $(this).attr('id').split("-")[2];
@@ -25,11 +25,11 @@
             method: 'GET',
             datatype: 'json',
             beforeSend: function(){
-              $(".loading").show();
+              $(".spinner-border").show();
               $(".basket_res").html('');
             },
             complete: function(){
-              $(".loading").hide();
+              $(".spinner-border").hide();
             }
         })).then(function( resp, textStatus, jqXHR ) {
           $(".basket_res").html(resp.html);
@@ -57,16 +57,16 @@
               method: 'GET',
               datatype: 'json',
               beforeSend: function(){
-                $(".loading").show();
+                $(".spinner-border").show();
               },
               complete: function(){
-                $(".loading").hide();
+                $(".spinner-border").hide();
                 
               }
           })).then(function( resp, textStatus, jqXHR ) {
             $(".products").html(resp.html);
             setFilterHeight()
-            $(".loading").hide();
+            $(".spinner-border").hide();
           })
 
      return false;
@@ -74,22 +74,26 @@
 
  $("body").on("submit", '#filters-form', function(e){
      e.preventDefault();
+     $(".spinner-border").show();
      var data = $(this).serialize();
      $.when($.ajax({
-              url: $(this).attr("href"),
+              url: $(this).attr("action"),
               method: 'GET',
               data: data,
               datatype: 'json',
               beforeSend: function(){
-                $(".loading").show();
+                $(".spinner-border").show();
+                $('#modal').modal('hide');
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
               },
               complete: function(){
-                $(".loading").hide();
+                $(".spinner-border").hide();
               }
           })).then(function( resp, textStatus, jqXHR ) {
             $(".products").html(resp.html);
             setFilterHeight()
-            $(".loading").hide();
+            $(".spinner-border").hide();
           })
 
      return false;

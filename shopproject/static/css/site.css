@@ -98,32 +98,55 @@ div[class*="mega-menu-container-"]{
   }
 
 
-.ck-button {
-    margin:4px;
-    overflow:auto;
-    display:inline-block;
-    background-color:#f0f0f0;
-    padding:0.4rem;
-}
-
-.ck-button label span {
-    text-align:center;
-}
-
-.ck-button label input {
+  .ck-button {
+    margin: 5px 3px 0 0;
+    background-color: #fff;
+    border-radius: 2px;
+    border: 1px solid #e1e1e1;
+    -webkit-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 13px;
+  }
+  
+  .ck-button label {
+    float:left;
+    padding:2px;
+  }
+  
+  .ck-button label span {
+    padding:3px 0px;
+    display:block;
+    font-size:12px;
+  }
+  
+  /* .ck-button label input {
     position:absolute;
-    top:-5000px;
-}
-
- .ck-button input:checked + span {
-    background-color:#0f0f0f;
-    color:#f0f0f0;
-}
-
- .checked {
-    background-color:#0f0f0f;
-    color:#f0f0f0;
-}
+    top:-20px;
+  } */
+  
+  /* .ck-button label {
+    float:left;
+    width:4.0em;
+  } */
+  
+  /* .ck-button label span {
+    text-align:center;
+    padding:3px 0px;
+    display:block;
+  } */
+  
+  .ck-button label input {
+    position:absolute;
+    top:-1200px;
+  }
+  
+  .ck-button input:checked + span {
+    background-color: #b4edfb;
+    color: #000;
+  }
 
 .close:hover {
   cursor:pointer;

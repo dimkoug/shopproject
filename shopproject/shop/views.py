@@ -112,6 +112,7 @@ class CatalogListView(PaginationMixin, ListView):
         features = [feature for feature in self.request.GET.keys()
                     if feature.startswith('feature')]
         selected_features = [f.split('-')[1] for f in features]
+        context['url'] = reverse_lazy("shop:catalog")
         context['selected_features'] = selected_features
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
@@ -122,10 +123,12 @@ class CatalogListView(PaginationMixin, ListView):
         brand = self.request.GET.get('brand')
         page_title = ''
         if category:
-            page_title = Category.objects.get(id=category).name
+            page_title = Category.objects.get(id=category)
+            context['category'] = page_title
         if brand:
-            page_title = Brand.objects.get(id=brand).name
-        context['page_title'] = page_title
+            page_title = Brand.objects.get(id=brand)
+            context['brand'] = category
+        
         context['attrs_checked'] = attrs_checked
         counter = Count('productattributes', filter=Q(
             products__in=self.get_queryset()))

@@ -81,7 +81,7 @@ def is_active(request , url):
 
 
 @register.simple_tag
-def get_selected_attr(pk, items):
-    if pk in items:
+def is_selected(value, object_list):
+    if str(value) in object_list:
         return True
     return False

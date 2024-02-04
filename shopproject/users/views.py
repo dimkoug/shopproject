@@ -22,7 +22,6 @@ User = get_user_model()
 
 
 class UserLoginView(auth_views.LoginView):
-    template_name = 'users/login.html'
     form_class = UserAuthenticationForm
 
 
