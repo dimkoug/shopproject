@@ -89,6 +89,10 @@ def delete_model(request):
 
 
 def get_rows(fields, object_list):
+    '''
+    fields : [{'verbose_name': 'Name', 'db_name': 'name'}]
+    object_list : queryset
+    '''
     table = "<table class='table table-striped'>"
     thead = '<thead><tr>'
     for field in fields:
