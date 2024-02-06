@@ -30,7 +30,13 @@ from shop.forms import WareHouseForm
 
 class WareHouseListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = WareHouse
-    paginate_by = 50
+    paginate_by = 2
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
 
 class WareHouseDetailView(LoginRequiredMixin, BaseDetailView):

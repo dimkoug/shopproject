@@ -36,6 +36,12 @@ from shop.forms import (
 class OfferListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Offer
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
 
 class OfferDetailView(LoginRequiredMixin, BaseDetailView):

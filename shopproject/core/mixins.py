@@ -31,10 +31,13 @@ class ModelMixin:
         context['app'] = app
         context['model'] = model
         context['model_name'] = model_name
-        fields = []
-        for f in self.model._meta.fields:
-            fields.append(f.name)
-        context['fields'] = fields
+        # context['fields'] = self.fields
+        # table = get_rows(self.fields,super().get_queryset())
+        # context['table'] = table
+        # fields = []
+        # for f in self.model._meta.fields:
+        #     fields.append(f.name)
+        # context['fields'] = fields
         title = model._meta.verbose_name.capitalize()
         if 'list' in self.__class__.__name__.lower():
             title = model._meta.verbose_name_plural.capitalize()
@@ -56,6 +59,7 @@ class ModelMixin:
 
 class FormMixin:
     def form_valid(self, form):
+        form.save()
         if 'continue' in self.request.POST:
             return redirect(reverse_lazy('{}:{}-update'.format(
                 form.instance._meta.app_label,
@@ -75,7 +79,7 @@ class FormMixin:
 
 class SuccessUrlMixin:
     def get_success_url(self):
-        return reverse_lazy('{}:{}-list'.format(
+        return reverse('{}:{}-list'.format(
             self.model._meta.app_label, self.model.__name__.lower()))
 
 
@@ -104,11 +108,9 @@ class PaginationMixin:
         else:  # case 3
             pages = [x for x in range(page_no - 5, page_no + 6)]
         
-        try:
-            context['fields'] = self.fields
-            table = get_rows(self.fields,current_page)
-            context['table'] = table
-        except:
-            raise
+
+        context['fields'] = self.fields
+        table = get_rows(self.fields,current_page)
+        context['table'] = table
         context.update({'pages': pages})
         return context

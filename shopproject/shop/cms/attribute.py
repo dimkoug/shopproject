@@ -36,7 +36,17 @@ from shop.forms import (
 class AttributeListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Attribute
     queryset = Attribute.objects.select_related('feature')
-    paginate_by = 50
+    paginate_by = 20
+    fields = [
+        {
+        'verbose_name': 'Feature',
+        'db_name':'feature'
+        },
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
     def get_queryset(self):
         queryset = super().get_queryset()

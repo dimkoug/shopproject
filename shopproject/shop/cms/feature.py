@@ -35,7 +35,17 @@ from shop.forms import (
 class FeatureListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Feature
     queryset = Feature.objects.prefetch_related('categories')
-    paginate_by = 50
+    paginate_by = 20
+    fields = [
+        {
+        'verbose_name': 'Feature',
+        'db_name':'name'
+        },
+        {
+        'verbose_name': 'Categories',
+        'db_name':'categories'
+        },
+    ]
 
     def get_queryset(self):
         queryset = super().get_queryset()

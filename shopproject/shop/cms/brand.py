@@ -36,7 +36,21 @@ from shop.forms import (
 class BrandListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Brand
     queryset = Brand.objects.prefetch_related('suppliers')
-    paginate_by = 50
+    paginate_by = 20
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+        {
+        'verbose_name': 'Suppliers',
+        'db_name':'suppliers'
+        },
+        {
+        'verbose_name': 'Image',
+        'db_name':'image'
+        },
+    ]
 
     def get_queryset(self):
         queryset = super().get_queryset()

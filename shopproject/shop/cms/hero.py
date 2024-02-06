@@ -36,6 +36,12 @@ from shop.forms import (
 class HeroListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Hero
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
 
 class HeroDetailView(LoginRequiredMixin, BaseDetailView):

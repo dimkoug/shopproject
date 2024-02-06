@@ -36,6 +36,12 @@ from shop.forms import (
 class OrderListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Order
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'Billing Address',
+        'db_name':'billing_address'
+        },
+    ]
 
 
 class OrderDetailView(LoginRequiredMixin, BaseDetailView):

@@ -36,6 +36,20 @@ from shop.forms import (
 class ShipmentListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Shipment
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'Warehouse',
+        'db_name':'warehouse'
+        },
+        {
+        'verbose_name': 'Product',
+        'db_name':'product'
+        },
+        {
+        'verbose_name': 'stock',
+        'db_name':'stock'
+        },
+    ]
 
 
 class ShipmentDetailView(LoginRequiredMixin, BaseDetailView):

@@ -31,7 +31,12 @@ from shop.forms import SupplierForm
 class SupplierListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Supplier
     paginate_by = 50
-
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
 class SupplierDetailView(LoginRequiredMixin, BaseDetailView):
     model = Supplier

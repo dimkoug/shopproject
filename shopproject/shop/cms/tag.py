@@ -31,6 +31,12 @@ from shop.forms import TagForm
 class TagListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Tag
     paginate_by = 2
+    fields = [
+        {
+        'verbose_name': 'Name',
+        'db_name':'name'
+        },
+    ]
 
 
 class TagDetailView(LoginRequiredMixin, BaseDetailView):

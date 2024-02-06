@@ -16,7 +16,7 @@ from core.views import (
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
+from core.mixins import FormMixin, SuccessUrlMixin, PaginationMixin
 from shop.cms.core import CmsListView
 
 
@@ -36,6 +36,20 @@ from shop.forms import (
 class AddressListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Address
     paginate_by = 50
+    fields = [
+        {
+        'verbose_name': 'First Name',
+        'db_name':'first_name'
+        },
+        {
+        'verbose_name': 'Last Name',
+        'db_name':'last_name'
+        },
+        {
+        'verbose_name': 'Mobile',
+        'db_name':'mobile'
+        },
+    ]
 
 
 class AddressDetailView(LoginRequiredMixin, BaseDetailView):
