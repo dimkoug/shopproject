@@ -40,11 +40,15 @@ from shop.forms import (
 class ProductListView(LoginRequiredMixin,CmsListView, BaseListView):
     model = Product
     paginate_by = 50
-    queryset = Product.objects.select_related('brand', 'category')
+    queryset = Product.objects.select_related('brand', 'category').order_by('order')
     fields = [
         {
         'verbose_name': 'Image',
         'db_name':'image'
+        },
+        {
+            'verbose_name': 'Order',
+            'db_name': 'order'
         },
         {
         'verbose_name': 'Name',

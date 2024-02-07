@@ -93,39 +93,54 @@ def get_rows(fields, object_list):
     fields : [{'verbose_name': 'Name', 'db_name': 'name'}]
     object_list : queryset
     '''
+    db_fields = set([d['db_name'] for d in fields])
+    if 'order' in db_fields:
+        order = True
+    else:
+        order = False
     table = "<table class='table table-striped'>"
     thead = '<thead><tr>'
     for field in fields:
         thead += f"<th>{field['verbose_name']}</th>"
-    thead += '</tr></thead>'    
-    table += thead + '<tbody>'
+    thead += '</tr></thead>'
+    if order:
+        table += thead + '<tbody class="order">'
+    else:
+        table += thead + '<tbody>'
     for obj in object_list:
+        model_name = obj.__class__.__name__.lower()
+        if order:
+            tr = f"<tr class='item' data-pk={obj.pk} data-model={model_name}>"
+        else:
+            tr = '<tr>'
         print(obj._meta.fields)
         app = obj._meta.app_label
         model = obj.__class__.__name__.lower()
         update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
         delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
-        tr = '<tr>'
         for field in fields:
             db_name = field['db_name']
-            value = getattr(obj, db_name)
-            if isinstance(value, Decimal):
-                value = round(value,0)
-            elif isinstance(value, bool):
-                if value:
-                    value = format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
-                else:
-                    value = format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
-            elif isinstance(value, models.Manager):
-                print(f"{value} is a related manager.")
-                related_objects = value.get_queryset()
-                value = '<ul>'
-                for obj in related_objects:
-                    value += f'<li>{obj}</li>'
-                value += '</ul>'
-            elif isinstance(value,ImageFieldFile):
-                if value and value.url:
-                    value = format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
+            if db_name == 'order':
+                value = '<i class="bi bi-list"></i>'
+            else:
+                value = getattr(obj, db_name)
+                if isinstance(value, Decimal):
+                    value = round(value,0)
+                elif isinstance(value, bool):
+                    if value:
+                        value = format_html(mark_safe('<i class="bi bi-check-lg text-success"></i>'))
+                    else:
+                        value = format_html(mark_safe('<i class="bi bi-x-lg text-danger"></i>'))
+                elif isinstance(value, models.Manager):
+                    print(f"{value} is a related manager.")
+                    related_objects = value.get_queryset()
+                    value = '<ul>'
+                    for obj in related_objects:
+                        value += f'<li>{obj}</li>'
+                    value += '</ul>'
+                elif isinstance(value,ImageFieldFile):
+                    if value and value.url:
+                        value = format_html(mark_safe('<img src="{}" width="100px" />'.format(value.url)))
             tr += '<td>' + str(value) + '</td>'
         tr += f"""<td><a href='{update_url}'>{format_html(mark_safe('<i class="bi bi-pencil-square text-warning" style="font-size:1.5rem;"></i>'))}</a><a href='{delete_url}        'class='delete-tr'>{format_html(mark_safe('<i class="bi bi-x text-danger" style="font-size:1.5rem;"></i>'))}</a></td>"""
         
