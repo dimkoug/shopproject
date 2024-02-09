@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $("div[class*='mega-menu-container-']").hide();
-  $(".loading").hide();
+  $(".spinner-border").hide();
   $("div[class*='basket-container']").hide();
   $("body").on("click", "[id^='mega-menu-']", function(e){
        var id = $(this).attr('id').split("-")[2];
