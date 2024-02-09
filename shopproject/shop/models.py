@@ -15,6 +15,7 @@ from core.models import (
 )
 from core.storage import OverwriteStorage
 
+from .managers import ActiveProductManager
 
 class MediaFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
@@ -229,6 +230,9 @@ class Product(Timestamped,  Ordered, Published):
         max_digits=18, decimal_places=2, null=True, blank=True)
     subtitle = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+
+    objects = models.Manager()
+    active_products = ActiveProductManager()
 
     class Meta:
         default_related_name = 'products'
