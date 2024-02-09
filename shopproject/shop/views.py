@@ -145,7 +145,7 @@ class CatalogListView(PaginationMixin, ListView):
 
         feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(filter_display=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
             product_count=counter), to_attr='attrs')).filter(
-            id__in=features_items, featurecategories__filter_display=True).distinct()
+            id__in=features_items, featurecategories__filter_display=True,attributes__in=attribute_items).distinct()
         context['specification_list'] = feature_list
         context['products_count'] = self.get_queryset().count()
         context['query_string'] = create_query_string(self.request)
@@ -298,14 +298,13 @@ def search_items(request):
     search = request.GET.get('term')
     data = []
     if search and search != '':
-        posts = Product.objects.select_related('brand', 'parent').prefetch_related(
-        'categories',
+        posts = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'attributes',
     ).filter(
         Q(price__gt=0) &
         (
-            Q(categories__name__icontains=search.strip()) |
+            Q(category__name__icontains=search.strip()) |
             Q(brand__name__icontains=search.strip()) |
             Q(name__icontains=search.strip()) |
             Q(attributes__name__icontains=search.strip())
