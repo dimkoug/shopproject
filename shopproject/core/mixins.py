@@ -108,9 +108,9 @@ class PaginationMixin:
         else:  # case 3
             pages = [x for x in range(page_no - 5, page_no + 6)]
         
-
-        context['fields'] = self.fields
-        table = get_rows(self.fields,current_page)
-        context['table'] = table
+        if hasattr(self,'fields'):
+            context['fields'] = self.fields
+            table = get_rows(self.fields,current_page)
+            context['table'] = table
         context.update({'pages': pages})
         return context

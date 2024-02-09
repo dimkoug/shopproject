@@ -66,7 +66,7 @@ class CatalogListView(PaginationMixin, ListView):
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'attributes__feature',
-    ).filter(price__gt=0)
+    ).filter(price__gt=0,is_published=True).order_by('price')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -121,14 +121,13 @@ class CatalogListView(PaginationMixin, ListView):
                 attrs_checked.append(item)
         category = self.request.GET.get('category')
         brand = self.request.GET.get('brand')
-        page_title = ''
         if category:
-            page_title = Category.objects.get(id=category)
-            context['category'] = page_title
+            category_obj = Category.objects.get(id=category)
+            context['category'] = category_obj
         if brand:
-            page_title = Brand.objects.get(id=brand)
-            context['brand'] = category
-        
+            brand = Brand.objects.get(id=brand)
+            context['brand'] = brand
+
         context['attrs_checked'] = attrs_checked
         counter = Count('productattributes', filter=Q(
             products__in=self.get_queryset()))

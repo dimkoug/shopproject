@@ -8,7 +8,7 @@ from django.db.models.signals import post_delete, pre_delete
 from django.dispatch.dispatcher import receiver
 from django.utils.html import format_html, mark_safe
 from profiles.models import Profile
-
+from django.db.models import Q
 
 from core.models import (
     Timestamped, Ordered, Published
@@ -179,7 +179,7 @@ class FeatureCategory(Timestamped):
     feature = models.ForeignKey(
         Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    filter_display = models.BooleanField(null=True, blank=True)
+    filter_display = models.BooleanField(default=False,db_index=True)
 
     class Meta:
         default_related_name = 'featurecategories'
@@ -235,6 +235,13 @@ class Product(Timestamped,  Ordered, Published):
         verbose_name = 'product'
         verbose_name_plural = 'products'
         ordering = ['-pk']
+        indexes = (
+            models.Index(
+                fields=('price','is_published'),
+                name="%(app_label)s_%(class)s_p_product_idx",
+                condition=(Q(price__gt=0)&Q(is_published=True))
+            ),
+        )
 
     def __str__(self):
         return f"{self.name}"
