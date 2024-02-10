@@ -295,20 +295,24 @@ class AddressDeleteView(ProtectProfile, FormMixin, DeleteView):
 
 
 def search_items(request):
-    search = request.GET.get('term')
+    search = request.GET.get('term','').strip()
+    search_terms = search.split(' ')
+    print(search_terms)
     data = []
     if search and search != '':
         posts = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
-        'attributes',
-    ).filter(
-        Q(price__gt=0) &
-        (
-            Q(category__name__icontains=search.strip()) |
-            Q(brand__name__icontains=search.strip()) |
-            Q(name__icontains=search.strip()) |
-            Q(attributes__name__icontains=search.strip())
-        )).values('id', 'name','image').distinct()
+        'attributes__feature',
+        ).filter(Q(price__gt=0) & Q(is_published=True))
+        q = Q()
+        for item in search_terms:
+            q |= Q(category__name__icontains=item)
+            q |= Q(brand__name__icontains=item)
+            q |= Q(name__icontains=item)
+            q |= Q(attributes__name__icontains=item)
+            q |= Q(attributes__feature__name__icontains=item)
+        posts = posts.filter(q).values('id', 'name','image').distinct()
+
         for post in posts:
             print(post)
             d = {}
