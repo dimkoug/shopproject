@@ -102,8 +102,8 @@
                       $("#filters-form").submit();
                     }
                 });
-                $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-                  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+                $( "#amount" ).val(new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format($( "#slider-range" ).slider( "values", 0 ) )+
+                  " - " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format($( "#slider-range" ).slider( "values", 1 ) ));
               } );
 
 

@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -37,6 +38,7 @@
   </head>
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
     {% include 'site/navbar.html' %}
+    {% cache 500 categories categories %}
     <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for category in categories %}
@@ -62,6 +64,8 @@
         {% endfor %}
       </div>
     </div>
+    {% endcache %}
+    {% cache 500 brands brands %}
     <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for brand in brands %}
@@ -76,6 +80,7 @@
         
       </div>
     </div>
+    {% endcache %}
     <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         <div class="col">
