@@ -40,8 +40,18 @@
                             </div>
                         </div>
                         {% endfor %}
-                        <input type="hidden" name="category" value="{{category.id}}">
+                        {% if category %}
+                            <input type="hidden" name="category" value="{{category.id}}">
+                        {% endif %}
+                        {% if brand %}
+                            <input type="hidden" name="brand" value="{{brand.id}}">
+                        {% endif %}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            {% if category %}
+                            <a href="{% url 'shop:catalog' %}?category={{ category.id }}" class="btn btn-light">Reset</a>
+                            {% else %}
+                            <a href="{% url 'shop:catalog' %}?brand={{ brand.id }}" class="btn btn-light">Reset</a>
+                            {% endif %}
                           <button type="submit" class="btn btn-primary">Search</button>
                         </div>
                         
