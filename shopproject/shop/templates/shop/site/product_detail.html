@@ -4,38 +4,67 @@
 
 {% block head %}
     <style>
-    .swiper {
-      width: 100%;
-      height: 100%;
-    }
 
-    .swiper-slide {
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
 
+        .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .swiper {
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-    }
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-    .swiper-slide {
-      background-size: cover;
-      background-position: center;
-    }
+        .swiper {
+            width: 100%;
+            height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
+        .swiper-slide {
+            background-size: cover;
+            background-position: center;
+        }
 
-    .swiper-slide img {
-      display: block;
-      width: 50%;
-      object-fit: cover;
-    }
+        .mySwiper2 {
+            height: 80%;
+            width: 100%;
+        }
+
+        .mySwiper {
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+
+        .mySwiper .swiper-slide {
+            width: 25%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        .mySwiper .swiper-slide-thumb-active {
+            opacity: 1;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
     </style>
 {% endblock %}
@@ -44,155 +73,215 @@
 
 {% block content %}
 
-<div class="container-fluid wrapper rounded shadow">
-  <div class="d-flex flex-row">
-    <div class="col-12">
-      <div class="d-flex flex-row py-2">
-        <div class="col">
-          <h1>{{object.name}}</h1>
-        </div>
-      </div>
-      <hr>
-      <div class="d-flex flex-row py-2">
-        
-        <div class="col-2 col-sm-2">
-          <div class="text-center">
-            <a href="{% url 'shop:catalog' %}?brand={{object.brand.pk}}" class="tag-link">
-              {% if object.brand.image %}
-                <img src="{{object.brand.image.url}}" alt="" class="img-fluid">
-              {% else %}
-                {{object.brand}}
-              {% endif %}
-              </a>
-          </div>
-          {% if object.image %}
-          <img src="{{ object.image.url }}" class="img-fluid">
-          {% endif %}
-        </div>
-        <div class="col-8 col-sm-8">
-          {% if object.tags.all %}
-          <div class="">
-            {% for tag in object.tags.all %}
-                <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.id}}">{{tag.name}}</a>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <div class="">
-             <a class="tag-link" href="{% url 'shop:catalog' %}?category={{object.category.id}}">{{object.category.name}}</a>
-             {% if object.pdf_guide %}
-              <a href="{{object.pdf_guide.url}}"><i class="bi bi-file-pdf-fill" style="font-size:1.4rem;"></i></a>
-            {% endif %}
-          </div>
-
-        </div>
-        <div class="col-2">
-            <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency object.price %}</a>
-        </div>
-      </div>
-      <hr>
-      {% if  object.productlogos.all %}
-      <div class="row">
-        {% for logo in object.productlogos.all %}
-          {% if logo.logo.image %}
-          <div class="col-1">
-            <img src="{{logo.logo.image.url}}" alt="">
-
-          </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-      <hr>
-      {% endif %}
-      <div class="row py-2">
-          <div class="col-12 col-sm-12">
-              <div class="swiper-container mySwiper">
-                <div class="swiper-wrapper">
-                  {% for media in object.media.all %}
-                    <div class="swiper-slide">
-                        <img src="{{ media.image.url }}" class="img-thumbnail img-fluid">
+    <div class="container-fluid wrapper rounded shadow">
+        <div class="d-flex flex-row">
+            <div class="col-12">
+                <div class="d-flex flex-row py-2">
+                    <div class="col">
+                        <h1>{{ object.name }}</h1>
                     </div>
-                  {% endfor %}
-                </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-              </div>
-            </div>
-      </div>
-
-    
-    
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description-tab-pane" type="button" role="tab" aria-controls="description-tab-pane" aria-selected="true">Description</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs-tab-pane" type="button" role="tab" aria-controls="specs-tab-pane" aria-selected="false">Specs</button>
-        </li>
-        {% if  object.relatedproducts.all %}
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="compatible-tab" data-bs-toggle="tab" data-bs-target="#compatible-tab-pane" type="button" role="tab" aria-controls="compatible-tab-pane" aria-selected="false">Compatible</button>
-        </li>
-        {% endif %}
-      </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel" aria-labelledby="description-tab" tabindex="0">
-          <div class="">
-            {{object.description|safe}}
-          </div>
-
-
-
-
-        </div> <!--description-->
-        <div class="tab-pane fade" id="specs-tab-pane" role="tabpanel" aria-labelledby="specs-tab" tabindex="0">
-          <div class="row d-flex justify-content-center">
-            <div class="col-6">
-              <div class="">
-                {% for attr in object.attributes.all %}
-                <div class="">
-                  <span style="font-weight:bold;">{{attr.feature}}</span> : {{attr|safe}}
                 </div>
                 <hr>
-                {% endfor %}
-              </div>
+                <div class="d-flex flex-row py-2">
+
+                    <div class="col-4">
+                        <div class="text-center">
+                            <a href="{% url 'shop:catalog' %}?brand={{ object.brand.pk }}" class="tag-link">
+                                {% if object.brand.image %}
+                                    <img src="{{ object.brand.image.url }}" alt="" class="img-fluid">
+                                {% else %}
+                                    {{ object.brand }}
+                                {% endif %}
+                            </a>
+                        </div>
+                        {% if object.image and object.media.count == 0 %}
+                            <img src="{{ object.image.url }}" class="img-fluid">
+                        {% else %}
+                            <div class="card rounded shadow">
+                                <div class="card-body">
+                                    <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
+                                         class="swiper mySwiper2">
+                                        <div class="swiper-wrapper">
+                                            {% for media in object.media.all %}
+                                                <div class="swiper-slide">
+                                                    <img src="{{ media.image.url }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                    <div thumbsSlider="" class="swiper mySwiper">
+                                        <div class="swiper-wrapper">
+                                            {% for media in object.media.all %}
+                                                <div class="swiper-slide">
+                                                    <img src="{{ media.image.url }}">
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endif %}
+
+
+                    </div>
+                    <div class="col-6">
+                        {% if object.tags.all %}
+                            <div class="">
+                                {% for tag in object.tags.all %}
+                                    <a class="tag-link"
+                                       href="{% url 'shop:catalog' %}?tag={{ tag.id }}">{{ tag.name }}</a>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="">
+                            <a class="tag-link"
+                               href="{% url 'shop:catalog' %}?category={{ object.category.id }}">{{ object.category.name }}</a>
+                            {% if object.pdf_guide %}
+                                <a href="{{ object.pdf_guide.url }}"><i class="bi bi-file-pdf-fill"
+                                                                        style="font-size:1.4rem;"></i></a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    <div class="col-2">
+                        <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i
+                                class="bi bi-cart"></i> {% format_currency object.price %}</a>
+                    </div>
+                </div>
+                {% if  object.productlogos.all %}
+                    <div class="row">
+                        {% for logo in object.productlogos.all %}
+                            {% if logo.logo.image %}
+                                <div class="col-1">
+                                    <img src="{{ logo.logo.image.url }}" alt="">
+
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <hr>
+                {% endif %}
+
+
+
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                                data-bs-target="#description-tab-pane" type="button" role="tab"
+                                aria-controls="description-tab-pane" aria-selected="true">Description
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs-tab-pane"
+                                type="button" role="tab" aria-controls="specs-tab-pane" aria-selected="false">Specs
+                        </button>
+                    </li>
+                    {% if  object.relatedproducts.all %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="compatible-tab" data-bs-toggle="tab"
+                                    data-bs-target="#compatible-tab-pane" type="button" role="tab"
+                                    aria-controls="compatible-tab-pane" aria-selected="false">Compatible
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="description-tab-pane" role="tabpanel"
+                         aria-labelledby="description-tab" tabindex="0">
+                        <div class="">
+                            {{ object.description|safe }}
+                        </div>
+
+
+                    </div> <!--description-->
+                    <div class="tab-pane fade" id="specs-tab-pane" role="tabpanel" aria-labelledby="specs-tab"
+                         tabindex="0">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-6">
+                                <div class="">
+                                    {% for attr in object.attributes.all %}
+                                        <div class="">
+                                            <span style="font-weight:bold;">{{ attr.feature }}</span> : {{ attr|safe }}
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div> <!--specs-->
+                    {% if  object.relatedproducts.all %}
+                        <div class="tab-pane fade" id="compatible-tab-pane" role="tabpanel"
+                             aria-labelledby="compatible-tab" tabindex="0">...
+                            <div class="row">
+                                {% for item in object.relatedproducts.all %}
+                                    <div class="col">
+                                        <div class="card">
+                                            {% if item.image %}
+                                                <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+                                            {% endif %}
+                                            <div class="card-body">
+                                                <h6 class="card-title">{{ item }}</h6>
+                                                <a href="{% url 'shop:catalog-product-detail' item.pk %}"
+                                                   class="btn btn-primary">Info</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                            </div>
+
+
+                        </div> <!--compatible-->
+                    {% endif %}
+
+                </div>
+
+
             </div>
         </div>
-
-
-        </div> <!--specs-->
-        {% if  object.relatedproducts.all %}
-        <div class="tab-pane fade" id="compatible-tab-pane" role="tabpanel" aria-labelledby="compatible-tab" tabindex="0">...
-          <div class="row">
-            {% for item in object.relatedproducts.all %}
-              <div class="col">
-                <div class="card">
-                  {% if item.image %}
-                  <img src="{{item.image.url}}" class="card-img-top" alt="...">
-                  {% endif %}
-                  <div class="card-body">
-                    <h6 class="card-title">{{item}}</h6>
-                    <a href="{% url 'shop:catalog-product-detail' item.pk %}" class="btn btn-primary">Info</a>
-                  </div>
-                </div>
-              </div>
-              
-            {% endfor %}
-          </div>
-
-
-
-        </div> <!--compatible-->
-        {% endif %}
-
-      </div>
-    
-    
-    
-    
-    
     </div>
-  </div>
-</div>
+
+{% endblock %}
+
+{% block body_scripts %}
+
+    <script>
+        'use strict';
+
+        (function (w, d, $) {
+            $(d).ready(function () {
+                var swiper = new Swiper(".mySwiper", {
+                    spaceBetween: 5,
+                    slidesPerView: 6,
+                    freeMode: true,
+                    watchSlidesVisibility: true,
+                    watchSlidesProgress: true,
+                });
+                var swiper2 = new Swiper(".mySwiper2", {
+                    loop: true,
+                    spaceBetween: 10,
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                    thumbs: {
+                        swiper: swiper,
+                    },
+                });
+
+
+            })
+
+        })(window, document, jQuery)
+
+
+    </script>
+
 
 
 
