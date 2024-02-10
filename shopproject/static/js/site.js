@@ -151,6 +151,12 @@ $('body').on("click","[id*='caret_']", function(e){
   return false;
 })
 
+     $("body").on("change", '#filters-form :input',function(e){
+         $("#filters-form").submit();
+
+     })
+
+
 
  }) /* document ready */
 
