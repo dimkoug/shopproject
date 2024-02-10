@@ -78,56 +78,42 @@
             <div class="col-12">
                 <div class="d-flex flex-row py-2">
                     <div class="col">
-                        <h1>{{ object.name }}</h1>
+
                     </div>
                 </div>
                 <hr>
                 <div class="d-flex flex-row py-2">
 
                     <div class="col-4">
-                        <div class="text-center">
-                            <a href="{% url 'shop:catalog' %}?brand={{ object.brand.pk }}" class="tag-link">
-                                {% if object.brand.image %}
-                                    <img src="{{ object.brand.image.url }}" alt="" class="img-fluid">
-                                {% else %}
-                                    {{ object.brand }}
-                                {% endif %}
-                            </a>
-                        </div>
                         {% if object.image and object.media.count == 0 %}
                             <img src="{{ object.image.url }}" class="img-fluid">
                         {% else %}
-                            <div class="card rounded shadow">
-                                <div class="card-body">
-                                    <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
-                                         class="swiper mySwiper2">
-                                        <div class="swiper-wrapper">
-                                            {% for media in object.media.all %}
-                                                <div class="swiper-slide">
-                                                    <img src="{{ media.image.url }}">
-                                                </div>
-                                            {% endfor %}
+                            <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
+                                 class="swiper mySwiper2">
+                                <div class="swiper-wrapper">
+                                    {% for media in object.media.all %}
+                                        <div class="swiper-slide">
+                                            <img src="{{ media.image.url }}">
                                         </div>
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
-                                    </div>
-                                    <div thumbsSlider="" class="swiper mySwiper">
-                                        <div class="swiper-wrapper">
-                                            {% for media in object.media.all %}
-                                                <div class="swiper-slide">
-                                                    <img src="{{ media.image.url }}">
-                                                </div>
-                                            {% endfor %}
+                                    {% endfor %}
+                                </div>
+                                <div class="swiper-button-prev"></div>
+                                <div class="swiper-button-next"></div>
+                            </div>
+                            <div thumbsSlider="" class="swiper mySwiper">
+                                <div class="swiper-wrapper">
+                                    {% for media in object.media.all %}
+                                        <div class="swiper-slide">
+                                            <img src="{{ media.image.url }}">
                                         </div>
-                                    </div>
-
+                                    {% endfor %}
                                 </div>
                             </div>
+
+
                         {% endif %}
-
-
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 g-2">
                         {% if object.tags.all %}
                             <div class="">
                                 {% for tag in object.tags.all %}
@@ -136,19 +122,30 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-                        <div class="">
+
+                        <a href="{% url 'shop:catalog' %}?brand={{ object.brand.pk }}" class="tag-link">
+                            {% if object.brand.image %}
+                                <img src="{{ object.brand.image.url }}" alt="" class="img-fluid">
+                            {% else %}
+                                {{ object.brand }}
+                            {% endif %}
+                        </a>
+                        <h1 style="font-size:25px;">{{ object.name }}</h1>
+
+                        <div class="d-flex justify-content-end">
                             <a class="tag-link"
                                href="{% url 'shop:catalog' %}?category={{ object.category.id }}">{{ object.category.name }}</a>
                             {% if object.pdf_guide %}
-                                <a href="{{ object.pdf_guide.url }}"><i class="bi bi-file-pdf-fill"
-                                                                        style="font-size:1.4rem;"></i></a>
+                                <a href="{{ object.pdf_guide.url }}" class="justify-content-end"><i
+                                        class="bi bi-file-pdf-fill"
+                                        style="font-size:2.4rem;"></i></a>
                             {% endif %}
                         </div>
 
                     </div>
-                    <div class="col-2">
+                    <div class="text-end col-2">
                         <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i
-                                class="bi bi-cart"></i> {% format_currency object.price %}</a>
+                                class=" bi bi-cart"></i> {% format_currency object.price %}</a>
                     </div>
                 </div>
                 {% if  object.productlogos.all %}
@@ -199,16 +196,18 @@
                     </div> <!--description-->
                     <div class="tab-pane fade" id="specs-tab-pane" role="tabpanel" aria-labelledby="specs-tab"
                          tabindex="0">
-                        <div class="row d-flex justify-content-center">
+                        <div class="d-flex flex-row">
                             <div class="col-6">
-                                <div class="">
+                                <table class="table table-striped">
+                                    <tbody>
                                     {% for attr in object.attributes.all %}
-                                        <div class="">
-                                            <span style="font-weight:bold;">{{ attr.feature }}</span> : {{ attr|safe }}
-                                        </div>
-                                        <hr>
+                                        <tr>
+                                            <td>{{ attr.feature }}</td>
+                                            <td>{{ attr|safe }}</td>
+                                        </tr>
                                     {% endfor %}
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
