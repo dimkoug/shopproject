@@ -244,7 +244,7 @@ class CatalogProductDetailView(DetailView):
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'media',
-        'logos',
+        'productlogos',
         'attributes',
         'relatedproducts__target'
     )
@@ -308,7 +308,7 @@ def search_items(request):
             Q(brand__name__icontains=search.strip()) |
             Q(name__icontains=search.strip()) |
             Q(attributes__name__icontains=search.strip())
-        )).values('id', 'name','image')
+        )).values('id', 'name','image').distinct()
         for post in posts:
             print(post)
             d = {}

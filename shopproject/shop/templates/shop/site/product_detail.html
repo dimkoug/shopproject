@@ -48,12 +48,12 @@
         </div>
       </div>
       <hr>
-      {% if  object.logos.all %}
+      {% if  object.productlogos.all %}
       <div class="row">
-        {% for logo in object.logos.all %}
-          {% if logo.image %}
+        {% for logo in object.productlogos.all %}
+          {% if logo.logo.image %}
           <div class="col-1">
-            <img src="{{logo.image.url}}" alt="">
+            <img src="{{logo.logo.image.url}}" alt="">
 
           </div>
           {% endif %}
