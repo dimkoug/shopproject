@@ -56,17 +56,17 @@ class CatalogListView(PaginationMixin, ListView):
     template_name = 'shop/site/product_list.html'
     ajax_partial = 'shop/partials/product_ajax_list_partial.html'
 
-    @method_decorator(cache_page(60 * 15))
-    @method_decorator(vary_on_cookie)
+    # @method_decorator(cache_page(60 * 15))
+    # @method_decorator(vary_on_cookie)
     def dispatch(self, *args, **kwargs):
         response = super().dispatch(*args, **kwargs)
         response['X-Cache'] = 'HIT' if response.has_header('Expires') else 'MISS'
         return response
 
-    queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
+    queryset = Product.active_products.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
         'attributes__feature',
-    ).filter(price__gt=0,is_published=True).order_by('price')
+    ).order_by('price')
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -245,7 +245,7 @@ class CatalogProductDetailView(DetailView):
         'tags',
         'media',
         'productlogos',
-        'attributes',
+        'attributes__feature',
         'relatedproducts__target'
     )
 
