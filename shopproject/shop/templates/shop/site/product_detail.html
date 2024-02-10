@@ -1,6 +1,47 @@
 {% extends "site/base.html" %}
 {% load static %}
 {% load core %}
+
+{% block head %}
+    <style>
+    .swiper {
+      width: 100%;
+      height: 100%;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+
+    .swiper {
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .swiper-slide {
+      background-size: cover;
+      background-position: center;
+    }
+
+
+    .swiper-slide img {
+      display: block;
+      width: 50%;
+      object-fit: cover;
+    }
+
+    </style>
+{% endblock %}
+
+
+
 {% block content %}
 
 <div class="container-fluid wrapper rounded shadow">
@@ -68,7 +109,7 @@
                 <div class="swiper-wrapper">
                   {% for media in object.media.all %}
                     <div class="swiper-slide">
-                        <img src="{{ media.image.url }}" class="img-thumbnail">
+                        <img src="{{ media.image.url }}" class="img-thumbnail img-fluid">
                     </div>
                   {% endfor %}
                 </div>

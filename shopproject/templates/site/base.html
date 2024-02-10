@@ -36,6 +36,7 @@
         width:100%;
       }
       </style>
+    {% block head %}{% endblock %}
   </head>
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
     {% include 'site/navbar.html' %}
