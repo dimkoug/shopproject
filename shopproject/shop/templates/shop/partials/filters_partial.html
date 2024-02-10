@@ -20,6 +20,17 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{url}}" method="get" id="filters-form">
+                        <input type="hidden" value="{{ min_price }}" name="min_price" id="min_price" step="any">
+                        <input type="hidden" value="{{ max_price }}" name="max_price" id="max_price" step="any">
+                        <input type="hidden" value="{{ selected_min_price }}" name="selected_min_price" id="selected_min_price" step="any">
+                        <input type="hidden" value="{{ selected_max_price }}" name="selected_max_price" id="selected_max_price" step="any">
+<p>
+  <label for="amount">Price range:</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+
+<div id="slider-range"></div>
+
                         {% for feature in specification_list %}
                         <div class="d-flex flex-row">
                             <div class="col">
@@ -60,3 +71,39 @@
             </div>
         </div>
     </div>
+
+      <script>
+        'use strict';
+        (function(w,d,$){
+            $(d).ready(function(){
+                let min_price = parseFloat($("#min_price").val());
+                let max_price = parseFloat($("#max_price").val());
+
+                let selected_min_price = parseFloat($("#selected_min_price").val());
+                let selected_max_price = parseFloat($("#selected_max_price").val());
+                if (isNaN(selected_min_price)){
+                    selected_min_price = min_price;
+                }
+                if (isNaN(selected_max_price)){
+                    selected_max_price = max_price;
+                }
+              $( function() {
+                $( "#slider-range" ).slider({
+                  range: true,
+                  min: min_price,
+                  max: max_price,
+                  values: [ selected_min_price, selected_max_price ],
+                  slide: function( event, ui ) {
+                    $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+                    $("#min_price").val(ui.values[ 0 ] )
+                    $("#max_price").val(ui.values[ 1 ] )
+                  }
+                });
+                $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+                  " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+              } );
+
+
+                        })
+        })(window,document,jQuery)
+    </script>

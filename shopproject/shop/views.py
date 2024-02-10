@@ -1,6 +1,7 @@
 import uuid
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.db.models import Min ,Max
 from django.views.decorators.cache import cache_control
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import cache_page
@@ -91,6 +92,11 @@ class CatalogListView(PaginationMixin, ListView):
             for attr in attrs:
                 queryset = queryset.filter(
                     attributes__in=attr)
+        if self.request.GET.get('min_price'):
+            queryset = queryset.filter(price__gt=self.request.GET.get('min_price'))
+
+        if self.request.GET.get('max_price'):
+            queryset = queryset.filter(price__lt=self.request.GET.get('max_price'))
         # return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
         return queryset
 
@@ -124,10 +130,24 @@ class CatalogListView(PaginationMixin, ListView):
         if category:
             category_obj = Category.objects.get(id=category)
             context['category'] = category_obj
+            products = Product.active_products.filter(category_id=category.pk)
+            lowest_price = products.aggregate(Min('price'))['price__min']
+            max_price = products.aggregate(Max('price'))['price__max']
         if brand:
             brand = Brand.objects.get(id=brand)
             context['brand'] = brand
+            products = Product.active_products.filter(brand_id=brand.pk)
+            lowest_price = products.aggregate(Min('price'))['price__min']
+            max_price = products.aggregate(Max('price'))['price__max']
 
+        if self.request.GET.get('min_price'):
+            context['selected_min_price'] = self.request.GET.get('min_price')
+
+        if self.request.GET.get('max_price'):
+            context['selected_max_price'] = self.request.GET.get('max_price')
+
+        context['min_price'] = lowest_price
+        context['max_price'] = max_price
         context['attrs_checked'] = attrs_checked
         counter = Count('productattributes', filter=Q(
             products__in=self.get_queryset()))
