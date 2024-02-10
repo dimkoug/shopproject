@@ -130,7 +130,7 @@ class CatalogListView(PaginationMixin, ListView):
         if category:
             category_obj = Category.objects.get(id=category)
             context['category'] = category_obj
-            products = Product.active_products.filter(category_id=category.pk)
+            products = Product.active_products.filter(category_id=category_obj.pk)
             lowest_price = products.aggregate(Min('price'))['price__min']
             max_price = products.aggregate(Max('price'))['price__max']
         if brand:
