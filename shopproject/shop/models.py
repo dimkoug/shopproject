@@ -17,42 +17,6 @@ from core.storage import OverwriteStorage
 
 from .managers import ActiveProductManager
 from django.urls import reverse
-class MediaFileSystemStorage(FileSystemStorage):
-    def get_available_name(self, name, max_length=None):
-        if max_length and len(name) > max_length:
-            raise(Exception("name's length is greater than max_length"))
-        return name
-
-    def _save(self, name, content):
-        if self.exists(name):
-            # if the file exists, do not call the superclasses _save method
-            return name
-        # if the file is new, DO call it
-        return super(MediaFileSystemStorage, self)._save(name, content)
-
-
-class ImageModel(models.Model):
-    image = models.ImageField(upload_to='',
-                              storage=MediaFileSystemStorage(), max_length=500, null=True, blank=True)
-    md5sum = models.CharField(blank=True, max_length=255, null=True)
-
-    class Meta:
-        abstract = True
-
-    def get_thumb(self):
-        if self.image:
-            return format_html("<img src='{}' width='100' height='auto'>",
-                               self.image.url)
-        return ''
-
-    def save(self, *args, **kwargs):
-        if not self.pk:  # file is new
-            if self.image:
-                md5 = hashlib.md5()
-                for chunk in self.image.chunks():
-                    md5.update(chunk)
-                self.md5sum = md5.hexdigest()
-        super().save(*args, **kwargs)
 
 
 class Category(Timestamped, Ordered, Published):

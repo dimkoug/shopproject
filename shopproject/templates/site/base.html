@@ -65,7 +65,7 @@
     <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for brand in brands %}
-        <div class="col-2"><a href="{% url 'shop:catalog' %}?brand={{brand.id}}">
+        <div class="col-2 g-2"><a href="{% url 'shop:catalog' %}?brand={{brand.id}}">
           {% if brand.image %}
             <img src="{{brand.image.url}}" alt="" class="img-fluid"/>
           {% else %}
