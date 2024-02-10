@@ -1,12 +1,17 @@
 {% load static %}
+{% load core %}
 <div class="results">
-    <div class="row py-2">
+    <div class="d-flex flex-row py-2">
       <div class="col">
-        <h2 class="text-center">{{page_title}}</h2>
+          {% if brand %}
+            <h2 class="text-center">{{brand.name}}</h2>
+          {% else %}
+            <h2 class="text-center">{{category.name}}</h2>
+          {% endif %}
       </div>
     </div>
     {% for product in product_list %}
-    <div class="row py-2">
+    <div class="d-flex flex-row py-2 border-bottom">
       <div class="col-3 col-lg-2">
         {% if product.image %}
             <img src="{{ product.image.url }}" class="img-fluid rounded">
@@ -26,7 +31,7 @@
         </div>
       </div>
       <div class="col-2 col-lg-2">
-        <a href="{% url 'shop:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> &#128;{{product.price}}</a>
+        <a href="{% url 'shop:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency product.price %}</a>
       </div>
     </div>
     {% endfor %}

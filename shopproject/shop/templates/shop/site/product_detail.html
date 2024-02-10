@@ -1,17 +1,18 @@
 {% extends "site/base.html" %}
 {% load static %}
+{% load core %}
 {% block content %}
 
 <div class="container-fluid wrapper rounded shadow">
-  <div class="row">
+  <div class="d-flex flex-row">
     <div class="col-12">
-      <div class="row py-2">
+      <div class="d-flex flex-row py-2">
         <div class="col">
           <h1>{{object.name}}</h1>
         </div>
       </div>
       <hr>
-      <div class="row py-2">
+      <div class="d-flex flex-row py-2">
         
         <div class="col-2 col-sm-2">
           <div class="text-center">
@@ -44,7 +45,7 @@
 
         </div>
         <div class="col-2">
-            <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-light float-right ajax_add_to_cart"><i class="bi bi-cart"></i>  &#128;{{object.price}}</a>
+            <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency object.price %}</a>
         </div>
       </div>
       <hr>
