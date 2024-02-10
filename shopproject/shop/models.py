@@ -16,7 +16,7 @@ from core.models import (
 from core.storage import OverwriteStorage
 
 from .managers import ActiveProductManager
-
+from django.urls import reverse
 class MediaFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         if max_length and len(name) > max_length:
@@ -249,6 +249,9 @@ class Product(Timestamped,  Ordered, Published):
 
     def __str__(self):
         return f"{self.name}"
+
+    def get_absolute_url(self):
+        return reverse('shop:catalog-product-detail', args=[self.pk])
 
 
 class ProductTag(Timestamped):

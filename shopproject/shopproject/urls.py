@@ -32,6 +32,7 @@ from core.functions import get_sb_data
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
+    path('search/', include('haystack.urls')),
     path('test/', TestView.as_view(), name='test'),
     path('sb_data/', get_sb_data, name='sb-data'),
     path('delete/', delete_model, name='delete'),
