@@ -258,6 +258,8 @@ class BasketView(TemplateView):
         return context
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
+@method_decorator(vary_on_cookie,name='dispatch')
 class CatalogProductDetailView(DetailView):
     model = Product
     template_name = 'shop/site/product_detail.html'
@@ -268,7 +270,10 @@ class CatalogProductDetailView(DetailView):
         'attributes__feature',
         'relatedproducts__target'
     )
-
+    def dispatch(self, *args, **kwargs):
+        response = super().dispatch(*args, **kwargs)
+        response['X-Cache'] = 'HIT' if response.has_header('Expires') else 'MISS'
+        return response
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
