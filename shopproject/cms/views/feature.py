@@ -24,6 +24,7 @@ from core.functions import is_ajax
 
 from shop.models import (
     Feature,
+    FeatureCategory
 )
 
 
@@ -77,3 +78,31 @@ class FeatureUpdateView(LoginRequiredMixin, FormMixin,
 
 class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Feature
+
+
+def create_featurecategory(request):
+    try:
+        feature_id = request.POST['feature']
+        category_id = request.POST['category']
+        filter_display = bool(request.POST.get('filter_display'))
+        product_attribute, created = FeatureCategory.objects.update_or_create(feature_id=feature_id,category_id=category_id,defaults={"filter_display":filter_display})
+        return JsonResponse({
+            'id':product_attribute.id,
+            'feature':product_attribute.feature_id,
+            'category': product_attribute.category.name,
+            'category_id': product_attribute.category_id,
+            'filter_display':product_attribute.filter_display
+        })
+    except Exception as e:
+        print(e)
+        raise
+        return JsonResponse({})
+
+def delete_featurecategory(request):
+    try:
+        feature_id = request.POST['feature']
+        category_id = request.POST['category']
+        FeatureCategory.objects.filter(feature_id=feature_id,category_id=category_id).delete()
+    except:
+        raise
+    return JsonResponse({})

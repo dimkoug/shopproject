@@ -2,7 +2,7 @@ from .address import AddressListView, AddressDetailView, AddressCreateView, Addr
 from .attribute import AttributeListView, AttributeDetailView, AttributeCreateView, AttributeUpdateView, AttributeDeleteView, create_attribute,delete_attribute
 from .brand import BrandListView, BrandDetailView, BrandCreateView, BrandUpdateView, BrandDeleteView
 from .category import IndexView, CategoryListView, CategoryDetailView, CategoryCreateView, CategoryUpdateView, CategoryDeleteView
-from .feature import FeatureListView, FeatureDetailView, FeatureCreateView, FeatureUpdateView, FeatureDeleteView
+from .feature import FeatureListView, FeatureDetailView, FeatureCreateView, FeatureUpdateView, FeatureDeleteView, create_featurecategory,delete_featurecategory
 from .hero import HeroListView, HeroDetailView, HeroCreateView, HeroUpdateView, HeroDeleteView
 from .product import ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView
 from .tag import TagListView, TagDetailView, TagCreateView, TagUpdateView, TagDeleteView

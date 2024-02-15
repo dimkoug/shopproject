@@ -74,9 +74,11 @@
         <div class="tab-pane fade" id="pills-attribute" role="tabpanel" aria-labelledby="pills-attribute-tab">
           <div class="row">
             <div class="col-12">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add Attribute
-              </button>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Add Attribute
+                </button>
+              </div>
             </div>
           </div>
           <div class="row justify-content-center">
@@ -100,11 +102,15 @@
             </div>
           </div>
         </div><!-- attributes tab-->
-        <div class="tab-pane fade" id="pills-categories" role="tabpanel" aria-labelledby="pills-categories-tab">media
+        <div class="tab-pane fade" id="pills-categories" role="tabpanel" aria-labelledby="pills-categories-tab">
           <div class="row">
             <div class="col-12">
-              <div class="mb-3">
-                add category
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <div class="mb-3">
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                    Add Category
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -119,11 +125,11 @@
                   </tr>
                 </thead>
                 <tbody id="category_list">
-                  {% for attr in form.instance.categories.all %}
+                  {% for attr in form.instance.featurecategories.all %}
                     <tr>
-                      <td>{{attr}}</td>
+                      <td>{{attr.category}}</td>
                       <td>{{attr.filter_display}}</td>
-                      <td><a href="#" data-product="{{form.instance.pk}}" data-attribute="{{attr.id}}"  class="deleteAttr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td>
+                      <td><a href="#" data-feature="{{form.instance.pk}}" data-categoryid="{{attr.category_id}}" class="deleteFtr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -172,6 +178,46 @@
 </div>
 
 
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="category-form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Feature Category</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <input type="hidden" name="feature" value="{{form.instance.pk}}" >
+            <div class="row">
+              <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="category" id="id_category" class="form-control">
+                  </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="filter_display" name='filter_display'>
+                <label class="form-check-label" for="filter_display">
+                  is filter
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
 {% endblock %}
 
 
@@ -181,7 +227,7 @@
   (function(w,d,$){
 
     $(d).ready(function(){
-      $("select[name*='categories']" ).attr( "multiple", true );
+      /*$("select[name*='categories']" ).attr( "multiple", true );
       $("select[name*='categories']" ).select2({
         ajax: {
           url: '/sb_data/',
@@ -196,12 +242,26 @@
             return query;
           }
         }
-      });
+      });*/
     
+
+      $('#id_category').select2({
+        dropdownParent: $('#exampleModal2'),
+        ajax: {
+          url: '/shop/get_categories_for_sb/',
+          data: function (params) {
+            var query = {
+              search: params.term,
+              type: 'public'
+            }
+            // Query parameters will be ?search=[term]&type=public
+            return query;
+          }
+        }
+      });
     
       $('#attribute-form').submit(function(e){
         e.preventDefault();
-        alert("fdsfdfd");
         let data = $(this).serialize();
         console.info(data);
         $.ajax({
@@ -222,6 +282,29 @@
 
       })
 
+      $('#category-form').submit(function(e){
+        e.preventDefault();
+        let data = $(this).serialize();
+        console.info(data);
+        $.ajax({
+          url: '/cms/create_featurecategory/',
+          data: data,
+          type: 'POST',
+          dataType: 'json',
+          success: function (data) {
+            console.info(data);
+            
+            if (data) {
+              $('#category_list').prepend(`<tr><td>${data.category}</td><td>${data.filter_display}</td><td><a href="#" data-feature="${data.feature_id}" data-categoryid="${data.category_id}" class="deleteFtr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td></tr>`)
+              $('#exampleModal2').modal("hide");
+            }
+          }
+        });
+        return false
+
+      })
+
+
       $("body").on('click', '.deleteAttr', function(e){
         e.preventDefault();
         console.info("clicked delete")
@@ -240,7 +323,22 @@
       })
     
     
-    
+      $("body").on('click', '.deleteFtr', function(e){
+        e.preventDefault();
+        console.info("clicked delete")
+        var that = $(this);
+        $.ajax({
+          url: '/cms/delete_featurecategory/',
+          data: {feature:$(this).data("feature"), category:$(this).data("categoryid")},
+          type: 'POST',
+          dataType: 'json',
+          success: function (data) {
+            console.info(data);
+            $(that).parent().parent().fadeOut();
+          }
+        });
+        return false
+      })
     
     
     
