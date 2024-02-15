@@ -36,6 +36,7 @@ urlpatterns = [
     path('test/', TestView.as_view(), name='test'),
     path('sb_data/', get_sb_data, name='sb-data'),
     path('delete/', delete_model, name='delete'),
+    path('cms/', include('cms.urls', namespace='cms')),
     path('shop/', include('shop.urls', namespace='shop')),
     path('api/', include('shop.shopapi.routers')),
     path('users/', include('users.urls')),

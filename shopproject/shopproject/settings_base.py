@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     'users.api',
     'profiles',
     'shop',
+    'cms',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +109,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'shop.context_processors.get_context_data',
+                'cms.context_processors.get_context_data',
             ],
             'debug': DEBUG,
             'loaders': [

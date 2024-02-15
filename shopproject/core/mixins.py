@@ -28,7 +28,7 @@ class ModelMixin:
         model = self.model
         app = model._meta.app_label
         model_name = self.model.__name__.lower()
-        context['app'] = app
+        context['app'] = 'cms'
         context['model'] = model
         context['model_name'] = model_name
         # context['fields'] = self.fields
@@ -50,8 +50,8 @@ class ModelMixin:
         if 'delete' in self.__class__.__name__.lower():
             title += ' Delete {}'.format(self.get_object())
         context['page_title'] = title
-        back_url = reverse("{}:{}-list".format(app, model_name))
-        create_url = reverse("{}:{}-create".format(app, model_name))
+        back_url = reverse("cms:{}-list".format(model_name))
+        create_url = reverse("cms:{}-create".format(model_name))
         context['back_url'] = back_url
         context['create_url'] = create_url
         return context

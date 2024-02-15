@@ -116,8 +116,8 @@ def get_rows(fields, object_list):
         print(obj._meta.fields)
         app = obj._meta.app_label
         model = obj.__class__.__name__.lower()
-        update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
-        delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
+        update_url = reverse_lazy(f"cms:{model}-update",kwargs={"pk":obj.pk})
+        delete_url = reverse_lazy(f"cms:{model}-delete",kwargs={"pk":obj.pk})
         for field in fields:
             db_name = field['db_name']
             if db_name == 'order':

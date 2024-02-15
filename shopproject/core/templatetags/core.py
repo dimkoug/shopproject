@@ -32,7 +32,7 @@ def get_url(context, action, obj=None):
     '''
     model = context['model']
     lower_name = model.__name__.lower()
-    app = model._meta.app_label
+    app = 'cms'
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
         url = reverse_lazy(url_string, kwargs={'pk': obj.pk})
@@ -45,7 +45,7 @@ def get_url(context, action, obj=None):
 @register.simple_tag(takes_context=True)
 def get_template_name(context, *args):
     model = context['model']
-    app = model._meta.app_label
+    app = 'cms'
     lower_name = model.__name__.lower()
     template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
     return template_name
@@ -54,9 +54,9 @@ def get_template_name(context, *args):
 @register.simple_tag(takes_context=True)
 def get_template_name_cms(context, *args):
     model = context['model']
-    app = model._meta.app_label
+    app = 'cms'
     lower_name = model.__name__.lower()
-    template_name = "shop/cms/partials/{}_list_partial.html".format(lower_name)
+    template_name = "cms/partials/{}_list_partial.html".format(lower_name)
     return template_name
 
 
@@ -106,13 +106,13 @@ def sortFn(value):
 def get_generate_sidebar(context):
     request = context['request']
     urls = ""
-    app_models = list(apps.get_app_config(context['app']).get_models())
+    app_models = list(apps.get_app_config(context['modelapp']).get_models())
     app_models.sort(key=sortFn)
     
     for model in app_models:
         try:
             url_item = reverse(
-                "{}:{}-list".format(model._meta.app_label, model.__name__.lower()))
+                "cms:{}-list".format(model.__name__.lower()))
         except NoReverseMatch:
             url_item = None
         if url_item:
@@ -136,8 +136,8 @@ def get_rows(fields, object_list):
     for obj in object_list:
         app = obj._meta.app_label
         model = obj.__class__.__name__.lower()
-        update_url = reverse_lazy(f"{app}:{model}-update",kwargs={"pk":obj.pk})
-        delete_url = reverse_lazy(f"{app}:{model}-delete",kwargs={"pk":obj.pk})
+        update_url = reverse(f"cms:{model}-update",kwargs={"pk":obj.pk})
+        delete_url = reverse(f"cms:{model}-delete",kwargs={"pk":obj.pk})
         tr = '<tr>'
         for field in fields:
             db_name = field['db_name']
