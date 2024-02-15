@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
+from django.http import JsonResponse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Prefetch
@@ -74,3 +75,28 @@ class AttributeUpdateView(LoginRequiredMixin, FormMixin,
 
 class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
     model = Attribute
+
+
+def create_attribute(request):
+    try:
+        feature_id = request.POST['feature']
+        attribute = request.POST['name']
+        product_attribute, created = Attribute.objects.get_or_create(feature_id=feature_id,name=attribute)
+        return JsonResponse({
+            'id':product_attribute.id,
+            'feature':product_attribute.feature_id,
+            'name': product_attribute.name,
+        })
+    except Exception as e:
+        print(e)
+        return JsonResponse({})
+
+def delete_attribute(request):
+    try:
+        feature_id = request.POST['feature']
+        attribute = request.POST['attribute']
+        product_attribute = Attribute.objects.get(feature_id=feature_id,id=attribute)
+        product_attribute.delete()
+    except:
+        pass
+    return JsonResponse({})

@@ -61,13 +61,11 @@ class FormMixin:
     def form_valid(self, form):
         form.save()
         if 'continue' in self.request.POST:
-            return redirect(reverse_lazy('{}:{}-update'.format(
-                form.instance._meta.app_label,
+            return redirect(reverse_lazy('cms:{}-update'.format(
                 form.instance.__class__.__name__.lower()),
                 kwargs={'pk': form.instance.pk}))
         if 'new' in self.request.POST:
-            return redirect(reverse_lazy('{}:{}-create'.format(
-                form.instance._meta.app_label,
+            return redirect(reverse_lazy('cms:{}-create'.format(
                 form.instance.__class__.__name__.lower())))
         return super().form_valid(form)
 
@@ -79,8 +77,7 @@ class FormMixin:
 
 class SuccessUrlMixin:
     def get_success_url(self):
-        return reverse('{}:{}-list'.format(
-            self.model._meta.app_label, self.model.__name__.lower()))
+        return reverse('cms:{}-list'.format(self.model.__name__.lower()))
 
 
 class PassRequestToFormViewMixin:

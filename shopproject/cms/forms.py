@@ -72,7 +72,7 @@ SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
 class FeatureForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Feature
-        fields = ('name', 'image','categories', 'is_published', 'order')
+        fields = ('name', 'image','is_published', 'order')
 
 
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):

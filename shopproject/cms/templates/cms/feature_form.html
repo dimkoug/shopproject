@@ -13,62 +13,165 @@
 <form method="post" class="shadow rounded" enctype='multipart/form-data' novalidate>{% csrf_token %}
   <div class="card">
     <div class="card-body">
-      {{form.errors}}
-      <div class="row">
-        <div class="col-4">
-          <div class="form-group">
-            
-            {{ form.name.label_tag }}
-            {{form.name}}
-            {% if form.name.errors %}
-            <div class="invalid-feedback">
-              {{form.name.errors}}
-            </div>
-            {%endif%}
-            
-            
-            {% if form.name.help_text %}
-              <small class="form-text text-muted">{{ form.name.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="form-group">
-            {{ form.image.errors }}
-            {{ form.image.label_tag }}
-            {{form.image}}
-            {% if form.image.help_text %}
-              <small class="form-text text-muted">{{ form.image.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="form-group">
-            {{ form.is_published.errors }}
-            {{ form.is_published.label_tag }}
-            {{form.is_published}}
-            {% if form.is_published.help_text %}
-              <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group">
-          {{ form.categories.errors }}
-          {{ form.categories.label_tag }}
-          {{form.categories}}
-          {% if form.categories.help_text %}
-            <small class="form-text text-muted">{{ form.categories.help_text }}</small>
-          {% endif %}
-        </div>
 
+      <ul class="nav nav-pills mb-3" id="info-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-info" aria-selected="true">Feature Info</button>
+        </li>
+        {% if form.instance.pk %}
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-attribute-tab" data-bs-toggle="pill" data-bs-target="#pills-attribute" type="button" role="tab" aria-controls="pills-attribute" aria-selected="false">Attributes</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pills-categories-tab" data-bs-toggle="pill" data-bs-target="#pills-categories" type="button" role="tab" aria-controls="pills-categories" aria-selected="false">Categories</button>
+        </li>
+        {% endif %}
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">info
+          {{form.errors}}
+          <div class="row">
+            <div class="col-4">
+              <div class="form-group">
+                
+                {{ form.name.label_tag }}
+                {{form.name}}
+                {% if form.name.errors %}
+                <div class="invalid-feedback">
+                  {{form.name.errors}}
+                </div>
+                {%endif%}
+                
+                
+                {% if form.name.help_text %}
+                  <small class="form-text text-muted">{{ form.name.help_text }}</small>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                {{ form.image.errors }}
+                {{ form.image.label_tag }}
+                {{form.image}}
+                {% if form.image.help_text %}
+                  <small class="form-text text-muted">{{ form.image.help_text }}</small>
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                {{ form.is_published.errors }}
+                {{ form.is_published.label_tag }}
+                {{form.is_published}}
+                {% if form.is_published.help_text %}
+                  <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div> <!--info-->
+        {% if form.instance.pk %}
+        <div class="tab-pane fade" id="pills-attribute" role="tabpanel" aria-labelledby="pills-attribute-tab">
+          <div class="row">
+            <div class="col-12">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add Attribute
+              </button>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-6">
+              <table class="table table-stripped">
+                <thead>
+                  <tr>
+                    <th>Attribute</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="attribute_list">
+                  {% for attr in form.instance.attributes.all %}
+                    <tr>
+                      <td>{{attr|safe}}</td>
+                      <td><a href="#" data-feature="{{form.instance.pk}}" data-id="{{attr.id}}"  class="deleteAttr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div><!-- attributes tab-->
+        <div class="tab-pane fade" id="pills-categories" role="tabpanel" aria-labelledby="pills-categories-tab">media
+          <div class="row">
+            <div class="col-12">
+              <div class="mb-3">
+                add category
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-6">
+              <table class="table table-stripped">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>is Filter</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="category_list">
+                  {% for attr in form.instance.categories.all %}
+                    <tr>
+                      <td>{{attr}}</td>
+                      <td>{{attr.filter_display}}</td>
+                      <td><a href="#" data-product="{{form.instance.pk}}" data-attribute="{{attr.id}}"  class="deleteAttr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+        </div> <!--media tab-->
+        {% endif %}
       </div>
+
+
+
+
+
+
+
       {% include 'partials/form_buttons.html' with form=form %}
     </div>
   </div>
   
 </form>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="attribute-form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Feature Attribute</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <input type="hidden" name="feature" value="{{form.instance.pk}}" >
+            <div class="mb-3">
+              <label for="name" class="form-label">Attribute</label>
+              <textarea id="name" name="name" rows="4" cols="50"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 {% endblock %}
 
 
@@ -94,6 +197,58 @@
           }
         }
       });
+    
+    
+      $('#attribute-form').submit(function(e){
+        e.preventDefault();
+        alert("fdsfdfd");
+        let data = $(this).serialize();
+        console.info(data);
+        $.ajax({
+          url: '/cms/create_attribute/',
+          data: data,
+          type: 'POST',
+          dataType: 'json',
+          success: function (data) {
+            console.info(data);
+            
+            if (data) {
+              $('#attribute_list').prepend(`<tr><td>${data.name}</td><td><a href="#" data-feature="${data.feature_id}" data-id="${data.id}"  class="deleteAttr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td></tr>`)
+              $('#exampleModal').modal("hide");
+            }
+          }
+        });
+        return false
+
+      })
+
+      $("body").on('click', '.deleteAttr', function(e){
+        e.preventDefault();
+        console.info("clicked delete")
+        var that = $(this);
+        $.ajax({
+          url: '/cms/delete_attribute/',
+          data: {feature:$(this).data("feature"), attribute:$(this).data("id")},
+          type: 'POST',
+          dataType: 'json',
+          success: function (data) {
+            console.info(data);
+            $(that).parent().parent().fadeOut();
+          }
+        });
+        return false
+      })
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     }) /* document ready */
 
 
