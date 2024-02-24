@@ -231,12 +231,6 @@ class ProductAttribute(Timestamped, Ordered):
 
 
 
-
-
-
-
-
-
 class Address(Timestamped):
     SHIPPING_ADDRESS, BILLING_ADDRESS = range(0, 2)
     ADDRESS_CHOICES = (

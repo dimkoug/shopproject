@@ -15,7 +15,7 @@ from baskets.models import Basket
 def ajax_basket(request):
     session = Session.objects.get(session_key=request.session.session_key)
     context = {}
-    template_name = 'shop/partials/basket_partial.html'
+    template_name = 'baskets/partials/basket_partial.html'
     sum = 0
     shopping_items = Basket.objects.select_related(
             'product', 'session').filter(session=session)
@@ -45,7 +45,7 @@ def add_to_basket(request, id):
     if is_ajax(request):
         return ajax_basket(request)
 
-    return redirect('shop:basket')
+    return redirect('baskets:basket')
 
 
 def remove_from_basket(request, id):
@@ -64,7 +64,7 @@ def remove_from_basket(request, id):
     messages.success(request, 'Your basket was updated successfully!')
     if is_ajax(request):
         return ajax_basket(request)
-    return redirect('shop:basket')
+    return redirect('baskets:basket')
 
 
 def clear_basket(request):
@@ -84,4 +84,4 @@ def remove_item_from_basket(request, id):
     messages.success(request, 'Your basket was cleared successfully!')
     if is_ajax(request):
         return ajax_basket(request)
-    return redirect('shop:basket')
+    return redirect('baskets:basket')

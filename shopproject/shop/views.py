@@ -231,31 +231,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
         return super().form_valid(form)
 
 
-class BasketView(TemplateView):
-    template_name = 'shop/site/basket.html'
-    ajax_partial = 'shop/partials/basket_partial.html'
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        if is_ajax(request):
-            context['ajax'] = True
-            html = render_to_string(
-                self.ajax_partial, context, request)
-            return JsonResponse({'html': html})
-        else:
-            return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        shopping_cart_id = self.request.session.get('shopping_cart_id')
-        sum = 0
-        shopping_items = Basket.objects.select_related(
-            'product', 'session').filter(session=self.request.session.session_key)
-        for item in shopping_items:
-            sum += item.product.price * item.quantity
-        context['sum'] = sum
-        context['items'] = shopping_items
-        return context
 
 
 @method_decorator(cache_page(60 * 15), name='dispatch')
