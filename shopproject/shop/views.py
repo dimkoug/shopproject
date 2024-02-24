@@ -1,4 +1,5 @@
 import uuid
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.db.models import Min ,Max
@@ -18,8 +19,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
-
-from profiles.views import ProtectProfile
 
 from core.functions import create_query_string, is_ajax
 
@@ -280,19 +279,26 @@ class AddressCreateView(FormMixin, CreateView):
         return super().form_valid(form)
 
 
-class AddressUpdateView(ProtectProfile, FormMixin, UpdateView):
+class AddressUpdateView(FormMixin, UpdateView):
     model = Address
     form_class = SiteAddressForm
     template_name = 'shop/site/address_form.html'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('profile').filter(profile=self.request.user.profile)
+
 
     def get_success_url(self):
         url = reverse_lazy('index')
         return url
 
 
-class AddressDeleteView(ProtectProfile, FormMixin, DeleteView):
+class AddressDeleteView(FormMixin, DeleteView):
     model = Address
     template_name = 'shop/site/address_form_confirm_delete.html'
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('profile').filter(profile=self.request.user.profile)
 
     def get_success_url(self):
         url = reverse_lazy('index')

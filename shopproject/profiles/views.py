@@ -12,15 +12,11 @@ from .forms import ProfileForm
 from .models import Profile
 
 
-class ProtectProfile:
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.profile.pk != self.get_object().pk:
-            raise PermissionDenied()
-        return super().dispatch(*args, **kwargs)
-
-
-class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
+
+    def get_queryset(self):
+        return super().get_queryset().filter(id=self.request.user.profile.id)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -33,19 +29,25 @@ class ProfileDetailView(ProtectProfile, LoginRequiredMixin, DetailView):
         return context
 
 
-class ProfileUpdateView(ProtectProfile, LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileForm
     template_name = 'profiles/profile_form.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(id=self.request.user.profile.id)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('profile-detail',
                             kwargs={'pk': self.get_object().pk})
 
 
-class ProfileDeleteView(ProtectProfile, LoginRequiredMixin, DeleteView):
+class ProfileDeleteView(LoginRequiredMixin, DeleteView):
     model = Profile
     template_name = 'profiles/profile_confirm_delete.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(id=self.request.user.profile.id)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy('profile-detail',
