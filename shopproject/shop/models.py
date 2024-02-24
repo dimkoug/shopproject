@@ -189,9 +189,6 @@ class Media(Timestamped, Ordered, Published):
     def __str__(self):
         return f"{self.image.name}"
 
-
-
-
 class ProductLogo(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     logo = models.ForeignKey('logos.Logo', on_delete=models.CASCADE)
