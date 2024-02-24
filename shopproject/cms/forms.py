@@ -15,7 +15,7 @@ from shop.models import (
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
     Shipment, ProductAttribute, Hero, HeroItem,
-    Offer, Address, Order, OrderItem,Logo,
+    Offer, Address, Order, OrderItem,
     OfferProduct
 )
 
@@ -173,11 +173,6 @@ class MediaForm(BootstrapForm, forms.ModelForm):
         model = Media
         fields = ('product', 'image', 'is_published', 'order')
 
-
-class LogoForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Logo
-        fields = ('image', 'is_published', 'order')
 
 
 MediaFormSet = inlineformset_factory(Product, Media,

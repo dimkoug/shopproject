@@ -6,7 +6,7 @@ from shop.models import (
     Feature, FeatureCategory,
     Attribute, Product,
     ProductTag, ProductRelated,
-    Media, Logo,ProductLogo, Shipment, ProductAttribute,
+    Media, ProductLogo, Shipment, ProductAttribute,
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
@@ -20,7 +20,7 @@ from .forms import (
     FeatureForm, CategoryFormSet, AttributeForm,
     MediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
-    ProductRelatedFormSet, MediaForm, LogoForm,ProductLogoForm, StockForm, ShipmentForm,
+    ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm, ShipmentForm,
     ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
     OfferProductForm, OfferProductFormSet
@@ -183,9 +183,7 @@ class MediaAdmin(admin.ModelAdmin):
     form = MediaForm
 
 
-class LogoAdmin(admin.ModelAdmin):
-    model = Logo
-    form = LogoForm
+
 
 
 class StockAdmin(admin.ModelAdmin):
@@ -246,7 +244,7 @@ admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Media, MediaAdmin)
-admin.site.register(Logo, LogoAdmin)
+
 admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Offer, OfferAdmin)

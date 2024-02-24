@@ -3,7 +3,7 @@ from rest_framework import serializers
 from shop.models import (
     Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
-    Media,Logo, Shipment,ProductAttribute,
+    Media, Shipment,ProductAttribute,
     Hero,HeroItem, Offer, OfferProduct, Order, OrderItem,
     ShoppingCart, Address,
 )
@@ -128,10 +128,7 @@ class HeroItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['hero', 'product']
 
 
-class LogoSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Logo
-        fields = ['url', 'product', 'image', 'order', 'is_published']
+
 
 
 class MediaSerializer(serializers.HyperlinkedModelSerializer):

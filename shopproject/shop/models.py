@@ -190,22 +190,11 @@ class Media(Timestamped, Ordered, Published):
         return f"{self.image.name}"
 
 
-class Logo(Timestamped, Ordered, Published):
-    image = models.ImageField(upload_to='logos/',
-                              storage=OverwriteStorage(), max_length=500)
 
-    class Meta:
-        default_related_name = 'logos'
-        verbose_name = 'logo'
-        verbose_name_plural = 'logos'
-        ordering = ['order']
-
-    def __str__(self):
-        return f"{self.image.name}"
 
 class ProductLogo(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    logo = models.ForeignKey(Logo, on_delete=models.CASCADE)
+    logo = models.ForeignKey('logos.Logo', on_delete=models.CASCADE)
 
 
     class Meta:
