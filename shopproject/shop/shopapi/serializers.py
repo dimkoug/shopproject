@@ -4,7 +4,7 @@ from shop.models import (
     Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media, ProductAttribute,
-    Offer, OfferProduct, Order, OrderItem,
+    Order, OrderItem,
     ShoppingCart, Address,
 )
 
@@ -159,10 +159,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class OfferSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Offer
-        fields = ['start_date', 'end_date']
+
 
 
 

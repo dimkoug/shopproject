@@ -7,7 +7,7 @@ from shop.models import (
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, ProductLogo, ProductAttribute,
-    Offer, OfferProduct, ShoppingCart,
+    ShoppingCart,
     Address, Order, OrderItem,
 )
 
@@ -20,9 +20,8 @@ from .forms import (
     MediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm,
-    ProductAttributeFormSet, OfferForm,
+    ProductAttributeFormSet,
     AddressForm, OrderForm, OrderItemFormSet,
-    OfferProductForm, OfferProductFormSet
 )
 
 
@@ -185,21 +184,7 @@ class StockAdmin(admin.ModelAdmin):
     form = StockForm
 
 
-class OfferProductInline(admin.TabularInline):
-    model = OfferProduct
-    extra = 1
-    fk_name = 'offer'
-    autocomplete_fields = ['product']
 
-
-class OfferAdmin(admin.ModelAdmin):
-    model = Offer
-    form = OfferForm
-    search_fields = ['name']
-
-    inlines = [
-        OfferProductInline
-    ]
 
 
 
@@ -228,6 +213,6 @@ admin.site.register(Media, MediaAdmin)
 
 
 
-admin.site.register(Offer, OfferAdmin)
+
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Order, OrderAdmin)

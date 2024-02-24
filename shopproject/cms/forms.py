@@ -15,8 +15,8 @@ from shop.models import (
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
     ProductAttribute,
-    Offer, Address, Order, OrderItem,
-    OfferProduct
+    Address, Order, OrderItem,
+    
 )
 
 
@@ -230,24 +230,6 @@ ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute,
 
 
 
-class OfferForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Offer
-        fields = ('name', 'start_date', 'end_date')
-
-
-class OfferProductForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = OfferProduct
-        fields = ('offer', 'product', 'is_complementary',
-                  'is_primary', 'discount_price')
-
-
-OfferProductFormSet = inlineformset_factory(Offer, OfferProduct,
-                                            form=OfferProductForm,
-                                            formset=BootstrapFormSet,
-                                            can_delete=True,
-                                            fk_name='offer')
 
 
 class AddressForm(BootstrapForm, forms.ModelForm):

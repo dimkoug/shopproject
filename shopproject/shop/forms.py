@@ -8,8 +8,8 @@ from .models import (
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
     ProductAttribute,
-    Offer, Address, Order, OrderItem,
-    OfferProduct
+    Address, Order, OrderItem,
+    
 )
 
 

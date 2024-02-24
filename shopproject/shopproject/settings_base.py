@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'logos',
     'shipments',
     'heroes',
+    'offers',
 ]
 
 MIDDLEWARE = [
