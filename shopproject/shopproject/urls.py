@@ -41,8 +41,14 @@ urlpatterns = [
     path('brands/', include('brands.urls', namespace='brands')),
     path('tags/', include('tags.urls', namespace='tags')),
     path('api/', include('shop.shopapi.routers')),
+    path('api/', include('brands.brands_api.routers')),
+    path('api/', include('tags.tags_api.routers')),
+    path('api/', include('suppliers.suppliers_api.routers')),
+    path('api/', include('warehouses.warehouses_api.routers')),
+    path('api/', include('users.api.routers')),
+    
+    
     path('users/', include('users.urls')),
-    path('users/api/', include('users.api.routers')),
     path('profiles/', include('profiles.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api-auth/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
