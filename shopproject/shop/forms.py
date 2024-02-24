@@ -7,7 +7,7 @@ from .models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
-    Shipment, ProductAttribute, Hero, HeroItem,
+    ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,
     OfferProduct
 )

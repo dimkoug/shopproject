@@ -7,5 +7,5 @@ from .media import MediaViewSet
 from .offer import OfferViewSet
 from .order import OrderViewSet
 from .product import ProductViewSet
-from .shipment import ShipmentViewSet
+
 

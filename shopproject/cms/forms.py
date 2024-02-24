@@ -14,7 +14,7 @@ from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
-    Shipment, ProductAttribute, Hero, HeroItem,
+    ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,
     OfferProduct
 )
@@ -37,16 +37,6 @@ ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
                                              formset=BootstrapFormSet,
                                              can_delete=True,
                                              fk_name='source')
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -205,10 +195,6 @@ StockFormSet = inlineformset_factory(Product, Stock,
                                      fk_name='product')
 
 
-class ShipmentForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Shipment
-        fields = ('warehouse', 'product', 'stock', 'date')
 
 
 class ProductAttributeForm(BootstrapForm, forms.ModelForm):

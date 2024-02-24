@@ -13,6 +13,6 @@ router.register(r'media', viewsets.MediaViewSet)
 router.register(r'offers', viewsets.OfferViewSet)
 router.register(r'orders', viewsets.OrderViewSet)
 router.register(r'products', viewsets.ProductViewSet)
-router.register(r'shipments', viewsets.ShipmentViewSet)
 
-urlpatterns = router.urls 
+
+urlpatterns = router.urls
