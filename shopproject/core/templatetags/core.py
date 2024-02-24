@@ -106,10 +106,14 @@ def sortFn(value):
 def get_generate_sidebar(context):
     request = context['request']
     urls = ""
-    app_models = list(apps.get_app_config(context['modelapp']).get_models())
-    app_models.sort(key=sortFn)
-    
-    for model in app_models:
+    cms_apps = []
+    model_apps = context['modelapp']
+    for model_app in model_apps:
+        app_models = list(apps.get_app_config(model_app).get_models())
+        cms_apps.extend(app_models)
+    cms_apps.sort(key=sortFn)
+
+    for model in cms_apps:
         try:
             url_item = reverse(
                 "cms:{}-list".format(model.__name__.lower()))
