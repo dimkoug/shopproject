@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="col-2 col-lg-2">
-        <a href="{% url 'shop:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency product.price %}</a>
+        <a href="{% url 'baskets:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency product.price %}</a>
       </div>
     </div>
     {% endfor %}

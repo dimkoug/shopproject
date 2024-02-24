@@ -10,8 +10,6 @@ from .views import (
 )
 
 from .functions import (
-    remove_from_basket, add_to_basket, clear_basket,
-    remove_item_from_basket, 
     get_products_for_sb,
     get_categories_for_sb,
     get_attributes_for_sb,
@@ -35,12 +33,6 @@ urlpatterns = [
     path('address/<int:pk>/delete/', SiteAddressDeleteView.as_view(),
          name='site-address-delete'),
     path('myorders/items/', OrderListView.as_view(), name='myorders'),
-    path('remove_from_basket/<int:id>/', remove_from_basket,
-         name='remove_from_basket'),
-    path('add_to_basket/<int:id>/', add_to_basket, name='add_to_basket'),
-    path('remove_item_from_basket/<int:id>/', remove_item_from_basket,
-         name='remove_item_from_basket'),
-    path('clear/basket', clear_basket, name='clear-basket'),
     path('order/items/', OrderFormView.as_view(), name='order'),
     path('search/', search_items, name="search"),
 

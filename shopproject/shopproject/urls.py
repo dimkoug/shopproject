@@ -39,6 +39,7 @@ urlpatterns = [
     path('cms/', include('cms.urls', namespace='cms')),
     path('shop/', include('shop.urls', namespace='shop')),
     path('brands/', include('brands.urls', namespace='brands')),
+    path('baskets/', include('baskets.urls', namespace='baskets')),
     path('tags/', include('tags.urls', namespace='tags')),
     path('api/', include('shop.shopapi.routers')),
     path('api/', include('brands.brands_api.routers')),

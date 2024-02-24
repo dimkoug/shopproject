@@ -205,7 +205,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
         context = super().get_context_data(**kwargs)
         sum = 0
         shopping_items = Basket.objects.select_related(
-            'product', 'session').filter(session=self.request.session)
+            'product', 'session').filter(session=self.request.session.session_key)
         for item in shopping_items:
             sum += item.product.price
         context['items'] = shopping_items
@@ -226,7 +226,7 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
             detail.quantity = item.quantity
             detail.save()
         Basket.objects.select_related('session').filter(
-            session=self.request.session).delete()
+            session=self.request.session.session_key).delete()
         messages.success(self.request, 'The order is placed successfully!')
         return super().form_valid(form)
 
@@ -250,7 +250,7 @@ class BasketView(TemplateView):
         shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = 0
         shopping_items = Basket.objects.select_related(
-            'product', 'session').filter(session=self.request.session)
+            'product', 'session').filter(session=self.request.session.session_key)
         for item in shopping_items:
             sum += item.product.price * item.quantity
         context['sum'] = sum

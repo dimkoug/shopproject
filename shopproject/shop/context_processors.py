@@ -24,7 +24,7 @@ def get_context_data(request):
         ).filter(is_published=True)
 
     basket_count = Basket.objects.select_related('session').filter(
-        session=request.session).count()
+        session=request.session.session_key).count()
 
 
 
