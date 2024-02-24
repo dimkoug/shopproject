@@ -1,4 +1,3 @@
-from .address import AddressViewSet
 from .attribute import AttributeViewSet
 from .category import CategoryViewSet
 from .feature import FeatureViewSet

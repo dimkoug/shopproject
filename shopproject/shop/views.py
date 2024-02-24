@@ -27,18 +27,21 @@ from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
 
+from addresses.models import Address
+from addresses.forms import SiteAddressForm 
+
+
 from brands.models import Brand
 from baskets.models import Basket
 
 
 from shop.models import (
     FeatureCategory, Feature, Product, ProductTag, Order, OrderItem,
-    Attribute, Address,
-    Media, ProductAttribute, Category,
+    Attribute, Media, ProductAttribute, Category,
 )
 
 from shop.forms import (
-    SiteOrderForm, SiteAddressForm
+    SiteOrderForm
 )
 
 

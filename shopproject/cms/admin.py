@@ -7,7 +7,7 @@ from shop.models import (
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, ProductLogo, ProductAttribute,
-    Address, Order, OrderItem,
+    Order, OrderItem,
 )
 
 from stocks.models import Stock
@@ -20,7 +20,7 @@ from .forms import (
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm,
     ProductAttributeFormSet,
-    AddressForm, OrderForm, OrderItemFormSet,
+    OrderForm, OrderItemFormSet,
 )
 
 
@@ -188,9 +188,7 @@ class StockAdmin(admin.ModelAdmin):
 
 
 
-class AddressAdmin(admin.ModelAdmin):
-    model = Address
-    form = AddressForm
+
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -213,5 +211,5 @@ admin.site.register(Media, MediaAdmin)
 
 
 
-admin.site.register(Address, AddressAdmin)
+
 admin.site.register(Order, OrderAdmin)

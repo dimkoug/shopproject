@@ -9,13 +9,14 @@ from stocks.models import Stock
 
 from stocks.forms import StockForm
 
+from addresses.models import Address
 
 from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
     ProductAttribute,
-    Address, Order, OrderItem,
+    Order, OrderItem,
     
 )
 
@@ -232,20 +233,7 @@ ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute,
 
 
 
-class AddressForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Address
-        fields = ('profile', 'address_type',  'first_name', 'last_name',
-                  'mobile', 'street_name', 'postal_code', 'city',
-                  'street_number', 'floor_number')
 
-
-class SiteAddressForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Address
-        fields = ('first_name', 'last_name',
-                  'mobile', 'street_name', 'postal_code', 'city',
-                  'street_number', 'floor_number')
 
 
 class OrderForm(BootstrapForm, forms.ModelForm):

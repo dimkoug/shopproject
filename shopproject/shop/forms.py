@@ -8,25 +8,12 @@ from .models import (
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
     ProductAttribute,
-    Address, Order, OrderItem,
+    Order, OrderItem,
     
 )
 
 
-class AddressForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Address
-        fields = ('profile', 'address_type',  'first_name', 'last_name',
-                  'mobile', 'street_name', 'postal_code', 'city',
-                  'street_number', 'floor_number')
 
-
-class SiteAddressForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Address
-        fields = ('first_name', 'last_name',
-                  'mobile', 'street_name', 'postal_code', 'city',
-                  'street_number', 'floor_number')
 
 
 class OrderForm(BootstrapForm, forms.ModelForm):

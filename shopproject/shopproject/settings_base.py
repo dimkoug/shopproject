@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'heroes',
     'offers',
     'baskets',
+    'addresses',
 ]
 
 MIDDLEWARE = [

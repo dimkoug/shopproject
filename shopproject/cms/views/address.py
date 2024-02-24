@@ -23,12 +23,12 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import (
+from addresses.models import (
     Address,
 )
 
 
-from shop.forms import (
+from addresses.forms import (
     AddressForm,
 )
 

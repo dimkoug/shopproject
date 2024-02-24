@@ -5,7 +5,6 @@ from . import viewsets
 
 router = routers.DefaultRouter()
 router.register(r'attributes', viewsets.AttributeViewSet)
-router.register(r'address', viewsets.AddressViewSet)
 router.register(r'categories', viewsets.CategoryViewSet)
 router.register(r'features', viewsets.FeatureViewSet)
 router.register(r'media', viewsets.MediaViewSet)

@@ -6,7 +6,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 # Create your views here.
 
-from shop.models import Address
+from addresses.models import Address
 
 from .forms import ProfileForm
 from .models import Profile

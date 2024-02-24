@@ -5,7 +5,7 @@ from shop.models import (
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media, ProductAttribute,
     Order, OrderItem,
-    Address,
+    
 )
 
 from warehouses.warehouses_api.serializers import WareHouseSerializer
@@ -72,11 +72,7 @@ class ProductAttributeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-class AddressSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Address
-        fields = ['address_type', 'profile', 'first_name', 'last_name','mobile', 'street_name', 'postal_code',
-                  'city','street_number', 'floor_number']
+
 
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
