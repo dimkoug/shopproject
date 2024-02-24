@@ -9,8 +9,6 @@ from stocks.models import Stock
 
 from stocks.forms import StockForm
 
-from addresses.models import Address
-
 from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
