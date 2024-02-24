@@ -7,7 +7,6 @@ from shop.models import (
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, ProductLogo, ProductAttribute,
-    ShoppingCart,
     Address, Order, OrderItem,
 )
 

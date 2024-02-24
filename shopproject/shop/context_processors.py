@@ -3,12 +3,12 @@ from django.db.models import Prefetch, Count
 from brands.models import Brand
 from tags.models import Tag
 from shop.models import (
-    ShoppingCart,
     Category, Product,
-    Hero, HeroItem,
     ChildCategory
 )
 
+from baskets.models import Basket
+from heroes.models import Hero,HeroItem
 
 def get_context_data(request):
     third_categories = Product.objects.filter(price__gt=0, is_published=True).values_list('category_id',flat=True).distinct()
@@ -16,18 +16,16 @@ def get_context_data(request):
         children__in=third_categories).values_list('id',flat=True).distinct()
     first_categories = Category.objects.prefetch_related('children').filter(
         children__in=second_categories).values_list('id',flat=True).distinct()
-    shopping_cart_id = request.session.get('shopping_cart_id')
     heroes = Hero.objects.prefetch_related(
         Prefetch('heroitems',
                  queryset=HeroItem.objects.select_related(
                     'product', 'hero'), to_attr='item_list'
                  )
         ).filter(is_published=True)
-    if shopping_cart_id:
-        basket_count = ShoppingCart.objects.filter(
-            shopping_cart_id=shopping_cart_id).count()
-    else:
-        basket_count = 0
+
+    basket_count = Basket.objects.select_related('session').filter(
+        session=request.session).count()
+
 
 
     p = Prefetch(

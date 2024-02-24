@@ -5,7 +5,7 @@ from shop.models import (
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media, ProductAttribute,
     Order, OrderItem,
-    ShoppingCart, Address,
+    Address,
 )
 
 from warehouses.warehouses_api.serializers import WareHouseSerializer

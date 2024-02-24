@@ -9,16 +9,17 @@ from core.functions import is_ajax
 
 from tags.models import Tag
 
-from .models import ShoppingCart, Product,Category, Attribute, ProductAttribute
+from baskets.models import Basket
+
+from .models import  Product,Category, Attribute, ProductAttribute
 
 
 def ajax_basket(request):
     context = {}
     template_name = 'shop/partials/basket_partial.html'
-    shopping_cart_id = request.session.get('shopping_cart_id')
     sum = 0
-    shopping_items = ShoppingCart.objects.select_related(
-            'product').filter(shopping_cart_id=shopping_cart_id)
+    shopping_items = Basket.objects.select_related(
+            'product', 'session').filter(session=request.session)
     for item in shopping_items:
         sum += item.product.price * item.quantity
     context['sum'] = sum
@@ -30,16 +31,14 @@ def ajax_basket(request):
 
 
 def add_to_basket(request, id):
-    shopping_cart_id = request.session.get('shopping_cart_id')
-    print('shopping cart id:', shopping_cart_id)
     try:
-        shopping_items = ShoppingCart.objects.get(
-            shopping_cart_id=shopping_cart_id, product_id=id)
+        shopping_items = Basket.objects.select_related('session', 'product').get(
+            session=request.session, product_id=id)
         shopping_items.quantity += 1
         shopping_items.save()
-    except ShoppingCart.DoesNotExist:
-        shopping_items = ShoppingCart()
-        shopping_items.shopping_cart_id = shopping_cart_id
+    except Basket.DoesNotExist:
+        shopping_items = Basket()
+        shopping_items.session = request.session
         shopping_items.product_id = id
         shopping_items.save()
     messages.success(request, 'Your basket was updated successfully!')
@@ -50,17 +49,16 @@ def add_to_basket(request, id):
 
 
 def remove_from_basket(request, id):
-    shopping_cart_id = request.session.get('shopping_cart_id')
     try:
-        shopping_items = ShoppingCart.objects.get(
-            shopping_cart_id=shopping_cart_id, product_id=id)
+        shopping_items = Basket.objects.select_related('session', 'product').get(
+            session=request.session, product_id=id)
         if shopping_items.quantity == 1 or shopping_items.quantity <= 1:
-            ShoppingCart.objects.filter(
-                shopping_cart_id=shopping_cart_id, product_id=id).delete()
+            Basket.objects.select_related('session', 'product').filter(
+                session=request.session, product_id=id).delete()
         else:
             shopping_items.quantity -= 1
             shopping_items.save()
-    except ShoppingCart.DoesNotExist:
+    except Basket.DoesNotExist:
         pass
     messages.success(request, 'Your basket was updated successfully!')
     if is_ajax(request):
@@ -69,9 +67,8 @@ def remove_from_basket(request, id):
 
 
 def clear_basket(request):
-    shopping_cart_id = request.session.get('shopping_cart_id')
-    ShoppingCart.objects.filter(
-        shopping_cart_id=shopping_cart_id).delete()
+    Basket.objects.select_related('session').filter(
+        session=request.session).delete()
     messages.success(request, 'Your basket was cleared successfully!')
     if is_ajax(request):
         return ajax_basket(request)
@@ -79,9 +76,8 @@ def clear_basket(request):
 
 
 def remove_item_from_basket(request, id):
-    shopping_cart_id = request.session.get('shopping_cart_id')
-    ShoppingCart.objects.filter(
-        shopping_cart_id=shopping_cart_id, product_id=id).delete()
+    Basket.objects.select_related('session').filter(
+        session=request.session, product_id=id).delete()
     messages.success(request, 'Your basket was cleared successfully!')
     if is_ajax(request):
         return ajax_basket(request)

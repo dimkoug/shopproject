@@ -28,10 +28,12 @@ from core.mixins import (
 )
 
 from brands.models import Brand
+from baskets.models import Basket
+
 
 from shop.models import (
     FeatureCategory, Feature, Product, ProductTag, Order, OrderItem,
-    ShoppingCart, Attribute, Address,
+    Attribute, Address,
     Media, ProductAttribute, Category,
 )
 
@@ -44,9 +46,6 @@ class IndexView(TemplateView):
     template_name = "shop/site/index.html"
 
     def dispatch(self, *args, **kwargs):
-        if not self.request.session.get('shopping_cart_id'):
-            self.request.session['shopping_cart_id'] = str(uuid.uuid4())
-        print('index cart: ', self.request.session['shopping_cart_id'])
         return super().dispatch(*args, **kwargs)
 
 
@@ -205,9 +204,8 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         sum = 0
-        shopping_cart_id = self.request.session.get('shopping_cart_id')
-        shopping_items = ShoppingCart.objects.select_related(
-            'product').filter(shopping_cart_id=shopping_cart_id)
+        shopping_items = Basket.objects.select_related(
+            'product', 'session').filter(session=self.request.session)
         for item in shopping_items:
             sum += item.product.price
         context['items'] = shopping_items
@@ -216,7 +214,6 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
 
     def form_valid(self, form):
         obj = form.save(commit=False)
-        shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = self.get_context_data()['sum']
         items = self.get_context_data()['items']
         obj.order_registration = str(uuid.uuid4())[-10:]
@@ -228,9 +225,9 @@ class OrderFormView(LoginRequiredMixin, PassRequestToFormViewMixin,
             detail.product = item.product
             detail.quantity = item.quantity
             detail.save()
-            ShoppingCart.objects.filter(
-                shopping_cart_id=shopping_cart_id).delete()
-            messages.success(self.request, 'The order is placed successfully!')
+        Basket.objects.select_related('session').filter(
+            session=self.request.session).delete()
+        messages.success(self.request, 'The order is placed successfully!')
         return super().form_valid(form)
 
 
@@ -252,8 +249,8 @@ class BasketView(TemplateView):
         context = super().get_context_data(**kwargs)
         shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = 0
-        shopping_items = ShoppingCart.objects.select_related(
-            'product').filter(shopping_cart_id=shopping_cart_id)
+        shopping_items = Basket.objects.select_related(
+            'product', 'session').filter(session=self.request.session)
         for item in shopping_items:
             sum += item.product.price * item.quantity
         context['sum'] = sum

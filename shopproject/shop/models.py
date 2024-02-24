@@ -236,15 +236,6 @@ class ProductAttribute(Timestamped, Ordered):
 
 
 
-class ShoppingCart(Timestamped):
-    shopping_cart_id = models.CharField(max_length=255)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(
-        max_digits=8, decimal_places=2, null=True, blank=True)
-    discount_price = models.DecimalField(
-        max_digits=8, decimal_places=2, null=True, blank=True)
-
 
 class Address(Timestamped):
     SHIPPING_ADDRESS, BILLING_ADDRESS = range(0, 2)
