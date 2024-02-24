@@ -23,12 +23,12 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import (
+from heroes.models import (
     Hero,
 )
 
 
-from cms.forms import (
+from heroes.forms import (
     HeroForm, HeroItemFormSet,
 )
 

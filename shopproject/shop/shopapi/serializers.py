@@ -4,7 +4,7 @@ from shop.models import (
     Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media, ProductAttribute,
-    Hero,HeroItem, Offer, OfferProduct, Order, OrderItem,
+    Offer, OfferProduct, Order, OrderItem,
     ShoppingCart, Address,
 )
 
@@ -117,15 +117,7 @@ class FeatureSerializer(serializers.HyperlinkedModelSerializer):
         model = Feature
         fields = ['url', 'name', 'categories', 'order']
 
-class HeroSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Hero
-        fields = ['name',]
 
-class HeroItemSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = HeroItem
-        fields = ['hero', 'product']
 
 
 

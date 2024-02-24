@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'stocks',
     'logos',
     'shipments',
+    'heroes',
 ]
 
 MIDDLEWARE = [

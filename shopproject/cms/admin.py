@@ -7,7 +7,6 @@ from shop.models import (
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, ProductLogo, ProductAttribute,
-    Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
 )
@@ -21,7 +20,7 @@ from .forms import (
     MediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm,
-    ProductAttributeFormSet, HeroForm, HeroItemFormSet, OfferForm,
+    ProductAttributeFormSet, OfferForm,
     AddressForm, OrderForm, OrderItemFormSet,
     OfferProductForm, OfferProductFormSet
 )
@@ -94,12 +93,7 @@ class StockInline(admin.TabularInline):
     autocomplete_fields = ['warehouse']
 
 
-class HeroItemInline(admin.TabularInline):
-    model = HeroItem
-    formset = HeroItemFormSet
-    fk_name = 'hero'
-    extra = 1
-    autocomplete_fields = ['product']
+
 
 
 
@@ -191,16 +185,6 @@ class StockAdmin(admin.ModelAdmin):
     form = StockForm
 
 
-
-
-class HeroAdmin(admin.ModelAdmin):
-    model = Hero
-    form = HeroForm
-
-    inlines = [
-        HeroItemInline,
-    ]
-
 class OfferProductInline(admin.TabularInline):
     model = OfferProduct
     extra = 1
@@ -243,7 +227,7 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Media, MediaAdmin)
 
 
-admin.site.register(Hero, HeroAdmin)
+
 admin.site.register(Offer, OfferAdmin)
 admin.site.register(Address, AddressAdmin)
 admin.site.register(Order, OrderAdmin)

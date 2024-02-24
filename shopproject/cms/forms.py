@@ -14,7 +14,7 @@ from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo,
-    ProductAttribute, Hero, HeroItem,
+    ProductAttribute,
     Offer, Address, Order, OrderItem,
     OfferProduct
 )
@@ -227,23 +227,7 @@ ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute,
                                                 fk_name='product')
 
 
-class HeroForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Hero
-        fields = ('name', 'is_published', 'order')
 
-
-class HeroItemForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = HeroItem
-        fields = ('hero', 'product')
-
-
-HeroItemFormSet = inlineformset_factory(Hero, HeroItem,
-                                        form=HeroItemForm,
-                                        formset=BootstrapFormSet,
-                                        can_delete=True,
-                                        fk_name='hero')
 
 
 class OfferForm(BootstrapForm, forms.ModelForm):
