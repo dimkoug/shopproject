@@ -1,4 +1,6 @@
+import uuid
 from django.db.models import Prefetch, Count
+
 
 from brands.models import Brand
 from tags.models import Tag
@@ -22,6 +24,9 @@ def get_context_data(request):
                     'product', 'hero'), to_attr='item_list'
                  )
         ).filter(is_published=True)
+
+    request.session['shopping_cart_id'] = str(uuid.uuid4())
+
 
     basket_count = Basket.objects.select_related('session').filter(
         session=request.session.session_key).count()
