@@ -7,7 +7,6 @@ from shop.models import (
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, ProductLogo, ProductAttribute,
-    Order, OrderItem,
 )
 
 from stocks.models import Stock
@@ -20,7 +19,6 @@ from .forms import (
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm,
     ProductAttributeFormSet,
-    OrderForm, OrderItemFormSet,
 )
 
 
@@ -95,10 +93,7 @@ class StockInline(admin.TabularInline):
 
 
 
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    formset = OrderItemFormSet
-    fk_name = 'order'
+
 
 
 
@@ -191,13 +186,7 @@ class StockAdmin(admin.ModelAdmin):
 
 
 
-class OrderAdmin(admin.ModelAdmin):
-    model = Order
-    form = OrderForm
 
-    inlines = [
-        OrderItemInline,
-    ]
 
 
 admin.site.register(Category, CategoryAdmin)
@@ -212,4 +201,4 @@ admin.site.register(Media, MediaAdmin)
 
 
 
-admin.site.register(Order, OrderAdmin)
+

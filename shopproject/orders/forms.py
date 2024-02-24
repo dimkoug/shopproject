@@ -2,21 +2,11 @@ from django import forms
 from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm, BootstrapFormSet
+
 from addresses.models import Address
 
 
-
-from .models import (
-    Category, ChildCategory,
-    Feature, FeatureCategory, Attribute, Product,
-    ProductTag, ProductRelated, Media, ProductLogo,
-    ProductAttribute,
-    Order, OrderItem,
-    
-)
-
-
-
+from .models import Order, OrderItem
 
 
 class OrderForm(BootstrapForm, forms.ModelForm):

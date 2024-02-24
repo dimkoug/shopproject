@@ -33,14 +33,15 @@ from addresses.forms import SiteAddressForm
 
 from brands.models import Brand
 from baskets.models import Basket
+from orders.models import Order, OrderItem
 
 
 from shop.models import (
-    FeatureCategory, Feature, Product, ProductTag, Order, OrderItem,
+    FeatureCategory, Feature, Product, ProductTag,
     Attribute, Media, ProductAttribute, Category,
 )
 
-from shop.forms import (
+from orders.forms import (
     SiteOrderForm
 )
 

@@ -4,8 +4,6 @@ from shop.models import (
     Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media, ProductAttribute,
-    Order, OrderItem,
-    
 )
 
 from warehouses.warehouses_api.serializers import WareHouseSerializer
@@ -72,18 +70,10 @@ class ProductAttributeSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-
-
 class AttributeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Attribute
         fields = ['url', 'name', 'feature', 'order']
-
-
-
-
-
-
 
 
 
@@ -116,26 +106,10 @@ class FeatureSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-
-
-
 class MediaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Media
         fields = ['url', 'product', 'image', 'order']
-
-
-class OrderSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Order
-        fields = ['order_registration', 'billing_address', 'shipping_address', 'total', 'comments']
-
-
-class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = ['order', 'product', 'quantity', 'price']
-
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
@@ -151,11 +125,6 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
                   'price', 'tags', 'attributes',
                   'relatedproducts',
                   'order']
-
-
-
-
-
 
 
 
