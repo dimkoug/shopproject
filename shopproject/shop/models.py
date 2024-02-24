@@ -1,11 +1,4 @@
-import os
-import hashlib
-import datetime
-from django.utils import timezone
 from django.db import models
-from django.core.files.storage import FileSystemStorage
-from django.db.models.signals import post_delete, pre_delete
-from django.dispatch.dispatcher import receiver
 from django.utils.html import format_html, mark_safe
 from profiles.models import Profile
 from django.db.models import Q
