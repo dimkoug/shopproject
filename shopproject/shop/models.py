@@ -210,11 +210,6 @@ class ProductLogo(Timestamped):
         return f"{self.logo.image.name}"
 
 
-
-
-
-
-
 class ProductAttribute(Timestamped, Ordered):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

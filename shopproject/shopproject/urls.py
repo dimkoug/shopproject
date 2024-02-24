@@ -42,8 +42,11 @@ urlpatterns = [
     path('tags/', include('tags.urls', namespace='tags')),
     path('api/', include('shop.shopapi.routers')),
     path('api/', include('brands.brands_api.routers')),
-    path('api/', include('tags.tags_api.routers')),
+    path('api/', include('logos.logos_api.routers')),
+    path('api/', include('shipments.shipments_api.routers')),
+    path('api/', include('stocks.stocks_api.routers')),
     path('api/', include('suppliers.suppliers_api.routers')),
+    path('api/', include('tags.tags_api.routers')),
     path('api/', include('warehouses.warehouses_api.routers')),
     path('api/', include('users.api.routers')),
     
