@@ -6,11 +6,14 @@ from shop.models import (
     Feature, FeatureCategory,
     Attribute, Product,
     ProductTag, ProductRelated,
-    Media, Logo,ProductLogo, Stock, Shipment, ProductAttribute,
+    Media, Logo,ProductLogo, Shipment, ProductAttribute,
     Hero, HeroItem,
     Offer, OfferProduct, ShoppingCart,
     Address, Order, OrderItem,
 )
+
+from stocks.models import Stock
+
 
 from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
@@ -244,7 +247,6 @@ admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Logo, LogoAdmin)
-admin.site.register(Stock, StockAdmin)
 admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Hero, HeroAdmin)
 admin.site.register(Offer, OfferAdmin)

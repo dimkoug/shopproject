@@ -6,7 +6,7 @@ from core.forms import BootstrapForm, BootstrapFormSet
 from .models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
-    ProductTag, ProductRelated, Media, ProductLogo, Stock,
+    ProductTag, ProductRelated, Media, ProductLogo,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,Logo,
     OfferProduct

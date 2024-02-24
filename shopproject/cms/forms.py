@@ -4,11 +4,16 @@ from django.forms import inlineformset_factory
 from core.forms import BootstrapForm, BootstrapFormSet
 
 from tags.models import Tag
+from brands.models import Brand
+from stocks.models import Stock
+
+from stocks.forms import StockForm
+
 
 from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
-    ProductTag, ProductRelated, Media, ProductLogo, Stock,
+    ProductTag, ProductRelated, Media, ProductLogo,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,Logo,
     OfferProduct
@@ -195,10 +200,7 @@ ProductLogoFormSet = inlineformset_factory(Product, ProductLogo,
                                     fk_name='product')
 
 
-class StockForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Stock
-        fields = ('warehouse', 'product', 'stock',)
+
 
 
 StockFormSet = inlineformset_factory(Product, Stock,

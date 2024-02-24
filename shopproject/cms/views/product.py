@@ -24,9 +24,11 @@ from core.functions import is_ajax
 
 
 from shop.models import (
-    Product, ProductTag, ProductAttribute, ProductRelated, Media, ProductLogo,Logo, Stock,Category
+    Product, ProductTag, ProductAttribute, ProductRelated, Media, ProductLogo,Logo,Category
 
 )
+
+from stocks.models import Stock
 
 
 from cms.forms import (
