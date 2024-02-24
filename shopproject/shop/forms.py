@@ -2,6 +2,9 @@ from django import forms
 from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm, BootstrapFormSet
+from addresses.models import Address
+
+
 
 from .models import (
     Category, ChildCategory,
