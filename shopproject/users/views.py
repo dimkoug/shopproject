@@ -61,7 +61,7 @@ class AccountActivationSent(TemplateView):
 
 class SignupView(FormView):
     form_class = UserCreationForm
-    template_name = 'users/signup.html'
+    template_name = 'registration/signup.html'
 
     def form_valid(self, form):
         if form.is_valid():
