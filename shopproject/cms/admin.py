@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 # Register your models here.
 from shop.models import (
-    Category, ChildCategory, Tag,
-    Supplier, WareHouse, Brand,
-    BrandSupplier, Feature, FeatureCategory,
+    Category, ChildCategory, 
+    Feature, FeatureCategory,
     Attribute, Product,
     ProductTag, ProductRelated,
     Media, Logo,ProductLogo, Stock, Shipment, ProductAttribute,
@@ -15,8 +14,7 @@ from shop.models import (
 
 from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
-    TagForm, SupplierForm, WareHouseForm, BrandForm,
-    SupplierFormSet, FeatureForm, CategoryFormSet, AttributeForm,
+    FeatureForm, CategoryFormSet, AttributeForm,
     MediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, MediaForm, LogoForm,ProductLogoForm, StockForm, ShipmentForm,
@@ -35,12 +33,7 @@ class ChildCategoryInline(admin.TabularInline):
 
 
 
-class SupplierInline(admin.TabularInline):
-    model = BrandSupplier
-    formset = SupplierFormSet
-    fk_name = 'brand'
-    extra = 1
-    autocomplete_fields = ['supplier']
+
 
 
 class CategoryInline(admin.TabularInline):
@@ -143,32 +136,6 @@ class CategoryAdmin(admin.ModelAdmin):
         return "\n".join([p.name for p in obj.children.all()])
 
 
-class TagAdmin(admin.ModelAdmin):
-    model = Tag
-    form = TagForm
-    search_fields = ['name']
-
-
-class SupplierAdmin(admin.ModelAdmin):
-    model = Supplier
-    form = SupplierForm
-    search_fields = ['name']
-
-
-class WareHouseAdmin(admin.ModelAdmin):
-    model = WareHouse
-    form = WareHouseForm
-    search_fields = ['name']
-
-
-class BrandAdmin(admin.ModelAdmin):
-    model = Brand
-    form = BrandForm
-
-    inlines = [
-        SupplierInline,
-    ]
-
 
 class FeatureAdmin(admin.ModelAdmin):
     model = Feature
@@ -270,10 +237,8 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category, CategoryAdmin)
-admin.site.register(Tag, TagAdmin)
-admin.site.register(Supplier, SupplierAdmin)
-admin.site.register(WareHouse, WareHouseAdmin)
-admin.site.register(Brand, BrandAdmin)
+
+
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(Product, ProductAdmin)

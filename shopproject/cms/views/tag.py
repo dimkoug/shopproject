@@ -22,10 +22,10 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import Tag
+from tags.models import Tag
 
 
-from cms.forms import TagForm
+from  tags.forms import TagForm
 
 
 class TagListView(LoginRequiredMixin,CmsListView, BaseListView):

@@ -74,6 +74,10 @@ INSTALLED_APPS = [
     'profiles',
     'shop',
     'cms',
+    'tags',
+    'suppliers',
+    'brands',
+    'warehouses',
 ]
 
 MIDDLEWARE = [

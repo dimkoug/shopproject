@@ -26,10 +26,13 @@ from core.functions import create_query_string, is_ajax
 from core.mixins import (
     PassRequestToFormViewMixin, PaginationMixin, FormMixin
 )
+
+from brands.models import Brand
+
 from shop.models import (
     FeatureCategory, Feature, Product, ProductTag, Order, OrderItem,
     ShoppingCart, Attribute, Address,
-    Media, ProductAttribute, Category, Brand
+    Media, ProductAttribute, Category,
 )
 
 from shop.forms import (

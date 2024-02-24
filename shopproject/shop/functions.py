@@ -7,7 +7,9 @@ from django.template.loader import render_to_string
 
 from core.functions import is_ajax
 
-from .models import ShoppingCart, Product,Category, Attribute, Brand, Tag, ProductAttribute
+from tags.models import Tag
+
+from .models import ShoppingCart, Product,Category, Attribute, ProductAttribute
 
 
 def ajax_basket(request):
@@ -144,42 +146,10 @@ def get_categories_for_sb(request):
     return JsonResponse({"results": results}, safe=False)
 
 
-def get_brands_for_sb(request):
-    """"
-    Return Data for  select box 2  plugin
-    """
-    results = []
-    if not request.user.is_authenticated:
-        return JsonResponse(results, safe=False)
-    search = request.GET.get('search')
-    if search and search != '':
-        data = Brand.objects.filter(
-            Q(name__icontains=search)
-        ).values('id', 'name')
-        for d in data:
-            results.append({'id':d['id'], "text": d['name']})
-        # j_data = serializers.serialize("json", data, fields=('erp_code', 'title'))
-        # return JsonResponse(j_data, safe=False)
-    return JsonResponse({"results": results}, safe=False)
 
 
-def get_tags_for_sb(request):
-    """"
-    Return Data for  select box 2  plugin
-    """
-    results = []
-    if not request.user.is_authenticated:
-        return JsonResponse(results, safe=False)
-    search = request.GET.get('search')
-    if search and search != '':
-        data = Tag.objects.filter(
-            Q(name__icontains=search)
-        ).values('id', 'name')
-        for d in data:
-            results.append({'id':d['id'], "text": d['name']})
-        # j_data = serializers.serialize("json", data, fields=('erp_code', 'title'))
-        # return JsonResponse(j_data, safe=False)
-    return JsonResponse({"results": results}, safe=False)
+
+
 
 
 def get_attributes(request):

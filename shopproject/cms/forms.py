@@ -3,9 +3,11 @@ from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm, BootstrapFormSet
 
+from tags.models import Tag
+
 from shop.models import (
-    Category, ChildCategory, Tag, Supplier, WareHouse, Brand,
-    BrandSupplier, Feature, FeatureCategory, Attribute, Product,
+    Category, ChildCategory,
+    Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,Logo,
@@ -32,41 +34,16 @@ ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
                                              fk_name='source')
 
 
-class TagForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Tag
-        fields = ('name', 'is_published', 'order')
 
 
-class SupplierForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Supplier
-        fields = ('name', 'is_published', 'order')
 
 
-class WareHouseForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = WareHouse
-        fields = ('name',)
 
 
-class BrandForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = Brand
-        fields = ('name', 'image', 'suppliers', 'is_published', 'order')
 
 
-class BrandSupplierForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = BrandSupplier
-        fields = ('brand', 'supplier',)
 
 
-SupplierFormSet = inlineformset_factory(Brand, BrandSupplier,
-                                        form=BrandSupplierForm,
-                                        formset=BootstrapFormSet,
-                                        can_delete=True,
-                                        fk_name='brand')
 
 
 class FeatureForm(BootstrapForm, forms.ModelForm):

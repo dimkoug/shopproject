@@ -22,10 +22,10 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import WareHouse
+from warehouses.models import WareHouse
 
 
-from cms.forms import WareHouseForm
+from  warehouses.forms import WareHouseForm
 
 
 class WareHouseListView(LoginRequiredMixin,CmsListView, BaseListView):

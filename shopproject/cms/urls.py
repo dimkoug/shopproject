@@ -5,7 +5,7 @@ from .views import *
 
 app_name = 'cms'
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
+    path('', ManageView.as_view(), name='index'),
     path('categories/',
          CategoryListView.as_view(), name='category-list'),
     path('categories/add/',

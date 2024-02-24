@@ -1,28 +1,15 @@
 from rest_framework import serializers
 
 from shop.models import (
-    Category,ChildCategory,Tag, Supplier,WareHouse, Brand, BrandSupplier, Feature,
+    Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
     Media,Logo,Stock, Shipment,ProductAttribute,
     Hero,HeroItem, Offer, OfferProduct, Order, OrderItem,
     ShoppingCart, Address,
 )
 
+from warehouses.warehouses_api.serializers import WareHouseSerializer
 
-class BrandSupplierSerializer(serializers.HyperlinkedModelSerializer):
-    brand = serializers.HyperlinkedRelatedField(
-        view_name='brand-detail',
-        read_only=True,
-        lookup_field='pk'
-    )
-    supplier = serializers.HyperlinkedRelatedField(
-        view_name='supplier-detail',
-        read_only=True,
-        lookup_field='pk'
-    )
-    class Meta:
-        model = BrandSupplier
-        fields = ['brand', 'supplier']
 
 
 class FeatureCategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -97,17 +84,10 @@ class AttributeSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'name', 'feature', 'order']
 
 
-class SupplierSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Supplier
-        fields = ['url', 'name', 'order']
 
 
-class BrandSerializer(serializers.HyperlinkedModelSerializer):
-    suppliers = BrandSupplierSerializer(many=True, read_only=True)
-    class Meta:
-        model = Brand
-        fields = ['url', 'name', 'image', 'suppliers', 'order']
+
+
 
 
 
@@ -173,16 +153,6 @@ class OrderItemSerializer(serializers.HyperlinkedModelSerializer):
 
 
 
-
-
-class TagSerializer(serializers.HyperlinkedModelSerializer):
-    products = ProductTagSerializer(source='producttags',many=True)
-    class Meta:
-        model = Tag
-        fields = ['url', 'products', 'name', 'order']
-
-
-
 class ProductSerializer(serializers.HyperlinkedModelSerializer):
     tags = ProductTagSerializer(source='producttags',many=True)
     attributes = ProductAttributeSerializer(source='productattributes',many=True)
@@ -204,10 +174,7 @@ class ShipmentSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['url', 'product', 'stock', 'shipment_date']
 
 
-class WareHouseSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = WareHouse
-        fields = ['name','is_published']
+
 
 
 class StockSerializer(serializers.HyperlinkedModelSerializer):

@@ -4,18 +4,13 @@ from django.forms import inlineformset_factory
 from core.forms import BootstrapForm, BootstrapFormSet
 
 from .models import (
-    Category, ChildCategory, Tag, Supplier, WareHouse, Brand,
-    BrandSupplier, Feature, FeatureCategory, Attribute, Product,
+    Category, ChildCategory,
+    Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, Media, ProductLogo, Stock,
     Shipment, ProductAttribute, Hero, HeroItem,
     Offer, Address, Order, OrderItem,Logo,
     OfferProduct
 )
-
-
-
-
-
 
 
 class AddressForm(BootstrapForm, forms.ModelForm):

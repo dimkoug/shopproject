@@ -15,8 +15,6 @@ from .functions import (
     get_products_for_sb,
     get_categories_for_sb,
     get_attributes_for_sb,
-    get_brands_for_sb,
-    get_tags_for_sb,
     get_attributes,
     set_attribute,
     delete_attribute,
@@ -49,9 +47,6 @@ urlpatterns = [
     path('get_products_for_sb/',get_products_for_sb, name='get_products_for_sb'),
     path('get_attributes_for_sb/', get_attributes_for_sb, name='get_attributes_for_sb'),
     path('get_categories_for_sb/', get_categories_for_sb, name='get_categories_for_sb'),
-    path('get_brands_for_sb/', get_brands_for_sb, name='get_brands_for_sb'),
-    path('get_tags_for_sb/', get_tags_for_sb, name='get_tags_for_sb'),
-
     path('attributes/', get_attributes, name='get_attributes'),
     path('set_attribute/', set_attribute, name='set_attributes'),
     path('delete_attribute/', delete_attribute, name='delete_attributes'),

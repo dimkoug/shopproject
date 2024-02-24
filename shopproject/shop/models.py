@@ -54,74 +54,6 @@ class ChildCategory(Timestamped, Ordered):
         ]
 
 
-class Tag(Timestamped, Ordered, Published):
-    name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        default_related_name = 'tags'
-        verbose_name = 'tag'
-        verbose_name_plural = 'tags'
-        ordering = ['order']
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class Supplier(Timestamped, Ordered, Published):
-    name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        default_related_name = 'suppliers'
-        verbose_name = 'supplier'
-        verbose_name_plural = 'suppliers'
-        ordering = ['order']
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class WareHouse(Timestamped):
-    name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        default_related_name = 'warehouses'
-        verbose_name = 'warehouse'
-        verbose_name_plural = 'warehouses'
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class Brand(Timestamped, Ordered, Published):
-    name = models.CharField(max_length=100, unique=True)
-    image = models.ImageField(upload_to='brands/',
-                              storage=OverwriteStorage(), max_length=500, null=True, blank=True)
-    url = models.URLField(blank=True, null=True)
-    suppliers = models.ManyToManyField(Supplier, through='BrandSupplier')
-
-    class Meta:
-        default_related_name = 'brands'
-        verbose_name = 'brand'
-        verbose_name_plural = 'brands'
-        ordering = ['order']
-
-    def __str__(self):
-        return f"{self.name}"
-
-
-class BrandSupplier(Timestamped):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['brand', 'supplier'], name="brand_supplier")
-        ]
-        indexes = [
-            models.Index(fields=['brand', 'supplier']),
-        ]
-
-
 
 class Feature(Timestamped, Ordered, Published):
     name = models.CharField(max_length=100, unique=True)
@@ -173,14 +105,14 @@ class Attribute(Timestamped, Ordered, Published):
 
 
 class Product(Timestamped,  Ordered, Published):
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    brand = models.ForeignKey('brands.Brand', on_delete=models.CASCADE)
     parent = models.ForeignKey("self", on_delete=models.CASCADE,
                                null=True, blank=True, related_name='children')
     image = models.ImageField(upload_to='products/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
-    tags = models.ManyToManyField(Tag, through='ProductTag')
+    tags = models.ManyToManyField('tags.Tag', through='ProductTag')
     relatedproducts = models.ManyToManyField("self", through='ProductRelated',
                                              through_fields=(
                                                  'source', 'target'),
@@ -220,7 +152,7 @@ class Product(Timestamped,  Ordered, Published):
 
 class ProductTag(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    tag = models.ForeignKey('tags.Tag', on_delete=models.CASCADE)
 
     class Meta:
         default_related_name = 'producttags'
@@ -299,7 +231,7 @@ class ProductLogo(Timestamped):
         return f"{self.logo.image.name}"
 
 class Stock(Timestamped):
-    warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey('warehouses.WareHouse', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
 
@@ -320,7 +252,7 @@ class Stock(Timestamped):
 
 
 class Shipment(Timestamped):
-    warehouse = models.ForeignKey(WareHouse, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey('warehouses.WareHouse', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
     date = models.DateTimeField()

@@ -1,6 +1,5 @@
 from .address import AddressViewSet
 from .attribute import AttributeViewSet
-from .brand import BrandViewSet
 from .category import CategoryViewSet
 from .feature import FeatureViewSet
 from .hero import HeroViewSet
@@ -11,6 +10,3 @@ from .order import OrderViewSet
 from .product import ProductViewSet
 from .shipment import ShipmentViewSet
 from .stock import StockViewSet
-from .supplier import SupplierViewSet
-from .tag import TagViewSet
-from .warehouse import WareHouseViewSet

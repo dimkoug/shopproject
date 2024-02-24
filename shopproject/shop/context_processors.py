@@ -1,8 +1,11 @@
 from django.db.models import Prefetch, Count
+
+from brands.models import Brand
+from tags.models import Tag
 from shop.models import (
-    ShoppingCart, Brand,
+    ShoppingCart,
     Category, Product,
-    Tag, Hero, HeroItem,
+    Hero, HeroItem,
     ChildCategory
 )
 

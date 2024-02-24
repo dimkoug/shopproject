@@ -15,8 +15,7 @@ class IndexView(TemplateView):
         return super().dispatch(*args, **kwargs)
 
 
-class ManageView(LoginRequiredMixin, TemplateView):
-    template_name = "cms/manage.html"
+
 
 
 

@@ -1,5 +1,7 @@
 from django.views.generic.list import ListView
 from django.template.loader import render_to_string
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 from django.http import JsonResponse
 
 from core.functions import is_ajax
@@ -20,3 +22,7 @@ class CmsListView(QueryListMixin):
                 self.ajax_list_partial, context, request)
             return JsonResponse(html_form, safe=False)
         return super().get(request, *args, **kwargs)
+
+
+class ManageView(LoginRequiredMixin, TemplateView):
+    template_name = "cms/manage.html"

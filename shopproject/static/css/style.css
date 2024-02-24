@@ -1,0 +1,162 @@
+body, html {
+  background-color: #f8f9fa;
+  font-family: 'Montserrat', sans-serif;
+  font-size:0.9rem;
+}
+
+.hero-wrapper {
+  background-color: #ffffff;
+  width: 70%;
+}
+
+.wrapper {
+  background-color:#ffffff;
+  width: 75%;
+  padding: 0.5rem;
+}
+
+.scrollable-row {
+  max-height: 200px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+div[class*="mega-menu-container-"]{
+    z-index:100;
+    position:absolute;
+    width:100%;
+    height: 200px;
+    left:0px;
+    right:0px;
+    border: 1px solid #f0f0f0;
+    background-color: #ffffff;
+    min-height: 200px;
+  }
+
+  div[class*="basket-container"]{
+      z-index:100;
+      position:absolute;
+      width:100%;
+      left:0px;
+      right:0px;
+      border: 1px solid #f0f0f0;
+      background-color: #ffffff;
+      min-height: 200px;
+    }
+
+
+  a.link, a.tag-link {
+      text-decoration: none;
+      color:#0f0f0f;
+  }
+
+  a.link:hover, a.tag-link:hover {
+      color:#f0f0f0;
+      background-color:#0f0f0f;
+      text-decoration:none;
+      cursor:pointer;
+  }
+
+  .level-1 {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .level-2 {
+    font-weight: 600;
+  }
+
+  .header{
+    font-weight:bold;
+    font-size:1.2rem;
+  }
+
+  .hero-header, .basket-header, .order-header {
+    font-weight:bold;
+    font-size:1.4rem;
+  }
+
+  .filter-header{
+    font-weight:bold;
+    font-size:1.2rem;
+  }
+
+
+.ck-button {
+    margin:4px;
+    overflow:auto;
+    display:inline-block;
+    background-color:#f0f0f0;
+    padding:0.4rem;
+}
+
+.ck-button label span {
+    text-align:center;
+}
+
+.ck-button label input {
+    position:absolute;
+    top:-5000px;
+}
+
+ .ck-button input:checked + span {
+    background-color:#0f0f0f;
+    color:#f0f0f0;
+}
+
+ .checked {
+    background-color:#0f0f0f;
+    color:#f0f0f0;
+}
+
+.close:hover {
+  cursor:pointer;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media screen and (max-width: 600px) {
+
+  .card {
+    display:flex;
+    font-size:0.8rem;
+  }
+
+  .ajax_add_to_cart {
+    font-size: 0.5rem;
+  }
+
+  .wrapper{
+    width: 100%;
+    display:block;
+  }
+}

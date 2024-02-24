@@ -22,10 +22,10 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import Supplier
+from suppliers.models import Supplier
 
 
-from cms.forms import SupplierForm
+from suppliers.forms import SupplierForm
 
 
 class SupplierListView(LoginRequiredMixin,CmsListView, BaseListView):
