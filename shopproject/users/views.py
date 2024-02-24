@@ -32,31 +32,31 @@ class UserLogoutView(auth_views.LogoutView):
 
 
 class UserPasswordResetView(auth_views.PasswordResetView):
-    email_template_name = 'users/password_reset_email.html'
+    email_template_name = 'registration/password_reset_email.html'
     form_class = UserPasswordResetForm
-    subject_template_name = 'users/password_reset_subject.txt'
+    subject_template_name = 'registration/password_reset_subject.txt'
     success_url = reverse_lazy('password_reset_done')
-    template_name = 'users/password_reset_form.html'
+    template_name = 'registration/password_reset_form.html'
 
 
 class UserPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    template_name = 'users/password_reset_complete.html'
+    template_name = 'registration/password_reset_complete.html'
     title = 'Password reset complete'
 
 
 class UserPasswordResetDoneView(auth_views.PasswordResetDoneView):
-    template_name = 'users/password_reset_done.html'
+    template_name = 'registration/password_reset_done.html'
     title = 'Password reset sent'
 
 
 class UserPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
     success_url = reverse_lazy('password_reset_complete')
-    template_name = 'users/password_reset_confirm.html'
+    template_name = 'registration/password_reset_confirm.html'
     title = 'Enter new password'
 
 
 class AccountActivationSent(TemplateView):
-    template_name = 'users/account_activation_sent.html'
+    template_name = 'registration/account_activation_sent.html'
 
 
 class SignupView(FormView):
@@ -73,7 +73,7 @@ class SignupView(FormView):
             user.profile.birth_date = form.cleaned_data.get('birth_date')
             user.save()
             subject = 'Activate Your MySite Account'
-            message = render_to_string('users/account_activation_email.html', {
+            message = render_to_string('registration/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -96,6 +96,6 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
-        return redirect('home')
+        return redirect(settings.LOGOUT_REDIRECT_URL)
     else:
-        return render(request, 'users/account_activation_invalid.html')
+        return render(request, 'registration/account_activation_invalid.html')
