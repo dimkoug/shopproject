@@ -83,14 +83,18 @@ class ChildCategorySerializer(serializers.HyperlinkedModelSerializer):
         read_only=True,
         lookup_field='pk'
     )
+    name = serializers.SerializerMethodField('get_name')
     class Meta:
         model = ChildCategory
-        fields = ['target']
+        fields = ['id','name','target']
+
+    def get_name(self, obj):
+        return obj.target.name
 
 
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    children = ChildCategorySerializer(source='source', many=True)
+    children = ChildCategorySerializer(source='sources', many=True, read_only=True)
 
     class Meta:
         model = Category

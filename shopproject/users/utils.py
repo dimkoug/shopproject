@@ -1,4 +1,4 @@
-from users.api.serializers import UserSerializer
+from users.users_api.serializers import UserSerializer
 
 
 def my_jwt_response_handler(token, user=None, request=None):
