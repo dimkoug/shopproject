@@ -38,4 +38,10 @@ router.register(r'suppliers', SupplierViewSet)
 router.register(r'tags', TagViewSet)
 router.register(r'warehouses', WareHouseViewSet)
 router.register(r'users', UserViewSet)
-urlpatterns = router.urls
+router.register(r'groups', GroupViewSet)
+urlpatterns = router.urls + [
+    path('login/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('current_user/', current_user),
+    path('register/', RegisterApi.as_view()),
+    # path('users/', UserList.as_view())
+]
