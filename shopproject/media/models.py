@@ -6,16 +6,16 @@ from core.models import Timestamped, Ordered,Published
 from core.storage import OverwriteStorage
 
 
-class Logo(Timestamped, Ordered, Published):
+class Media(Timestamped, Ordered, Published):
     
-    image = models.ImageField(upload_to='logos/',
+    image = models.ImageField(upload_to='media/',
                               storage=OverwriteStorage(), max_length=500,null=True,blank=True)
     image_url = models.URLField(max_length=2048, null=True,blank=True)
 
     class Meta:
-        default_related_name = 'logos'
-        verbose_name = 'logo'
-        verbose_name_plural = 'logos'
+        default_related_name = 'media'
+        verbose_name = 'media'
+        verbose_name_plural = 'media'
         ordering = ['order']
 
     def __str__(self):

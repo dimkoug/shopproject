@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from shop.models import Media
+from media.models import Media
 
 
 from ..serializers import MediaSerializer

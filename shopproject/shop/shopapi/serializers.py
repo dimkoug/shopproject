@@ -3,8 +3,10 @@ from rest_framework import serializers
 from shop.models import (
     Category,ChildCategory, Feature,
     FeatureCategory, Attribute, Product,ProductTag,ProductRelated,
-    Media, ProductAttribute,
+    ProductAttribute,
 )
+
+from media.models import Media
 
 from warehouses.warehouses_api.serializers import WareHouseSerializer
 
@@ -113,7 +115,7 @@ class FeatureSerializer(serializers.HyperlinkedModelSerializer):
 class MediaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Media
-        fields = ['url', 'product', 'image', 'order']
+        fields = ['url', 'image', 'image_url', 'order']
 
 
 class ProductSerializer(serializers.HyperlinkedModelSerializer):

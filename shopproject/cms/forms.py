@@ -9,10 +9,12 @@ from stocks.models import Stock
 
 from stocks.forms import StockForm
 
+from media.models import Media
+
 from shop.models import (
     Category, ChildCategory,
     Feature, FeatureCategory, Attribute, Product,
-    ProductTag, ProductRelated, Media, ProductLogo,
+    ProductTag, ProductRelated, ProductMedia, ProductLogo,
     ProductAttribute,
 )
 
@@ -155,18 +157,18 @@ ProductRelatedFormSet = inlineformset_factory(Product, ProductRelated,
                                               )
 
 
-class MediaForm(BootstrapForm, forms.ModelForm):
+class ProductMediaForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = Media
-        fields = ('product', 'image', 'is_published', 'order')
+        model = ProductMedia
+        fields = ('product', 'media')
 
 
 
-MediaFormSet = inlineformset_factory(Product, Media,
-                                     form=MediaForm,
-                                     formset=BootstrapFormSet,
-                                     can_delete=True,
-                                     fk_name='product')
+ProductMediaFormSet = inlineformset_factory(Product, ProductMedia,
+                                    form=ProductMediaForm,
+                                    formset=BootstrapFormSet,
+                                    can_delete=True,
+                                    fk_name='product')
 
 
 class ProductLogoForm(BootstrapForm, forms.ModelForm):

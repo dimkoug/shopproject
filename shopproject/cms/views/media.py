@@ -22,14 +22,10 @@ from cms.views.core import CmsListView
 from core.functions import is_ajax
 
 
-from shop.models import (
-    Media,
-)
+from media.models import Media
 
+from media.forms import MediaForm
 
-from cms.forms import (
-    MediaForm,
-)
 
 
 class MediaListView(LoginRequiredMixin,CmsListView, BaseListView):

@@ -6,7 +6,7 @@ from shop.models import (
     Feature, FeatureCategory,
     Attribute, Product,
     ProductTag, ProductRelated,
-    Media, ProductLogo, ProductAttribute,
+    ProductMedia, ProductLogo, ProductAttribute,
 )
 
 from stocks.models import Stock
@@ -15,9 +15,9 @@ from stocks.models import Stock
 from .forms import (
     CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
     FeatureForm, CategoryFormSet, AttributeForm,
-    MediaFormSet, ProductLogoFormSet, StockFormSet,
+    ProductMediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
-    ProductRelatedFormSet, MediaForm, ProductLogoForm, StockForm,
+    ProductRelatedFormSet, ProductMediaForm, ProductLogoForm, StockForm,
     ProductAttributeFormSet,
 )
 
@@ -66,9 +66,9 @@ class ProductAttributeInline(admin.TabularInline):
     autocomplete_fields = ['attribute']
 
 
-class MediaInline(admin.TabularInline):
-    model = Media
-    formset = MediaFormSet
+class ProductMediaInline(admin.TabularInline):
+    model = ProductMedia
+    formset = ProductMediaFormSet
     fk_name = 'product'
     extra = 1
 
@@ -159,15 +159,15 @@ class ProductAdmin(admin.ModelAdmin):
         ProductTagInline,
         ProductRelatedInline,
         ProductAttributeInline,
-        MediaInline,
+        ProductMediaInline,
         ProductLogoInline,
         StockInline
     ]
 
 
-class MediaAdmin(admin.ModelAdmin):
-    model = Media
-    form = MediaForm
+# class MediaAdmin(admin.ModelAdmin):
+#     model = Media
+#     form = MediaForm
 
 
 
@@ -195,7 +195,7 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(Feature, FeatureAdmin)
 admin.site.register(Attribute, AttributeAdmin)
 admin.site.register(Product, ProductAdmin)
-admin.site.register(Media, MediaAdmin)
+# admin.site.register(Media, MediaAdmin)
 
 
 

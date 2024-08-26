@@ -37,7 +37,7 @@ from orders.models import Order, OrderItem
 
 from shop.models import (
     FeatureCategory, Feature, Product, ProductTag,
-    Attribute, Media, ProductAttribute, Category,
+    Attribute, ProductMedia, ProductAttribute, Category,
 )
 
 from orders.forms import (

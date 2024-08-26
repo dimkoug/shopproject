@@ -175,19 +175,26 @@ class ProductRelated(Timestamped):
 
 
 
-class Media(Timestamped, Ordered, Published):
+class ProductMedia(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='media/',
-                              storage=OverwriteStorage(), max_length=500)
+    media = models.ForeignKey('media.Media', on_delete=models.CASCADE)
+
 
     class Meta:
-        default_related_name = 'media'
-        verbose_name = 'media'
-        verbose_name_plural = 'media'
-        ordering = ['order']
+        default_related_name = 'productmedia'
+        verbose_name = 'product media'
+        verbose_name_plural = 'product media'
+        constraints = [
+            models.UniqueConstraint(fields=['product', 'media'], name="productmedia")
+        ]
+        indexes = [
+            models.Index(fields=['product', 'media']),
+            models.Index(fields=['product']),
+        ]
 
     def __str__(self):
-        return f"{self.image.name}"
+        return f"{self.product.image.name}"
+
 
 class ProductLogo(Timestamped):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

@@ -3,9 +3,9 @@ from django.forms import inlineformset_factory
 
 from core.forms import BootstrapForm, BootstrapFormSet
 
-from .models import Logo
+from media.models import Media
 
-class LogoForm(BootstrapForm, forms.ModelForm):
+class MediaForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = Logo
+        model = Media
         fields = ('image', 'image_url', 'is_published', 'order')
