@@ -103,6 +103,7 @@ class Product(Timestamped,  Ordered, Published):
                                null=True, blank=True, related_name='children')
     image = models.ImageField(upload_to='products/',
                               storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+    image_url = models.URLField(max_length=2048, null=True,blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     attributes = models.ManyToManyField(Attribute, through='ProductAttribute')
     tags = models.ManyToManyField('tags.Tag', through='ProductTag')
@@ -113,6 +114,10 @@ class Product(Timestamped,  Ordered, Published):
     name = models.CharField(max_length=255, unique=True)
     pdf_guide = models.FileField(upload_to='files/',
                                  storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+    cepdf = models.FileField(upload_to='files/',
+                                 storage=OverwriteStorage(), max_length=500, null=True, blank=True)
+    pdf_url = models.URLField(max_length=2048, null=True,blank=True)
+    cepdf_url = models.URLField(max_length=2048, null=True,blank=True)
     code = models.CharField(max_length=255, null=True,blank=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)
     price = models.DecimalField(
