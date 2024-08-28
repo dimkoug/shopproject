@@ -16,7 +16,7 @@ from core.views import (
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
+from core.mixins import FormMixin, SuccessUrlMixin, PassRequestToFormViewMixin
 from cms.views.core import CmsListView
 
 from core.functions import is_ajax
@@ -29,7 +29,6 @@ from brands.models import (
 
 from brands.forms import (
     BrandForm,
-    SupplierFormSet,
 )
 
 
@@ -65,12 +64,12 @@ class BrandDetailView(LoginRequiredMixin, BaseDetailView):
 
 
 class BrandCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseCreateView):
+                      SuccessUrlMixin,PassRequestToFormViewMixin, BaseCreateView):
     model = Brand
     form_class = BrandForm
 
 class BrandUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseUpdateView):
+                      SuccessUrlMixin,PassRequestToFormViewMixin, BaseUpdateView):
     model = Brand
     form_class = BrandForm
 

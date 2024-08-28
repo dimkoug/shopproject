@@ -38,6 +38,7 @@ urlpatterns = [
     path('delete/', delete_model, name='delete'),
     path('cms/', include('cms.urls', namespace='cms')),
     path('shop/', include('shop.urls', namespace='shop')),
+    path('suppliers/', include('suppliers.urls', namespace='suppliers')),
     path('brands/', include('brands.urls', namespace='brands')),
     path('baskets/', include('baskets.urls', namespace='baskets')),
     path('tags/', include('tags.urls', namespace='tags')),

@@ -72,32 +72,3 @@
 {% endblock %}
 
 
-{% block scripts %}
-<script>
-  'use strict';
-  (function(w,d,$){
-
-    $(d).ready(function(){
-      $("select[name*='suppliers']" ).attr( "multiple", true );
-      $("select[name*='suppliers']" ).select2({
-        ajax: {
-          url: '/sb_data/',
-          data: function (params) {
-            var query = {
-              search: params.term,
-              app:"shop",
-              model: "supplier",
-              type: 'public'
-            }
-            // Query parameters will be ?search=[term]&type=public
-            return query;
-          }
-        }
-      });
-    }) /* document ready */
-
-
-
-  })(window,document,jQuery)
-</script>
-{% endblock scripts %}
