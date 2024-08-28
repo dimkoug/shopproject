@@ -45,6 +45,10 @@ class FeatureForm(BootstrapForm, forms.ModelForm):
         model = Feature
         fields = ('name', 'image','is_published', 'order')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+
 
 class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
     class Meta:
@@ -56,6 +60,10 @@ class AttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Attribute
         fields = ('name', 'is_published', 'feature', 'order')
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):
@@ -150,35 +158,10 @@ class ProductMediaForm(BootstrapForm, forms.ModelForm):
 
 
 
-ProductMediaFormSet = inlineformset_factory(Product, ProductMedia,
-                                    form=ProductMediaForm,
-                                    formset=BootstrapFormSet,
-                                    can_delete=True,
-                                    fk_name='product')
-
-
 class ProductLogoForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductLogo
         fields = ('product', 'logo')
-
-
-ProductLogoFormSet = inlineformset_factory(Product, ProductLogo,
-                                    form=ProductLogoForm,
-                                    formset=BootstrapFormSet,
-                                    can_delete=True,
-                                    fk_name='product')
-
-
-
-
-
-StockFormSet = inlineformset_factory(Product, Stock,
-                                     form=StockForm,
-                                     formset=BootstrapFormSet,
-                                     can_delete=True,
-                                     fk_name='product')
-
 
 
 
@@ -203,13 +186,5 @@ class ProductAttributeForm(BootstrapForm, forms.ModelForm):
         if self.instance.pk:
             self.fields['attribute'].queryset = Attribute.objects.filter(id=self.instance.attribute_id)
             self.fields['product'].queryset = Product.objects.filter(id=self.instance.product_id)
-
-
-ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute,
-                                                form=ProductAttributeForm,
-                                                formset=BootstrapFormSet,
-                                                can_delete=True,
-                                                fk_name='product')
-
 
 

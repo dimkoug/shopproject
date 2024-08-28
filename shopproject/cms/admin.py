@@ -15,67 +15,8 @@ from stocks.models import Stock
 from .forms import (
     CategoryForm,
     FeatureForm, AttributeForm,
-    ProductMediaFormSet, ProductLogoFormSet, StockFormSet,
-    ProductForm, ProductTagFormSet,
-    ProductRelatedFormSet, ProductMediaForm, ProductLogoForm, StockForm,
-    ProductAttributeFormSet,
+    ProductForm, ProductMediaForm, ProductLogoForm, StockForm,
 )
-
-
-class ProductTagInline(admin.TabularInline):
-    model = ProductTag
-    formset = ProductTagFormSet
-    fk_name = 'product'
-    extra = 1
-    autocomplete_fields = ['tag']
-
-
-class ProductRelatedInline(admin.TabularInline):
-    model = ProductRelated
-    formset = ProductRelatedFormSet
-    fk_name = 'source'
-    extra = 1
-    autocomplete_fields = ['target']
-
-
-class ProductAttributeInline(admin.TabularInline):
-    model = ProductAttribute
-    formset = ProductAttributeFormSet
-    fk_name = 'product'
-    extra = 1
-    autocomplete_fields = ['attribute']
-
-
-class ProductMediaInline(admin.TabularInline):
-    model = ProductMedia
-    formset = ProductMediaFormSet
-    fk_name = 'product'
-    extra = 1
-
-
-class ProductLogoInline(admin.TabularInline):
-    model = ProductLogo
-    formset = ProductLogoFormSet
-    fk_name = 'product'
-    extra = 1
-
-
-
-class StockInline(admin.TabularInline):
-    model = Stock
-    formset = StockFormSet
-    fk_name = 'product'
-    extra = 1
-    autocomplete_fields = ['warehouse']
-
-
-
-
-
-
-
-
-
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -126,16 +67,6 @@ class ProductAdmin(admin.ModelAdmin):
     model = Product
     form = ProductForm
     search_fields = ['name']
-
-    inlines = [
-        ProductTagInline,
-        ProductRelatedInline,
-        ProductAttributeInline,
-        ProductMediaInline,
-        ProductLogoInline,
-        StockInline
-    ]
-
 
 # class MediaAdmin(admin.ModelAdmin):
 #     model = Media
