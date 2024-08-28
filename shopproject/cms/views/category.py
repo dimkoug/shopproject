@@ -18,7 +18,7 @@ from core.views import (
 
 from cms.views.core import CmsListView
 
-from core.mixins import FormMixin, SuccessUrlMixin
+from core.mixins import FormMixin, SuccessUrlMixin, PassRequestToFormViewMixin
 
 from core.functions import is_ajax
 
@@ -27,7 +27,7 @@ from shop.models import (
     Category, ChildCategory
 )
 
-from cms.forms import CategoryForm, ChildCategoryForm, ChildCategoryFormSet
+from cms.forms import CategoryForm
 
 
 class IndexView(LoginRequiredMixin, BaseIndexView):
@@ -62,7 +62,7 @@ class CategoryDetailView(LoginRequiredMixin, BaseDetailView):
         return context
 
 class CategoryCreateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseCreateView):
+                         SuccessUrlMixin, PassRequestToFormViewMixin, BaseCreateView):
     model = Category
     form_class = CategoryForm
 
@@ -71,7 +71,7 @@ class CategoryCreateView(LoginRequiredMixin, FormMixin,
 
 
 class CategoryUpdateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseUpdateView):
+                         SuccessUrlMixin, PassRequestToFormViewMixin, BaseUpdateView):
     model = Category
     form_class = CategoryForm
 

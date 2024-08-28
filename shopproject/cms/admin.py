@@ -13,24 +13,13 @@ from stocks.models import Stock
 
 
 from .forms import (
-    CategoryForm, ChildCategoryForm, ChildCategoryFormSet,
+    CategoryForm,
     FeatureForm, CategoryFormSet, AttributeForm,
     ProductMediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, ProductMediaForm, ProductLogoForm, StockForm,
     ProductAttributeFormSet,
 )
-
-
-class ChildCategoryInline(admin.TabularInline):
-    model = ChildCategory
-    formset = ChildCategoryFormSet
-    fk_name = 'source'
-    extra = 1
-    autocomplete_fields = ['target']
-
-
-
 
 
 
@@ -103,10 +92,6 @@ class CategoryAdmin(admin.ModelAdmin):
     form = CategoryForm
     list_display = ('name', 'thumbnail', 'is_published', 'get_categories')
     search_fields = ['name']
-
-    inlines = [
-        ChildCategoryInline,
-    ]
 
     def thumbnail(self, obj):
         try:

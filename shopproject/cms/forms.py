@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 
+from core.widgets import CustomSelectMultipleWithUrl, CustomSelectWithQueryset
 from core.forms import BootstrapForm, BootstrapFormSet
 
 from tags.models import Tag
@@ -20,23 +21,29 @@ from shop.models import (
 
 
 class CategoryForm(BootstrapForm, forms.ModelForm):
+    children = forms.ModelMultipleChoiceField(widget=CustomSelectMultipleWithUrl(ajax_url='/shop/categories/sb/'),required=False,queryset=Category.objects.none())
     class Meta:
         model = Category
         fields = ('name', 'image', 'is_published', 'order', 'children')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+        if 'children' in self.data:
+            queryset = Category.objects.all()
+            self.fields['children'].queryset = queryset
+            self.fields['children'].widget.queryset = queryset
+        else:
+            self.fields['children'].queryset = Category.objects.none()
+            self.fields['children'].widget.queryset = Category.objects.none()
 
-class ChildCategoryForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = ChildCategory
-        fields = ('source', 'target', 'order')
-
-
-ChildCategoryFormSet = inlineformset_factory(Category, ChildCategory,
-                                             form=ChildCategoryForm,
-                                             formset=BootstrapFormSet,
-                                             can_delete=True,
-                                             fk_name='source')
-
+      
+        
+        
+        if self.instance.pk:
+            queryset = Category.objects.filter(id__in=self.instance.children.all())
+            self.fields['children'].queryset = queryset
+            self.fields['children'].widget.queryset = queryset
 
 
 
