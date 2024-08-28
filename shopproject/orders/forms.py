@@ -16,10 +16,7 @@ class OrderForm(BootstrapForm, forms.ModelForm):
                   'total', 'comments')
 
     def __init__(self, *args, **kwargs):
-        try:
-            self.request = kwargs.pop("request")
-        except KeyError:
-            pass
+        request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
 
 

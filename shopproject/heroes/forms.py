@@ -11,15 +11,18 @@ class HeroForm(BootstrapForm, forms.ModelForm):
         model = Hero
         fields = ('name', 'is_published', 'order')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+
 
 class HeroItemForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = HeroItem
         fields = ('hero', 'product')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
 
-HeroItemFormSet = inlineformset_factory(Hero, HeroItem,
-                                        form=HeroItemForm,
-                                        formset=BootstrapFormSet,
-                                        can_delete=True,
-                                        fk_name='hero')
+

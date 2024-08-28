@@ -12,6 +12,10 @@ class OfferForm(BootstrapForm, forms.ModelForm):
         model = Offer
         fields = ('name', 'start_date', 'end_date')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+
 
 class OfferProductForm(BootstrapForm, forms.ModelForm):
     class Meta:
@@ -19,9 +23,8 @@ class OfferProductForm(BootstrapForm, forms.ModelForm):
         fields = ('offer', 'product', 'is_complementary',
                   'is_primary', 'discount_price')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
 
-OfferProductFormSet = inlineformset_factory(Offer, OfferProduct,
-                                            form=OfferProductForm,
-                                            formset=BootstrapFormSet,
-                                            can_delete=True,
-                                            fk_name='offer')
+

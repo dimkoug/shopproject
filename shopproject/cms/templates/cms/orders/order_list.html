@@ -1,5 +1,5 @@
 {% extends "cms/base.html" %}
-{% load cms %}
+{% load core %}
 
 {% block page_title %}
 {{page_title}}
@@ -13,7 +13,7 @@
 {% include 'partials/add_button.html' %}
 
 <div class="res">
-  {% get_template_name_cms as template_name %}
+  {% get_template_name as template_name %}
   {% with template=template_name %}
   {% include  template %}
 {% endwith %}

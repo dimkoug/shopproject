@@ -11,3 +11,7 @@ class StockForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Stock
         fields = ('warehouse', 'product', 'stock',)
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)

@@ -11,3 +11,7 @@ class WareHouseForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = WareHouse
         fields = ('name',)
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)

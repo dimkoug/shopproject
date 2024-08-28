@@ -10,3 +10,7 @@ class TagForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Tag
         fields = ('name', 'is_published', 'order')
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
