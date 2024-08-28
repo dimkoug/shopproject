@@ -81,6 +81,7 @@ class ProductForm(BootstrapForm, forms.ModelForm):
                   'description', 'price', 'is_published', 'order')
 
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
         self.fields['brand'].queryset = Brand.objects.none()
         self.fields['brand'].widget=forms.Select(attrs={'class': 'form-control'})
