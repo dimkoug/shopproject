@@ -11,29 +11,18 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
-
-from core.functions import is_ajax
+from shop.models import Feature, FeatureCategory
 
 
-from shop.models import (
-    Feature,
-    FeatureCategory
-)
+from cms.forms import FeatureForm
 
 
-from cms.forms import (
-    FeatureForm, CategoryFormSet
-)
-
-
-class FeatureListView(LoginRequiredMixin,CmsListView, BaseListView):
+class FeatureListView(BaseListView):
     model = Feature
     queryset = Feature.objects.prefetch_related('categories').order_by('order')
     paginate_by = 20
@@ -61,22 +50,20 @@ class FeatureListView(LoginRequiredMixin,CmsListView, BaseListView):
         return queryset
 
 
-class FeatureDetailView(LoginRequiredMixin, BaseDetailView):
+class FeatureDetailView(BaseDetailView):
     model = Feature
 
 
-class FeatureCreateView(LoginRequiredMixin, FormMixin,
-                        SuccessUrlMixin, BaseCreateView):
-    model = Feature
-    form_class = FeatureForm
-
-class FeatureUpdateView(LoginRequiredMixin, FormMixin,
-                        SuccessUrlMixin, BaseUpdateView):
+class FeatureCreateView(BaseCreateView):
     model = Feature
     form_class = FeatureForm
 
+class FeatureUpdateView(BaseUpdateView):
+    model = Feature
+    form_class = FeatureForm
 
-class FeatureDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+
+class FeatureDeleteView(BaseDeleteView):
     model = Feature
 
 

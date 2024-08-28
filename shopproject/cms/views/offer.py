@@ -11,29 +11,19 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
-from core.functions import is_ajax
+from offers.models import Offer
 
 
-from offers.models import (
-    Offer,
-)
+from offers.forms import OfferForm
 
 
-from offers.forms import (
-    OfferForm,
-    OfferProductFormSet,
-)
-
-
-class OfferListView(LoginRequiredMixin,CmsListView, BaseListView):
+class OfferListView(BaseListView):
     model = Offer
     paginate_by = 50
     fields = [
@@ -44,74 +34,17 @@ class OfferListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class OfferDetailView(LoginRequiredMixin, BaseDetailView):
+class OfferDetailView(BaseDetailView):
     model = Offer
 
 
-class OfferCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseCreateView):
-    model = Offer
-    form_class = OfferForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': OfferProductFormSet(self.request.POST or None)
-            },
-        ]
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                OfferProductFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
-
-
-class OfferUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseUpdateView):
+class OfferCreateView(BaseCreateView):
     model = Offer
     form_class = OfferForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': OfferProductFormSet(self.request.POST or None,
-                                               instance=self.get_object())
-            },
-        ]
-        return context
+class OfferUpdateView(BaseUpdateView):
+    model = Offer
+    form_class = OfferForm
 
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                OfferProductFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
-
-
-class OfferDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class OfferDeleteView(BaseDeleteView):
     model = Offer

@@ -11,13 +11,10 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -28,7 +25,7 @@ from suppliers.models import Supplier
 from suppliers.forms import SupplierForm
 
 
-class SupplierListView(LoginRequiredMixin,CmsListView, BaseListView):
+class SupplierListView(BaseListView):
     model = Supplier
     paginate_by = 50
     fields = [
@@ -38,21 +35,19 @@ class SupplierListView(LoginRequiredMixin,CmsListView, BaseListView):
         },
     ]
 
-class SupplierDetailView(LoginRequiredMixin, BaseDetailView):
+class SupplierDetailView(BaseDetailView):
     model = Supplier
 
 
-class SupplierCreateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseCreateView):
-    model = Supplier
-    form_class = SupplierForm
-
-
-class SupplierUpdateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseUpdateView):
+class SupplierCreateView(BaseCreateView):
     model = Supplier
     form_class = SupplierForm
 
 
-class SupplierDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class SupplierUpdateView(BaseUpdateView):
+    model = Supplier
+    form_class = SupplierForm
+
+
+class SupplierDeleteView(BaseDeleteView):
     model = Supplier

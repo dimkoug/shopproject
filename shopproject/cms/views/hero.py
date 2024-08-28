@@ -12,28 +12,19 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
-from core.functions import is_ajax
+from heroes.models import Hero
 
 
-from heroes.models import (
-    Hero,
-)
+from heroes.forms import HeroForm
 
 
-from heroes.forms import (
-    HeroForm, HeroItemFormSet,
-)
-
-
-class HeroListView(LoginRequiredMixin,CmsListView, BaseListView):
+class HeroListView(BaseListView):
     model = Hero
     paginate_by = 50
     fields = [
@@ -44,76 +35,20 @@ class HeroListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class HeroDetailView(LoginRequiredMixin, BaseDetailView):
+class HeroDetailView(BaseDetailView):
     model = Hero
 
 
-class HeroCreateView(LoginRequiredMixin, FormMixin,
-                     SuccessUrlMixin, BaseCreateView):
-    model = Hero
-    form_class = HeroForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': HeroItemFormSet(self.request.POST or None),
-                "sb_url": reverse("shop:get_products_for_sb")
-            },
-        ]
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                HeroItemFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
-
-
-class HeroUpdateView(LoginRequiredMixin, FormMixin,
-                     SuccessUrlMixin, BaseUpdateView):
+class HeroCreateView(BaseCreateView):
     model = Hero
     form_class = HeroForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': HeroItemFormSet(self.request.POST or None,
-                                           instance=self.get_object()),
-                "sb_url": reverse("shop:get_products_for_sb")
-            },
-        ]
-        return context
 
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                HeroItemFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
+class HeroUpdateView(BaseUpdateView):
+    model = Hero
+    form_class = HeroForm
 
 
-class HeroDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+
+class HeroDeleteView(BaseDeleteView):
     model = Hero

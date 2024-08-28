@@ -12,28 +12,21 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
 
-from orders.models import (
-    Order,
-)
+from orders.models import Order
 
 
-from orders.forms import (
-    OrderForm, OrderItemFormSet
-)
+from orders.forms import OrderForm
 
 
-class OrderListView(LoginRequiredMixin,CmsListView, BaseListView):
+class OrderListView(BaseListView):
     model = Order
     paginate_by = 50
     fields = [
@@ -44,76 +37,21 @@ class OrderListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class OrderDetailView(LoginRequiredMixin, BaseDetailView):
+class OrderDetailView(BaseDetailView):
     model = Order
 
 
-class OrderCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseCreateView):
-    model = Order
-    form_class = OrderForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': OrderItemFormSet(self.request.POST or None)
-            },
-        ]
-        return context
-
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                OrderItemFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
-
-
-class OrderUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseUpdateView):
+class OrderCreateView(BaseCreateView):
     model = Order
     form_class = OrderForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['formsets'] = [
-            {
-                'title': 'Items',
-                'formset': OrderItemFormSet(self.request.POST or None,
-                                            instance=self.get_object())
-            },
-        ]
-        return context
 
-    def form_valid(self, form):
-        if form.is_valid():
-            obj = form.save(commit=False)
-            formsets = [
-                OrderItemFormSet(self.request.POST, instance=obj),
-            ]
-            for formset in formsets:
-                if formset.is_valid():
-                    obj.save()
-                    formset.save()
-                else:
-                    print(formset.non_form_errors())
-                    print("formset errors:", formset.errors)
-                    return super().form_invalid(form)
-        return super().form_valid(form)
+class OrderUpdateView(BaseUpdateView):
+    model = Order
+    form_class = OrderForm
 
 
-class OrderDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class OrderDeleteView(BaseDeleteView):
     model = Order
 
 

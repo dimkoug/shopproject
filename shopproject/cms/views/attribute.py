@@ -12,29 +12,18 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
-
-from core.functions import is_ajax
+from shop.models import Attribute
 
 
-from shop.models import (
-    Attribute,
-)
+from cms.forms import AttributeForm
 
 
-from cms.forms import (
-    AttributeForm,
-
-)
-
-
-class AttributeListView(LoginRequiredMixin,CmsListView, BaseListView):
+class AttributeListView(BaseListView):
     model = Attribute
     queryset = Attribute.objects.select_related('feature')
     paginate_by = 20
@@ -57,23 +46,21 @@ class AttributeListView(LoginRequiredMixin,CmsListView, BaseListView):
         return queryset
 
 
-class AttributeDetailView(LoginRequiredMixin, BaseDetailView):
+class AttributeDetailView(BaseDetailView):
     model = Attribute
 
 
-class AttributeCreateView(LoginRequiredMixin, FormMixin,
-                          SuccessUrlMixin, BaseCreateView):
-    model = Attribute
-    form_class = AttributeForm
-
-
-class AttributeUpdateView(LoginRequiredMixin, FormMixin,
-                          SuccessUrlMixin, BaseUpdateView):
+class AttributeCreateView(BaseCreateView):
     model = Attribute
     form_class = AttributeForm
 
 
-class AttributeDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class AttributeUpdateView(BaseUpdateView):
+    model = Attribute
+    form_class = AttributeForm
+
+
+class AttributeDeleteView(BaseDeleteView):
     model = Attribute
 
 

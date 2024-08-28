@@ -11,47 +11,36 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
-from core.functions import is_ajax
+from logos.models import Logo
 
 
-from logos.models import (
-    Logo,
-)
+from logos.forms import LogoForm
 
 
-from logos.forms import (
-    LogoForm,
-)
-
-
-class LogoListView(LoginRequiredMixin,CmsListView, BaseListView):
+class LogoListView(BaseListView):
     model = Logo
     paginate_by = 50
 
 
-class LogoDetailView(LoginRequiredMixin, BaseDetailView):
+class LogoDetailView(BaseDetailView):
     model = Logo
 
 
-class LogoCreateView(LoginRequiredMixin, FormMixin,
-                     SuccessUrlMixin, BaseCreateView):
-    model = Logo
-    form_class = LogoForm
-
-
-class LogoUpdateView(LoginRequiredMixin, FormMixin,
-                     SuccessUrlMixin, BaseUpdateView):
+class LogoCreateView(BaseCreateView):
     model = Logo
     form_class = LogoForm
 
 
-class LogoDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class LogoUpdateView(BaseUpdateView):
+    model = Logo
+    form_class = LogoForm
+
+
+class LogoDeleteView(BaseDeleteView):
     model = Logo

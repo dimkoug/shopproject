@@ -11,16 +11,10 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
-
-from core.functions import is_ajax
-
 
 from media.models import Media
 
@@ -28,26 +22,24 @@ from media.forms import MediaForm
 
 
 
-class MediaListView(LoginRequiredMixin,CmsListView, BaseListView):
+class MediaListView(BaseListView):
     model = Media
     paginate_by = 50
 
 
-class MediaDetailView(LoginRequiredMixin, BaseDetailView):
+class MediaDetailView(BaseDetailView):
     model = Media
 
 
-class MediaCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseCreateView):
-    model = Media
-    form_class = MediaForm
-
-
-class MediaUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseUpdateView):
+class MediaCreateView(BaseCreateView):
     model = Media
     form_class = MediaForm
 
 
-class MediaDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class MediaUpdateView(BaseUpdateView):
+    model = Media
+    form_class = MediaForm
+
+
+class MediaDeleteView(BaseDeleteView):
     model = Media

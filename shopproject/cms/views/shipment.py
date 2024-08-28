@@ -11,29 +11,21 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
 
-from shipments.models import (
-    Shipment,
-)
+from shipments.models import Shipment
 
 
-from shipments.forms import (
-    ShipmentForm,
-
-)
+from shipments.forms import ShipmentForm
 
 
-class ShipmentListView(LoginRequiredMixin,CmsListView, BaseListView):
+class ShipmentListView(BaseListView):
     model = Shipment
     paginate_by = 50
     fields = [
@@ -52,21 +44,19 @@ class ShipmentListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class ShipmentDetailView(LoginRequiredMixin, BaseDetailView):
+class ShipmentDetailView(BaseDetailView):
     model = Shipment
 
 
-class ShipmentCreateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseCreateView):
-    model = Shipment
-    form_class = ShipmentForm
-
-
-class ShipmentUpdateView(LoginRequiredMixin, FormMixin,
-                         SuccessUrlMixin, BaseUpdateView):
+class ShipmentCreateView(BaseCreateView):
     model = Shipment
     form_class = ShipmentForm
 
 
-class ShipmentDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class ShipmentUpdateView(BaseUpdateView):
+    model = Shipment
+    form_class = ShipmentForm
+
+
+class ShipmentDeleteView(BaseDeleteView):
     model = Shipment

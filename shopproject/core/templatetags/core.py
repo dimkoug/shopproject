@@ -75,7 +75,9 @@ def get_url(context, action, obj=None, app=None):
 
 @register.simple_tag(takes_context=True)
 def get_template_name(context, app=None):
-    template_name = context['template']
+    view = context['view']
+
+    template_name = view.template
     return template_name
 
 

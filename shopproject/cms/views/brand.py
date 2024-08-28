@@ -11,28 +11,17 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin, PassRequestToFormViewMixin
-from cms.views.core import CmsListView
 
-from core.functions import is_ajax
-
-
-from brands.models import (
-    Brand,
-)
+from brands.models import Brand
+from brands.forms import BrandForm
 
 
-from brands.forms import (
-    BrandForm,
-)
-
-
-class BrandListView(LoginRequiredMixin,CmsListView, BaseListView):
+class BrandListView(BaseListView):
     model = Brand
     queryset = Brand.objects.prefetch_related('suppliers')
     paginate_by = 20
@@ -59,19 +48,17 @@ class BrandListView(LoginRequiredMixin,CmsListView, BaseListView):
         return queryset
 
 
-class BrandDetailView(LoginRequiredMixin, BaseDetailView):
+class BrandDetailView(BaseDetailView):
     model = Brand
 
 
-class BrandCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin,PassRequestToFormViewMixin, BaseCreateView):
-    model = Brand
-    form_class = BrandForm
-
-class BrandUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin,PassRequestToFormViewMixin, BaseUpdateView):
+class BrandCreateView(BaseCreateView):
     model = Brand
     form_class = BrandForm
 
-class BrandDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class BrandUpdateView(BaseUpdateView):
+    model = Brand
+    form_class = BrandForm
+
+class BrandDeleteView( BaseDeleteView):
     model = Brand

@@ -11,47 +11,38 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
 
-from stocks.models import (
-    Stock,
-)
+from stocks.models import Stock
 
 
-from stocks.forms import (
-    StockForm,
-)
+from stocks.forms import StockForm
 
 
-class StockListView(LoginRequiredMixin,CmsListView, BaseListView):
+class StockListView(BaseListView):
     model = Stock
     paginate_by = 50
 
 
-class StockDetailView(LoginRequiredMixin, BaseDetailView):
+class StockDetailView(BaseDetailView):
     model = Stock
 
 
-class StockCreateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseCreateView):
-    model = Stock
-    form_class = StockForm
-
-
-class StockUpdateView(LoginRequiredMixin, FormMixin,
-                      SuccessUrlMixin, BaseUpdateView):
+class StockCreateView(BaseCreateView):
     model = Stock
     form_class = StockForm
 
 
-class StockDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class StockUpdateView(BaseUpdateView):
+    model = Stock
+    form_class = StockForm
+
+
+class StockDeleteView(BaseDeleteView):
     model = Stock

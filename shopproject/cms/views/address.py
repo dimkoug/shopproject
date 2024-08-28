@@ -11,29 +11,17 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin, PaginationMixin
-from cms.views.core import CmsListView
+from addresses.models import Address
+
+from addresses.forms import AddressForm
 
 
-from core.functions import is_ajax
-
-
-from addresses.models import (
-    Address,
-)
-
-
-from addresses.forms import (
-    AddressForm,
-)
-
-
-class AddressListView(LoginRequiredMixin,CmsListView, BaseListView):
+class AddressListView(BaseListView):
     model = Address
     paginate_by = 50
     fields = [
@@ -52,21 +40,19 @@ class AddressListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class AddressDetailView(LoginRequiredMixin, BaseDetailView):
+class AddressDetailView(BaseDetailView):
     model = Address
 
 
-class AddressCreateView(LoginRequiredMixin, FormMixin,
-                        SuccessUrlMixin, BaseCreateView):
-    model = Address
-    form_class = AddressForm
-
-
-class AddressUpdateView(LoginRequiredMixin, FormMixin,
-                        SuccessUrlMixin, BaseUpdateView):
+class AddressCreateView(BaseCreateView):
     model = Address
     form_class = AddressForm
 
 
-class AddressDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class AddressUpdateView(BaseUpdateView):
+    model = Address
+    form_class = AddressForm
+
+
+class AddressDeleteView(BaseDeleteView):
     model = Address

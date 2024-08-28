@@ -11,13 +11,11 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -28,7 +26,7 @@ from warehouses.models import WareHouse
 from  warehouses.forms import WareHouseForm
 
 
-class WareHouseListView(LoginRequiredMixin,CmsListView, BaseListView):
+class WareHouseListView(BaseListView):
     model = WareHouse
     paginate_by = 2
     fields = [
@@ -39,21 +37,19 @@ class WareHouseListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class WareHouseDetailView(LoginRequiredMixin, BaseDetailView):
+class WareHouseDetailView(BaseDetailView):
     model = WareHouse
 
 
-class WareHouseCreateView(LoginRequiredMixin, FormMixin,
-                          SuccessUrlMixin, BaseCreateView):
-    model = WareHouse
-    form_class = WareHouseForm
-
-
-class WareHouseUpdateView(LoginRequiredMixin, FormMixin,
-                          SuccessUrlMixin, BaseUpdateView):
+class WareHouseCreateView(BaseCreateView):
     model = WareHouse
     form_class = WareHouseForm
 
 
-class WareHouseDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class WareHouseUpdateView(BaseUpdateView):
+    model = WareHouse
+    form_class = WareHouseForm
+
+
+class WareHouseDeleteView(BaseDeleteView):
     model = WareHouse

@@ -11,13 +11,10 @@ from django.db.models import Prefetch
 from django.shortcuts import render
 from django.apps import apps
 
-from core.views import (
-    BaseIndexView, BaseListView, BaseDetailView,
+from cms.cms_views import (
+    BaseListView, BaseDetailView,
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
-
-from core.mixins import FormMixin, SuccessUrlMixin
-from cms.views.core import CmsListView
 
 from core.functions import is_ajax
 
@@ -28,7 +25,7 @@ from tags.models import Tag
 from  tags.forms import TagForm
 
 
-class TagListView(LoginRequiredMixin,CmsListView, BaseListView):
+class TagListView(BaseListView):
     model = Tag
     paginate_by = 2
     fields = [
@@ -39,21 +36,19 @@ class TagListView(LoginRequiredMixin,CmsListView, BaseListView):
     ]
 
 
-class TagDetailView(LoginRequiredMixin, BaseDetailView):
+class TagDetailView(BaseDetailView):
     model = Tag
 
 
-class TagCreateView(LoginRequiredMixin, FormMixin,
-                    SuccessUrlMixin, BaseCreateView):
-    model = Tag
-    form_class = TagForm
-
-
-class TagUpdateView(LoginRequiredMixin, FormMixin,
-                    SuccessUrlMixin, BaseUpdateView):
+class TagCreateView(BaseCreateView):
     model = Tag
     form_class = TagForm
 
 
-class TagDeleteView(LoginRequiredMixin, SuccessUrlMixin, BaseDeleteView):
+class TagUpdateView(BaseUpdateView):
+    model = Tag
+    form_class = TagForm
+
+
+class TagDeleteView(BaseDeleteView):
     model = Tag
