@@ -29,21 +29,14 @@ class CategoryForm(BootstrapForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
+        queryset = Category.objects.none()
         if 'children' in self.data:
             queryset = Category.objects.all()
-            self.fields['children'].queryset = queryset
-            self.fields['children'].widget.queryset = queryset
-        else:
-            self.fields['children'].queryset = Category.objects.none()
-            self.fields['children'].widget.queryset = Category.objects.none()
-
-      
-        
-        
+    
         if self.instance.pk:
             queryset = Category.objects.filter(id__in=self.instance.children.all())
-            self.fields['children'].queryset = queryset
-            self.fields['children'].widget.queryset = queryset
+        self.fields['children'].queryset = queryset
+        self.fields['children'].widget.queryset = queryset
 
 
 
@@ -59,24 +52,10 @@ class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
         fields = ('feature', 'category',)
 
 
-CategoryFormSet = inlineformset_factory(Feature, FeatureCategory,
-                                        form=FeatureCategoryForm,
-                                        formset=BootstrapFormSet,
-                                        can_delete=True,
-                                        fk_name='feature')
-
-
 class AttributeForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = Attribute
         fields = ('name', 'is_published', 'feature', 'order')
-
-
-AttributeFormSet = inlineformset_factory(Feature, Attribute,
-                                         form=AttributeForm,
-                                         formset=BootstrapFormSet,
-                                         can_delete=True,
-                                         fk_name='feature')
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):

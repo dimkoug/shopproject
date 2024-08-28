@@ -14,21 +14,12 @@ from stocks.models import Stock
 
 from .forms import (
     CategoryForm,
-    FeatureForm, CategoryFormSet, AttributeForm,
+    FeatureForm, AttributeForm,
     ProductMediaFormSet, ProductLogoFormSet, StockFormSet,
     ProductForm, ProductTagFormSet,
     ProductRelatedFormSet, ProductMediaForm, ProductLogoForm, StockForm,
     ProductAttributeFormSet,
 )
-
-
-
-class CategoryInline(admin.TabularInline):
-    model = FeatureCategory
-    formset = CategoryFormSet
-    fk_name = 'feature'
-    extra = 1
-    autocomplete_fields = ['category']
 
 
 class ProductTagInline(admin.TabularInline):
@@ -116,10 +107,6 @@ class FeatureAdmin(admin.ModelAdmin):
     model = Feature
     form = FeatureForm
     search_fields = ['name']
-
-    inlines = [
-        CategoryInline,
-    ]
 
 
 class AttributeAdmin(admin.ModelAdmin):
