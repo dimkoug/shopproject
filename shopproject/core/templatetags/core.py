@@ -1,3 +1,4 @@
+import datetime
 import locale
 from django import template
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
@@ -16,8 +17,27 @@ def format_currency(value):
                             grouping=True, international=False)
 
 
+
+@register.simple_tag
+def exists_in_items(value, items):
+    if not str(value) in items:
+        return False
+    return True
+
+
+@register.simple_tag
+def pagination_links(current_page, total_pages, num_links=4):
+    if(total_pages):
+        start = max(current_page - num_links // 2, 1)
+        end = min(start + num_links - 1, total_pages)
+        if end - start < num_links:
+            start = max(end - num_links + 1, 1)
+        return range(start, end + 1)
+    return 0
+
+
 @register.simple_tag(takes_context=True)
-def get_url(context, action, obj=None):
+def get_url(context, action, obj=None, app=None):
     '''
     example 1  " get_url 'list' "
     example 2  " get_url 'create' "
@@ -30,12 +50,23 @@ def get_url(context, action, obj=None):
     app:model-delete
     app:model-detail
     '''
-    model = context['model']
-    lower_name = model.__name__.lower()
-    app = 'cms'
+    if not obj:
+        model = context['model']
+        lower_name = model.__name__.lower()
+        if not app:
+            app = model._meta.app_label
+    else:
+        model = obj
+        lower_name = model.__class__.__name__.lower()
+        if not app:
+            app = model._meta.app_label
+
     url_string = '{}:{}-{}'.format(app, lower_name, action)
     if obj:
-        url = reverse_lazy(url_string, kwargs={'pk': obj.pk})
+       try:
+           url = reverse(url_string, kwargs={'pk': obj.pk})
+       except NoReverseMatch:
+           url = reverse(url_string, kwargs={'slug': obj.slug})
     if not obj:
         url_string = '{}:{}-{}'.format(app, lower_name, action)
         url = reverse_lazy(url_string)
@@ -43,15 +74,9 @@ def get_url(context, action, obj=None):
 
 
 @register.simple_tag(takes_context=True)
-def get_template_name(context, *args):
-    model = context['model']
-    app = 'cms'
-    lower_name = model.__name__.lower()
-    template_name = "{}/partials/{}_list_partial.html".format(app,lower_name)
+def get_template_name(context, app=None):
+    template_name = context['template']
     return template_name
-
-
-
 
 
 @register.simple_tag
@@ -160,3 +185,91 @@ def get_rows(fields, object_list):
     for i in trs:
         items += str(i)
     return format_html(mark_safe(items))
+
+
+@register.inclusion_tag("core/add_button.html",takes_context=True)
+def add_button(context, app=None):
+    view = context["view"]
+    model = view.model
+    if not app:
+        app = model._meta.app_label
+    
+    url = reverse(f"{app}:{model.__name__.lower()}-create")
+    return {"url":url}
+
+
+@register.inclusion_tag("core/title.html",takes_context=True)
+def get_title(context):
+    view = context["view"]
+    model = view.model
+    return {"title":model._meta.verbose_name_plural.capitalize()}
+
+
+@register.inclusion_tag("core/actions.html",takes_context=True)
+def get_actions(context, obj, app=None):
+    view = context["view"]
+    model = view.model
+    if not app:
+        app = model._meta.app_label
+    change_url = reverse(f"{app}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
+    delete_url = reverse(f"{app}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+    return {"change_url":change_url,"delete_url":delete_url}
+
+
+@register.simple_tag(takes_context=True)
+def get_list_url(context, form, app=None):
+    try:
+        model = form.instance
+        if not app:
+            app = model._meta.app_label
+        list_url = reverse(f"{app}:{model.__class__.__name__.lower()}-list")
+    except:
+        if not app:
+            model = context['view'].model
+            app = model._meta.app_label
+        try:
+            list_url = reverse(f"{app}:{model.__name__.lower()}-list")
+        except:
+            list_url = reverse(f"{app}:{model.__class__.__name__.lower()}-list")
+    
+    return list_url
+
+
+@register.simple_tag(takes_context=True)
+def get_change_url(context, obj):
+    view = context["view"]
+    model = view.model
+    change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
+    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+    return change_url
+
+@register.simple_tag
+def get_delete_url(form, app=None):
+    model = form.instance
+    if not app:
+        app = model._meta.app_label
+    delete_url = reverse(f"{app}:{model.__class__.__name__.lower()}-delete",kwargs={"pk":form.instance.pk})
+    return delete_url
+
+
+@register.inclusion_tag("core/form_buttons.html",takes_context=True)
+def get_form_buttons(context, form, app=None):
+    return {"form":form,"app":app, "context":context}
+
+
+@register.simple_tag
+def display_data(object):
+    items = {}
+    for field in object._meta.fields:
+        print(type(field), field.name)
+        value = getattr(object,field.name)
+        if isinstance(value, Decimal):
+            value = round(value,0)
+        if isinstance(value, datetime.datetime):
+            format = '%Y-%m-%d %H:%M:%S'
+            print(format)
+            # applying strftime() to format the datetime
+            string = value.strftime(format)
+            value = str(string)
+        items[field.name] = value
+    return items

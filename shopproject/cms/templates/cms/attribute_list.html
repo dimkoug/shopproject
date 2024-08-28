@@ -1,6 +1,7 @@
 {% extends "cms/base.html" %}
 {% load static %}
 {% load cms %}
+{% load core %}
 
 {% block page_title %}
 {{page_title}}
@@ -12,7 +13,8 @@
 {% endblock %}
 
 {% block content %}
-{% include 'partials/add_button.html' %}
+{% get_title %}
+{% add_button 'cms' %}
 
 
 <div class="row py-2">

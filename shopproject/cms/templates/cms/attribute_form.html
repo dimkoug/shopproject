@@ -1,5 +1,5 @@
 {% extends "cms/base.html" %}
-{% load cms %}
+{% load core %}
 
 {% block page_title %}
 {{page_title}}
@@ -52,7 +52,7 @@
         </div>
 
       </div>
-      {% include 'partials/form_buttons.html' with form=form %}
+      {% get_form_buttons form 'cms' %}
     </div>
   </div>
   
