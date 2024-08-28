@@ -52,6 +52,7 @@ class FeatureListView(BaseListView):
 
 class FeatureDetailView(BaseDetailView):
     model = Feature
+    queryset = Feature.objects.prefetch_related(Prefetch('featurecategories',queryset=FeatureCategory.objects.select_related('category'),to_attr='categorylist'), 'attributes').order_by('order')
 
 
 class FeatureCreateView(BaseCreateView):
@@ -61,6 +62,7 @@ class FeatureCreateView(BaseCreateView):
 class FeatureUpdateView(BaseUpdateView):
     model = Feature
     form_class = FeatureForm
+    queryset = Feature.objects.prefetch_related(Prefetch('featurecategories',queryset=FeatureCategory.objects.select_related('category'),to_attr='categorylist'), 'attributes').order_by('order')
 
 
 class FeatureDeleteView(BaseDeleteView):

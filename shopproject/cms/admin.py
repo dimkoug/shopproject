@@ -15,7 +15,7 @@ from stocks.models import Stock
 from .forms import (
     CategoryForm,
     FeatureForm, AttributeForm,
-    ProductForm, ProductMediaForm, ProductLogoForm, StockForm,
+    ProductForm, ProductMediaForm, ProductLogoForm,
 )
 
 
@@ -71,22 +71,6 @@ class ProductAdmin(admin.ModelAdmin):
 # class MediaAdmin(admin.ModelAdmin):
 #     model = Media
 #     form = MediaForm
-
-
-
-
-
-class StockAdmin(admin.ModelAdmin):
-    model = Stock
-    form = StockForm
-
-
-
-
-
-
-
-
 
 
 

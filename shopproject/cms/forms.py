@@ -8,12 +8,8 @@ from tags.models import Tag
 from brands.models import Brand
 from stocks.models import Stock
 
-from stocks.forms import StockForm
-
-from media.models import Media
-
 from shop.models import (
-    Category, ChildCategory,
+    Category,
     Feature, FeatureCategory, Attribute, Product,
     ProductTag, ProductRelated, ProductMedia, ProductLogo,
     ProductAttribute,
@@ -41,22 +37,26 @@ class CategoryForm(BootstrapForm, forms.ModelForm):
 
 
 class FeatureForm(BootstrapForm, forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(widget=CustomSelectMultipleWithUrl(ajax_url='/shop/categories/sb/'),required=False,queryset=Category.objects.none())
     class Meta:
         model = Feature
-        fields = ('name', 'image','is_published', 'order')
+        fields = ('name','categories', 'image','is_published', 'order')
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
-
-
-class FeatureCategoryForm(BootstrapForm, forms.ModelForm):
-    class Meta:
-        model = FeatureCategory
-        fields = ('feature', 'category',)
+        queryset = Category.objects.none()
+        if 'categories' in self.data:
+            queryset = Category.objects.all()
+    
+        if self.instance.pk:
+            queryset = Category.objects.filter(id__in=self.instance.categories.all())
+        self.fields['categories'].queryset = queryset
+        self.fields['categories'].widget.queryset = queryset
 
 
 class AttributeForm(BootstrapForm, forms.ModelForm):
+    feature = forms.ModelChoiceField(widget=CustomSelectWithQueryset(ajax_url='/shop/features/sb/'),required=False,queryset=Feature.objects.none())
     class Meta:
         model = Attribute
         fields = ('name', 'is_published', 'feature', 'order')
@@ -64,6 +64,14 @@ class AttributeForm(BootstrapForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
+        queryset = Feature.objects.none()
+        if 'feature' in self.data:
+            queryset = Feature.objects.all()
+    
+        if self.instance.pk:
+            queryset = Feature.objects.filter(id=self.instance.feature_id)
+        self.fields['feature'].queryset = queryset
+        self.fields['feature'].widget.queryset = queryset
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):
@@ -119,13 +127,6 @@ class ProductTagForm(BootstrapForm, forms.ModelForm):
             self.fields['product'].queryset = Product.objects.filter(id=self.instance.product_id)
 
 
-ProductTagFormSet = inlineformset_factory(Product, ProductTag,
-                                          form=ProductTagForm,
-                                          formset=BootstrapFormSet,
-                                          can_delete=True,
-                                          fk_name='product')
-
-
 class ProductRelatedForm(BootstrapForm, forms.ModelForm):
     class Meta:
         model = ProductRelated
@@ -143,12 +144,7 @@ class ProductRelatedForm(BootstrapForm, forms.ModelForm):
             self.fields['target'].queryset = Product.objects.filter(id=self.instance.target_id)
 
 
-ProductRelatedFormSet = inlineformset_factory(Product, ProductRelated,
-                                              form=ProductRelatedForm,
-                                              formset=BootstrapFormSet,
-                                              can_delete=True,
-                                              fk_name='source'
-                                              )
+
 
 
 class ProductMediaForm(BootstrapForm, forms.ModelForm):

@@ -125,9 +125,9 @@
                   </tr>
                 </thead>
                 <tbody id="category_list">
-                  {% for attr in form.instance.featurecategories.all %}
+                  {% for attr in form.instance.categorylist %}
                     <tr>
-                      <td>{{attr.category}}</td>
+                      <td>{{attr.category.name}}</td>
                       <td>{{attr.filter_display}}</td>
                       <td><a href="#" data-feature="{{form.instance.pk}}" data-categoryid="{{attr.category_id}}" class="deleteFtr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a></td>
                     </tr>
