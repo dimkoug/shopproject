@@ -1,14 +1,14 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import WareHouse
-from .forms import WareHouseForm
+from .models import Warehouse
+from .forms import WarehouseForm
 
 
-class WareHouseAdmin(admin.ModelAdmin):
-    model = WareHouse
-    form = WareHouseForm
+class WarehouseAdmin(admin.ModelAdmin):
+    model = Warehouse
+    form = WarehouseForm
     search_fields = ['name']
 
 
-admin.site.register(WareHouse, WareHouseAdmin)
+admin.site.register(Warehouse, WarehouseAdmin)

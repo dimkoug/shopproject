@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 
-from warehouses.models import WareHouse
+from warehouses.models import Warehouse
 
 
-class WareHouseSerializer(serializers.HyperlinkedModelSerializer):
+class WarehouseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = WareHouse
+        model = Warehouse
         fields = ['name','is_published']

@@ -10,13 +10,13 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from warehouses.models import WareHouse
+from warehouses.models import Warehouse
 
 
-from .serializers import WareHouseSerializer
+from .serializers import WarehouseSerializer
 
-class WareHouseViewSet(viewsets.ModelViewSet):
-    queryset = WareHouse.objects.all()
-    serializer_class = WareHouseSerializer
+class WarehouseViewSet(viewsets.ModelViewSet):
+    queryset = Warehouse.objects.all()
+    serializer_class = WarehouseSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

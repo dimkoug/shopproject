@@ -4,12 +4,12 @@ from django.forms import inlineformset_factory
 from core.forms import BootstrapForm, BootstrapFormSet
 
 
-from .models import WareHouse
+from warehouses.models import Warehouse
 
 
-class WareHouseForm(BootstrapForm, forms.ModelForm):
+class WarehouseForm(BootstrapForm, forms.ModelForm):
     class Meta:
-        model = WareHouse
+        model = Warehouse
         fields = ('name',)
 
     def __init__(self, *args, **kwargs):

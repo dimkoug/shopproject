@@ -20,14 +20,14 @@ from cms.cms_views import (
 from core.functions import is_ajax
 
 
-from warehouses.models import WareHouse
+from warehouses.models import Warehouse
 
 
-from  warehouses.forms import WareHouseForm
+from  warehouses.forms import WarehouseForm
 
 
-class WareHouseListView(BaseListView):
-    model = WareHouse
+class WarehouseListView(BaseListView):
+    model = Warehouse
     paginate_by = 2
     fields = [
         {
@@ -37,19 +37,19 @@ class WareHouseListView(BaseListView):
     ]
 
 
-class WareHouseDetailView(BaseDetailView):
-    model = WareHouse
+class WarehouseDetailView(BaseDetailView):
+    model = Warehouse
 
 
-class WareHouseCreateView(BaseCreateView):
-    model = WareHouse
-    form_class = WareHouseForm
+class WarehouseCreateView(BaseCreateView):
+    model = Warehouse
+    form_class = WarehouseForm
 
 
-class WareHouseUpdateView(BaseUpdateView):
-    model = WareHouse
-    form_class = WareHouseForm
+class WarehouseUpdateView(BaseUpdateView):
+    model = Warehouse
+    form_class = WarehouseForm
 
 
-class WareHouseDeleteView(BaseDeleteView):
-    model = WareHouse
+class WarehouseDeleteView(BaseDeleteView):
+    model = Warehouse

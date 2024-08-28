@@ -4,7 +4,7 @@ from django.db import models
 from core.models import Timestamped
 
 
-class WareHouse(Timestamped):
+class Warehouse(Timestamped):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:

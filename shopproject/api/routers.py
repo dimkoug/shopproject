@@ -36,7 +36,7 @@ router.register(r'stocks', StockViewSet)
 
 router.register(r'suppliers', SupplierViewSet)
 router.register(r'tags', TagViewSet)
-router.register(r'warehouses', WareHouseViewSet)
+router.register(r'warehouses', WarehouseViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 urlpatterns = router.urls + [

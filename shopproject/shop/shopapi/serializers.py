@@ -8,7 +8,7 @@ from shop.models import (
 
 from media.models import Media
 
-from warehouses.warehouses_api.serializers import WareHouseSerializer
+from warehouses.warehouses_api.serializers import WarehouseSerializer
 
 
 

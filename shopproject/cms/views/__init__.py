@@ -8,7 +8,7 @@ from .hero import HeroListView, HeroDetailView, HeroCreateView, HeroUpdateView, 
 from .product import ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView
 from .tag import TagListView, TagDetailView, TagCreateView, TagUpdateView, TagDeleteView
 from .supplier import SupplierListView, SupplierDetailView, SupplierCreateView, SupplierUpdateView, SupplierDeleteView
-from .warehouse import WareHouseListView, WareHouseDetailView, WareHouseCreateView, WareHouseUpdateView, WareHouseDeleteView
+from .warehouse import WarehouseListView, WarehouseDetailView, WarehouseCreateView, WarehouseUpdateView, WarehouseDeleteView
 from .media import MediaListView, MediaDetailView, MediaCreateView, MediaUpdateView, MediaDeleteView
 from .logo import LogoListView, LogoDetailView, LogoCreateView, LogoUpdateView, LogoDeleteView
 from .stock import StockListView, StockDetailView, StockCreateView, StockUpdateView, StockDeleteView
