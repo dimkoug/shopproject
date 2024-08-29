@@ -118,6 +118,8 @@ urlpatterns = [
      
      path("add/heroitem/<int:hero_id>/",add_hero_item,name='add-heroitem'),
 
+     path("delete/heroitem/<int:hero_id>/<int:id>/",delete_hero_item,name='delete-heroitem'),
+
     path('offers/',
          OfferListView.as_view(), name='offer-list'),
     path('offers/add/',

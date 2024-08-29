@@ -82,7 +82,7 @@
                     {% for item in form.instance.heroitems.all %}
                       <tr>
                         <td>{{item.product}}</td>
-                        <td></td>
+                        <td><a href="{% url 'cms:delete-heroitem' form.instance.pk item.pk %}">Delete</a></td>
                       </tr>
                       {% endfor %}
                   </tbody>

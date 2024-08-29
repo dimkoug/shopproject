@@ -18,7 +18,7 @@ from cms.cms_views import (
 )
 
 
-from heroes.models import Hero
+from heroes.models import Hero, HeroItem
 
 
 from heroes.forms import HeroForm, HeroItemForm
@@ -70,3 +70,12 @@ def add_hero_item(request,hero_id):
 
 
     return render(request,template,context) 
+
+
+def delete_hero_item(request,hero_id, id):
+    context = {}
+    hero_item = Hero.objects.get(id=hero_id)
+    HeroItem.objects.get(id=id).delete()
+    return redirect(reverse_lazy('cms:hero-update',kwargs={"pk":hero_id}))
+
+
