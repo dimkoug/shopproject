@@ -115,6 +115,8 @@ urlpatterns = [
          HeroUpdateView.as_view(), name='hero-update'),
     path('heroes/delete/<int:pk>/',
          HeroDeleteView.as_view(), name='hero-delete'),
+     
+     path("add/heroitem/<int:hero_id>/",add_hero_item,name='add-heroitem'),
 
     path('offers/',
          OfferListView.as_view(), name='offer-list'),

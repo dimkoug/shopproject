@@ -21,7 +21,7 @@ from cms.cms_views import (
 from heroes.models import Hero
 
 
-from heroes.forms import HeroForm
+from heroes.forms import HeroForm, HeroItemForm
 
 
 class HeroListView(BaseListView):
@@ -37,6 +37,7 @@ class HeroListView(BaseListView):
 
 class HeroDetailView(BaseDetailView):
     model = Hero
+    queryset = Hero.objects.prefetch_related('heroitems')
 
 
 class HeroCreateView(BaseCreateView):
@@ -47,8 +48,25 @@ class HeroCreateView(BaseCreateView):
 class HeroUpdateView(BaseUpdateView):
     model = Hero
     form_class = HeroForm
+    queryset = Hero.objects.prefetch_related('heroitems')
 
 
 
 class HeroDeleteView(BaseDeleteView):
     model = Hero
+
+
+
+
+def add_hero_item(request,hero_id):
+    context = {}
+    hero_item = Hero.objects.get(id=hero_id)
+    form = HeroItemForm(request.POST or None,request=request,initial={'hero':hero_item})
+    context['form'] = form
+    template = 'cms/heroes/add_heroitem.html'
+    if request.method == 'POST':
+        form.save()
+        return redirect(reverse_lazy('cms:hero-update',kwargs={"pk":hero_id}))
+
+
+    return render(request,template,context) 

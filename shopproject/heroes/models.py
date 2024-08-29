@@ -21,8 +21,10 @@ class Hero(Timestamped, Ordered, Published):
 class HeroItem(Timestamped):
     hero = models.ForeignKey(Hero, on_delete=models.CASCADE)
     product = models.ForeignKey('shop.Product', on_delete=models.CASCADE)
+    order = models.PositiveBigIntegerField(default=0,db_index=True)
 
     class Meta:
+        ordering = ['order']
         default_related_name = 'heroitems'
         verbose_name = 'hero item'
         verbose_name_plural = 'heroitems'

@@ -15,33 +15,83 @@
   <div class="card">
     <div class="card-body">
       {{form.errors}}
-      <div class="row">
-        <div class="col-9">
-          <div class="form-group">
-            {{ form.name.label_tag }}
-            {{form.name}}
-            {% if form.name.errors %}
-            <div class="invalid-feedback">
-              {{form.name.errors}}
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Hero</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Hero Items</button>
+        </div>
+      </nav><!--tabs-->
+      <div class="tab-content" id="nav-tabContent">
+        
+        
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">...
+          <div class="row">
+            <div class="col-9">
+              <div class="form-group">
+                {{ form.name.label_tag }}
+                {{form.name}}
+                {% if form.name.errors %}
+                <div class="invalid-feedback">
+                  {{form.name.errors}}
+                </div>
+                {%endif%}
+                {% if form.name.help_text %}
+                  <small class="form-text text-muted">{{ form.name.help_text }}</small>
+                {% endif %}
+              </div>
             </div>
-            {%endif%}
-            {% if form.name.help_text %}
-              <small class="form-text text-muted">{{ form.name.help_text }}</small>
-            {% endif %}
+            <div class="col-2">
+              <div class="form-group">
+                {{ form.is_published.errors }}
+                {{ form.is_published.label_tag }}
+                {{form.is_published}}
+                {% if form.is_published.help_text %}
+                  <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
+                {% endif %}
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="col-2">
-          <div class="form-group">
-            {{ form.is_published.errors }}
-            {{ form.is_published.label_tag }}
-            {{form.is_published}}
-            {% if form.is_published.help_text %}
-              <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% include 'partials/formsets.html' %}
+
+
+
+
+        </div><!--home tab-->
+        
+        
+        
+        
+        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">...
+            <div class="row">
+              <div class="col py-2">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <a href="{% url 'cms:add-heroitem' form.instance.id %}" class="btn btn-primary">Add Item</a>
+                </div>
+                
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in form.instance.heroitems.all %}
+                      <tr>
+                        <td>{{item.product}}</td>
+                        <td></td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div> <!--hero items-->
+      </div><!--tab content-->
+
       {% include 'partials/form_buttons.html' with form=form %}
     </div>
   </div>

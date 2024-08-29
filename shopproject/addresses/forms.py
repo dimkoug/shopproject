@@ -13,6 +13,10 @@ class AddressForm(BootstrapForm, forms.ModelForm):
                   'mobile', 'street_name', 'postal_code', 'city',
                   'street_number', 'floor_number')
 
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
+
 
 class SiteAddressForm(BootstrapForm, forms.ModelForm):
     class Meta:
@@ -20,3 +24,7 @@ class SiteAddressForm(BootstrapForm, forms.ModelForm):
         fields = ('first_name', 'last_name',
                   'mobile', 'street_name', 'postal_code', 'city',
                   'street_number', 'floor_number')
+
+    def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
