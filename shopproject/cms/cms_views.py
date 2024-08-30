@@ -119,6 +119,18 @@ class BaseDeleteView(LoginRequiredMixin,ModelMixin, DeleteView):
             return JsonResponse({'html': html_form})
         return super().get(request, *args, **kwargs)
 
+
+    def post(self, *args, **kwargs):
+        if is_ajax(self.request):
+            self.object = super().get_object()
+            pk = self.object.pk
+            self.object.delete()
+            data = dict()
+            data['form_is_valid'] = True
+            data['item'] = pk
+            return JsonResponse(data)
+        return self.delete(*args, **kwargs)
+
     
 
     def delete(self, request, *args, **kwargs):

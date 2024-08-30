@@ -4,7 +4,7 @@
         <h1 class="modal-title fs-5" id="exampleModalLabel">Delete {{ object }}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-	  <form method="post" action="{{url}}">
+	  <form method="post" action="{{url}}" id="modal-delete">
 		{% csrf_token %}
 		<div class="modal-body">
 			<p>Are you sure you want to delete "{{ object }}"?</p>

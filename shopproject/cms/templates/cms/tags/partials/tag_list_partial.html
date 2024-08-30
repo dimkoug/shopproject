@@ -11,7 +11,7 @@
             </thead>
             <tbody>
                 {% for obj in object_list %}
-                <tr>
+                <tr id="item_{{obj.pk}}">
                     <td>{{obj}}</td>
                     <td>{% get_actions obj 'cms' %} </td>
                 </tr>

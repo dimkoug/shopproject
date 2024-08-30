@@ -219,7 +219,40 @@ $("body").on('click', '.js-load-form',function(e){
 
 })
 
+$("body").on("submit",'#modal-delete',function(e){
+    e.preventDefault();
+    let url = $(this).attr('action');
+    let method = "post";
+    $.when($.ajax({
+      url: url,
+      method: method,
+      //data: $(this).serialize(),
+      dataType: 'json',
+      headers: {'X-CSRFToken': $("input[name='csrfmiddlewaretoken']").val()},
+      beforeSend: function () {
+          //$(".spinner-border").show();
+          $('#modal').modal('hide');
+          $('body').removeClass('modal-open');
+          $('.modal-backdrop').remove();
+      },
+      complete: function (data) {
+        console.info(data)
+        $("#item_"+ data["item"]).fadeOut();
+        
+        //$('#modal').modal('hide');
+        //$('body').removeClass('modal-open');
+        //$('.modal-backdrop').remove();
+        //$(".spinner-border").hide();
+      }
+  })).then(function (resp, textStatus, jqXHR) {
+    $("#item_"+ resp["item"]).fadeOut();
+    console.info(resp);  
+  })
 
+return false;
+
+
+})
 
 
 
