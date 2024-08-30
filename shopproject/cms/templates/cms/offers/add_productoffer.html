@@ -1,0 +1,28 @@
+{% extends "cms/base.html" %}
+{% load static %}
+{% load core %}
+
+
+
+{% block content %}
+
+
+<div class="row py-2">
+    <div class="col">
+      <div class="card shadow rounded">
+        <div class="card-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Save</button>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+    
+{% endblock content %}
+    

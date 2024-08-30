@@ -131,6 +131,11 @@ urlpatterns = [
     path('offers/delete/<int:pk>/',
          OfferDeleteView.as_view(), name='offer-delete'),
 
+     path("add/offerproduct/<int:offer_id>/",add_offer_product,name='add-offerproduct'),
+
+     path("delete/offerproduct/<int:offer_id>/<int:id>/",delete_offer_product,name='delete-offerproduct'),
+
+
     path('address/',
          AddressListView.as_view(), name='address-list'),
     path('address/add/',

@@ -15,52 +15,125 @@
     <div class="card-body">
       {{form.errors}}
       <div class="row">
-        <div class="col-12">
-          <div class="form-group">
-            {{ form.name.label_tag }}
-            {{form.name}}
-            {% if form.name.errors %}
-            <div class="invalid-feedback">
-              {{form.name.errors}}
-            </div>
-            {%endif%}
-            {% if form.name.help_text %}
-              <small class="form-text text-muted">{{ form.name.help_text }}</small>
+        <div class="col">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Offer</button>
+            </li>
+            {% if form.instance.pk %}
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Offer Items</button>
+            </li>
             {% endif %}
-          </div>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+              <div class="row">
+                <div class="col-12">
+                  <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{form.name}}
+                    {% if form.name.errors %}
+                    <div class="invalid-feedback">
+                      {{form.name.errors}}
+                    </div>
+                    {%endif%}
+                    {% if form.name.help_text %}
+                      <small class="form-text text-muted">{{ form.name.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    {{ form.start_date.label_tag }}
+                    {{form.start_date}}
+                    {% if form.start_date.errors %}
+                    <div class="invalid-feedback">
+                      {{form.start_date.errors}}
+                    </div>
+                    {%endif%}
+                    {% if form.start_date.help_text %}
+                      <small class="form-text text-muted">{{ form.start_date.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    {{ form.end_date.label_tag }}
+                    {{form.end_date}}
+                    {% if form.end_date.errors %}
+                    <div class="invalid-feedback">
+                      {{form.end_date.errors}}
+                    </div>
+                    {%endif%}
+                    {% if form.end_date.help_text %}
+                      <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+
+
+
+            </div> <!--offers-->
+            {% if form.instance.pk %}
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">...
+              <div class="row">
+                <div class="col py-2">
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'cms:add-offerproduct' form.instance.pk %}" class="btn btn-primary">Add Item</a>
+                  </div>
+                  
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Product</th>
+                        <th>Complementary</th>
+                        <th>Primary</th>
+                        <th>Discount price</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for item in form.instance.offerproducts.all %}
+                        <tr>
+                          <td>{{item.product}}</td>
+                          <td>{{item.is_complementary}}</td>
+                          <td>{{item.is_primary}}</td>
+                          <td>{{item.discount_price}}</td>
+                          <td><a href="{% url 'cms:delete-offerproduct' form.instance.pk item.pk %}">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+
+
+
+            </div> <!--offer items-->
+            {% endif %}
+          </div> <!--tab contents-->
+
+
         </div>
+
+
+
       </div>
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            {{ form.start_date.label_tag }}
-            {{form.start_date}}
-            {% if form.start_date.errors %}
-            <div class="invalid-feedback">
-              {{form.start_date.errors}}
-            </div>
-            {%endif%}
-            {% if form.start_date.help_text %}
-              <small class="form-text text-muted">{{ form.start_date.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="form-group">
-            {{ form.end_date.label_tag }}
-            {{form.end_date}}
-            {% if form.end_date.errors %}
-            <div class="invalid-feedback">
-              {{form.end_date.errors}}
-            </div>
-            {%endif%}
-            {% if form.end_date.help_text %}
-              <small class="form-text text-muted">{{ form.end_date.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% include 'partials/formsets.html' %}
+
+
+
+
+
+
+
       {% include 'partials/form_buttons.html' with form=form %}
     </div>
   </div>

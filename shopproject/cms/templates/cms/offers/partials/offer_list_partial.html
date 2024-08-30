@@ -1,1 +1,27 @@
-{% include 'cms/partials/list_partial.html' %}
+{% load core %}
+
+<div class="d-flex flex-row">
+    <div class="col">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Offer</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in object_list %}
+                <tr>
+                    <td>{{obj}}</td>
+                    <td>{% get_actions obj 'cms' %} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex flex-row">
+    <div class="col">
+      {% include 'core/pagination.html' %}
+    </div>
+  </div>

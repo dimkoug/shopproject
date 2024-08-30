@@ -75,7 +75,7 @@ def add_hero_item(request,hero_id):
 def delete_hero_item(request,hero_id, id):
     context = {}
     hero_item = Hero.objects.get(id=hero_id)
-    HeroItem.objects.get(id=id).delete()
+    HeroItem.objects.get(id=id,hero_id=hero_id).delete()
     return redirect(reverse_lazy('cms:hero-update',kwargs={"pk":hero_id}))
 
 
