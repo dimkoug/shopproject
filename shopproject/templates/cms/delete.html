@@ -1,20 +1,27 @@
-{% extends "cms/base.html" %}
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete {{ object }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+	  <form method="post" action="{{url}}">
+		{% csrf_token %}
+		<div class="modal-body">
+			<p>Are you sure you want to delete "{{ object }}"?</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			<button type="submit" class="btn btn-danger">Confirm</button>
+		</div>
+		</div>
+	</form>
+  </div>
 
-{% load core %}
 
 
-{% block content %}
-<div class="card shadow rounded">
-	<div class="card-body">
-			{% get_title %}
-			<form method="post">{% csrf_token %}
-					<p>Are you sure you want to delete "{{ object }}"?</p>
-					<input type="submit" value="Confirm" class="btn btn-danger">
-					
-			</form>
-	</div>
-</div>
-{% endblock content %}
+
+
+
 
 
 

@@ -111,3 +111,5 @@ class PaginationMixin:
             context['table'] = table
         context.update({'pages': pages})
         return context
+
+

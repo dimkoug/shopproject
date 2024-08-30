@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -93,11 +93,32 @@ class BaseUpdateView(LoginRequiredMixin,ModelMixin, PassRequestToFormViewMixin, 
 
 
 class BaseDeleteView(LoginRequiredMixin,ModelMixin, DeleteView):
+    ajax_partial = 'cms/delete.html' 
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        obj = self.get_object()
+        url = reverse(f"cms:{obj.__class__.__name__.lower()}-delete",kwargs={"pk":obj.pk})
+        print(url)
+        context['url'] = url
+        return context
+    
     def get_template_names(self):
         return ['cms/{}/{}_confirm_delete.html'.format(self.model._meta.app_label,self.model.__name__.lower())]
 
     def get_success_url(self):
         return reverse_lazy('cms:{}-list'.format(self.model.__name__.lower()))
+
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(**kwargs)
+        if is_ajax(request):
+            html_form = render_to_string(
+                    self.ajax_partial, context, request)
+            return JsonResponse({'html': html_form})
+        return super().get(request, *args, **kwargs)
+
     
 
     def delete(self, request, *args, **kwargs):
