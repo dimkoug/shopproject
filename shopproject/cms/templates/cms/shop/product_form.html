@@ -297,45 +297,6 @@
     'use strict';
     (function(w,d,$){
         $(d).ready(function(){
-            $('#id_brand').select2({
-              ajax: {
-                url: '/shop/get_brands_for_sb/',
-                data: function (params) {
-                  var query = {
-                    search: params.term,
-                    type: 'public'
-                  }
-                  // Query parameters will be ?search=[term]&type=public
-                  return query;
-                }
-              }
-            });
-            $('#id_parent').select2({
-              ajax: {
-                url: '/shop/get_products_for_sb/',
-                data: function (params) {
-                  var query = {
-                    search: params.term,
-                    type: 'public'
-                  }
-                  // Query parameters will be ?search=[term]&type=public
-                  return query;
-                }
-              }
-            });
-            $('#id_category').select2({
-              ajax: {
-                url: '/shop/get_categories_for_sb/',
-                data: function (params) {
-                  var query = {
-                    search: params.term,
-                    type: 'public'
-                  }
-                  // Query parameters will be ?search=[term]&type=public
-                  return query;
-                }
-              }
-            });
             $("#id_feature").select2({
               dropdownParent: $('#exampleModal'),
             });

@@ -109,8 +109,11 @@ class ProductForm(BootstrapForm, forms.ModelForm):
 
 
         self.fields['brand'].queryset = brand_queryset
+        self.fields['brand'].widget.queryset = brand_queryset
         self.fields['parent'].queryset = parent_queryset
+        self.fields['parent'].widget.queryset = parent_queryset
         self.fields['category'].queryset = category_queryset
+        self.fields['category'].widget.queryset = category_queryset
 
 
 class ProductTagForm(BootstrapForm, forms.ModelForm):
