@@ -64,17 +64,21 @@ class AttributeForm(BootstrapForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
-        queryset = Feature.objects.none()
+        feature_queryset = Feature.objects.none()
         if 'feature' in self.data:
-            queryset = Feature.objects.all()
+            feature_queryset = Feature.objects.all()
     
         if self.instance.pk:
-            queryset = Feature.objects.filter(id=self.instance.feature_id)
-        self.fields['feature'].queryset = queryset
-        self.fields['feature'].widget.queryset = queryset
+            feature_queryset = Feature.objects.filter(id=self.instance.feature_id)
+        self.fields['feature'].queryset = feature_queryset
+        self.fields['feature'].widget.queryset = feature_queryset
 
 
 class ProductForm(BootstrapForm, forms.ModelForm):
+    brand = forms.ModelChoiceField(widget=CustomSelectWithQueryset(ajax_url='/brands/sb/'),required=False,queryset=Brand.objects.none())
+    category = forms.ModelChoiceField(widget=CustomSelectWithQueryset(ajax_url='/shop/categories/sb/'),required=False,queryset=Category.objects.none())
+    parent = forms.ModelChoiceField(widget=CustomSelectWithQueryset(ajax_url='/shop/products/sb/'),required=False,queryset=Product.objects.none())
+
     class Meta:
         model = Product
         fields = ('name', 'brand','category', 'parent', 'image', 'subtitle',
@@ -83,26 +87,30 @@ class ProductForm(BootstrapForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
-        self.fields['brand'].queryset = Brand.objects.none()
-        self.fields['brand'].widget=forms.Select(attrs={'class': 'form-control'})
-        self.fields['parent'].queryset = Product.objects.none()
-        self.fields['parent'].widget=forms.Select(attrs={'class': 'form-control'})
-        self.fields['category'].queryset = Category.objects.none()
-        self.fields['category'].widget=forms.Select(attrs={'class': 'form-control'})
-
-        if 'brand' in self.data:
-            self.fields['brand'].queryset = Brand.objects.all()
-
-        if 'category' in self.data:
-            self.fields['category'].queryset = Category.objects.all()
+        brand_queryset = Brand.objects.none()
+        parent_queryset = Product.objects.none()
+        category_queryset = Category.objects.none()
         
+        
+        if 'brand' in self.data:
+            brand_queryset = Brand.objects.all()
+        if 'category' in self.data:
+            category_queryset = Category.objects.all()
+    
         if 'parent' in self.data:
-            self.fields['parent'].queryset = Product.objects.all()
-
+            parent_queryset = Product.objects.all()
+           
+        
+        
         if self.instance.pk:
-            self.fields['brand'].queryset = Brand.objects.filter(id=self.instance.brand_id)
-            self.fields['parent'].queryset = Product.objects.filter(id=self.instance.parent_id)
-            self.fields['category'].queryset = Category.objects.filter(id=self.instance.category_id)
+            brand_queryset = Brand.objects.filter(id=self.instance.brand_id)
+            category_queryset = Category.objects.filter(id=self.instance.category_id)
+            parent_queryset = Product.objects.filter(id=self.instance.parent_id)
+
+
+        self.fields['brand'].queryset = brand_queryset
+        self.fields['parent'].queryset = parent_queryset
+        self.fields['category'].queryset = category_queryset
 
 
 class ProductTagForm(BootstrapForm, forms.ModelForm):
