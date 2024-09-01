@@ -118,6 +118,7 @@ class Product(Timestamped,  Ordered, Published):
                                  storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     pdf_url = models.URLField(max_length=2048, null=True,blank=True)
     cepdf_url = models.URLField(max_length=2048, null=True,blank=True)
+    video_url = models.URLField(max_length=2048, null=True,blank=True)
     code = models.CharField(max_length=255, null=True,blank=True)
     price_str = models.CharField(max_length=255, null=True, blank=True)
     price = models.DecimalField(
