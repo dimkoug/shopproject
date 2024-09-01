@@ -112,7 +112,7 @@ class Product(Timestamped,  Ordered, Published):
                                              through_fields=(
                                                  'source', 'target'),
                                              symmetrical=False, blank=True)
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
     pdf_guide = models.FileField(upload_to='files/',
                                  storage=OverwriteStorage(), max_length=500, null=True, blank=True)
     cepdf = models.FileField(upload_to='files/',
