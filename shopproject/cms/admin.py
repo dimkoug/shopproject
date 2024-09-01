@@ -53,8 +53,8 @@ class FeatureAdmin(admin.ModelAdmin):
 class AttributeAdmin(admin.ModelAdmin):
     model = Attribute
     form = AttributeForm
-    list_display = ('name', 'is_published', 'feature')
-    search_fields = ['name']
+    list_display = ('value', 'is_published', 'feature')
+    search_fields = ['value']
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

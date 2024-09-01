@@ -59,7 +59,7 @@ class AttributeForm(BootstrapForm, forms.ModelForm):
     feature = forms.ModelChoiceField(widget=CustomSelectWithQueryset(ajax_url='/shop/features/sb/'),required=False,queryset=Feature.objects.none())
     class Meta:
         model = Attribute
-        fields = ('name', 'is_published', 'feature', 'order')
+        fields = ('value', 'is_published', 'feature', 'order')
 
     def __init__(self, *args, **kwargs):
         request = kwargs.pop('request')

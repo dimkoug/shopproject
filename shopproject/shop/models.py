@@ -84,8 +84,9 @@ class FeatureCategory(Timestamped):
 
 
 class Attribute(Timestamped, Ordered, Published):
-    name = models.TextField()
+    value = models.TextField()
     feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    hash = models.CharField(max_length=128, null=True,blank=True)
 
     class Meta:
         default_related_name = 'attributes'
