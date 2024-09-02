@@ -24,7 +24,7 @@ from cms.forms import CategoryForm
 
 class CategoryListView(BaseListView):
     model = Category
-    queryset = Category.objects.prefetch_related('children')
+    queryset = Category.objects.prefetch_related('children', 'targets').filter(targets__isnull=True)
     paginate_by = 50
     fields = [
         {
