@@ -35,7 +35,7 @@ class AttributeListView(BaseListView):
         },
         {
         'verbose_name': 'Name',
-        'db_name':'name'
+        'db_name':'value'
         },
     ]
 
