@@ -16,7 +16,7 @@
           model_name = $(this).data("model");
          });
          $.ajax({
-          url:"/shop/cms/model/order/",
+          url:"/cms/model/order/",
           method:"POST",
           data:{"page_id_array":JSON.stringify(page_id_array),model_name:model_name},
           success:function(data)
