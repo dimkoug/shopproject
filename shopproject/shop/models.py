@@ -65,13 +65,14 @@ class Feature(Timestamped, Ordered, Published):
         return f"{self.name}"
 
 
-class FeatureCategory(Timestamped):
+class FeatureCategory(Timestamped,Ordered):
     feature = models.ForeignKey(
         Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     filter_display = models.BooleanField(default=False,db_index=True)
 
     class Meta:
+        ordering = ['order']
         default_related_name = 'featurecategories'
         unique_together = (('feature', 'category', 'filter_display'),)
         constraints = [
