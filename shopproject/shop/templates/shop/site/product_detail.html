@@ -144,7 +144,7 @@
 
                     </div>
                     <div class="text-end col-2">
-                        <a href="{% url 'shop:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i
+                        <a href="{% url 'baskets:add_to_basket' object.id %}" class="btn btn-primary ajax_add_to_cart"><i
                                 class=" bi bi-cart"></i> {% format_currency object.price %}</a>
                     </div>
                 </div>

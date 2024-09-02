@@ -95,7 +95,7 @@ class Attribute(Timestamped, Ordered, Published):
         ordering = ['order']
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.value}"
 
 
 class Product(Timestamped,  Ordered, Published):

@@ -244,8 +244,8 @@ class CatalogProductDetailView(DetailView):
     template_name = 'shop/site/product_detail.html'
     queryset = Product.objects.select_related('brand', 'parent', 'category').prefetch_related(
         'tags',
-        'media',
-        'productlogos',
+        'productmedia__media',
+        'productlogos__logo',
         'attributes__feature',
         'relatedproducts__target'
     )
