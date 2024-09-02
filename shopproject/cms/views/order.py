@@ -58,7 +58,8 @@ class OrderDeleteView(BaseDeleteView):
 def model_order(request):
     if request.method == 'POST' and is_ajax(request):
         model_name = request.POST['model_name']
-        model = apps.get_model('shop', model_name)
+        app_name = request.POST['app_name']
+        model = apps.get_model(app_name, model_name)
         page_id_array = json.loads(request.POST['page_id_array'])
         objs = []
         for index, item in enumerate(page_id_array):

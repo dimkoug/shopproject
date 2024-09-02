@@ -22,7 +22,7 @@
       </thead>
       <tbody class="order">
         {% for obj in object.children.all %}
-        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}'>
+        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
           <td><i class="bi bi-list"></i></td>
           <td> <a href="{% get_url 'detail' obj.target 'cms' %}">{{obj.target.name}}</a> </td>
         </tr>
@@ -45,7 +45,7 @@
       </thead>
       <tbody class="order">
         {% for obj in object.featurecategories.all %}
-        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}'>
+        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
           <td><i class="bi bi-list"></i></td>
           <td>{{obj.feature.name}}</td>
         </tr>
