@@ -17,7 +17,7 @@ from cms.cms_views import (
 )
 
 
-from shop.models import Category
+from shop.models import Category, ChildCategory
 
 from cms.forms import CategoryForm
 
@@ -40,7 +40,7 @@ class CategoryListView(BaseListView):
 
 class CategoryDetailView(BaseDetailView):
     model = Category
-    queryset = Category.objects.prefetch_related('children')
+    queryset = Category.objects.prefetch_related(Prefetch('children',queryset=ChildCategory.objects.order_by('order')))
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

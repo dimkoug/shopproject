@@ -14,7 +14,7 @@
                 {% for obj in object_list %}
                 <tr class='item' data-pk={{obj.pk}} data-model={% get_model obj %}>
                     <td><i class="bi bi-list"></i></td>
-                    <td>{{obj}}</td>
+                    <td><a href="{% get_url 'detail' obj 'cms' %}">{{obj}}</a></td>
                     <td>{% get_actions obj 'cms' %} </td>
                 </tr>
                 {% endfor %}
