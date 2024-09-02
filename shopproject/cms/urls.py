@@ -158,7 +158,7 @@ urlpatterns = [
     path('orders/delete/<int:pk>/',
          OrderDeleteView.as_view(), name='order-delete'),
     path('model/order/', model_order, name='model-order'),
-    path('create_attribute/', create_attribute, name='create-attribute'),
+    path('create_attribute/<int:product_id>/', create_attribute, name='create-attribute'),
     path('delete_attribute/', delete_attribute, name='delete-attribute'),
 
     path('create_featurecategory/', create_featurecategory, name='create-featurecategory'),

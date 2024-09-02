@@ -1,8 +1,9 @@
+import hashlib
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.template.loader import render_to_string
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
 from django.http import JsonResponse
@@ -17,7 +18,7 @@ from cms.cms_views import (
     BaseCreateView, BaseUpdateView, BaseDeleteView
 )
 
-from shop.models import Attribute
+from shop.models import Attribute, Product,Feature, ProductAttribute
 
 
 from cms.forms import AttributeForm
@@ -64,19 +65,25 @@ class AttributeDeleteView(BaseDeleteView):
     model = Attribute
 
 
-def create_attribute(request):
-    try:
-        feature_id = request.POST['feature']
-        attribute = request.POST['name']
-        product_attribute, created = Attribute.objects.get_or_create(feature_id=feature_id,name=attribute)
-        return JsonResponse({
-            'id':product_attribute.id,
-            'feature':product_attribute.feature_id,
-            'name': product_attribute.name,
-        })
-    except Exception as e:
-        print(e)
-        return JsonResponse({})
+def create_attribute(request,product_id):
+    context = {}
+    template_name = 'cms/shop/add_attribute.html'
+    product = Product.objects.get(id=product_id)
+    features = Feature.objects.filter(categories=product.category_id).distinct()
+    context['features'] = features
+    context['product'] = product
+    if request.method == 'POST':
+        product = Product.objects.get(id=request.POST['product_id'])
+        feature = Feature.objects.get(id=request.POST['feature'])
+        str2hash = f"{feature.name}{request.POST['value']}"
+        result = hashlib.md5(str2hash.encode())
+        attribute_hash = result.hexdigest()
+        ProductAttribute.objects.filter(attribute__feature_id=feature.id,product=product).delete()
+        attribute,_ = Attribute.objects.get_or_create(feature=feature,value=request.POST['value'],hash=attribute_hash)
+        ProductAttribute.objects.get_or_create(product=product,attribute=attribute)
+        return redirect(reverse("cms:product-update",kwargs={"pk":product.id}))
+    return render(request,template_name,context)
+
 
 def delete_attribute(request):
     try:

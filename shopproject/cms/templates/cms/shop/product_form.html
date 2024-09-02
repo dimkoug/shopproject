@@ -214,9 +214,7 @@
           <div class="row">
             <div class="col-12">
               <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Add Attribute
-              </button>
+                <a href="{% url 'cms:create-attribute' form.instance.pk %}" class="btn btn-primary">Add Attribute</a>
             </div>
             </div>
           </div>
