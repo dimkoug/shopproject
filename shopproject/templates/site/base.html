@@ -49,15 +49,19 @@
                   <div>{{ category.name }}</div>
   
                   <!-- Check if the current category has children -->
-                  {% if category.children.all %}
+                  {% if category.children.all and category.has_products %}
+
                       <div class="row">
                           {% for child in category.children.all %}
+                              {% if child.has_products %}
+                          
                               <div class="col-md-6">
                                   <div>{{ child.name }}</div>
   
                                   <!-- Optionally, you can include a recursive partial template here -->
                                   {% include 'category_partial.html' with categories=child.children.all %}
                               </div>
+                              {% endif %}
                           {% endfor %}
                       </div>
                   {% endif %}
