@@ -30,6 +30,15 @@ class Category(Timestamped, Ordered, Published):
     def __str__(self):
         return f"{self.name}"
 
+    def has_products(self):
+        """Check if this category or any of its descendants have products."""
+        # Check if the current category has products
+        if self.products.filter(price__gt=0).exists():
+            return True
+        
+        # Check if any of the child categories have products
+        return any(child.has_products() for child in self.children.all())
+
 
 class ChildCategory(Timestamped, Ordered):
     source = models.ForeignKey(Category, on_delete=models.CASCADE,

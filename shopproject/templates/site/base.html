@@ -39,7 +39,41 @@
   <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
     {% include 'site/navbar.html' %}
     {% cache 500 categories categories %}
+    
     <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
+      <div class="row">
+          {% for category in categories %}
+            {% if category.has_products %}
+              <div class="col-md-4">
+                  <!-- Display the current category -->
+                  <div>{{ category.name }}</div>
+  
+                  <!-- Check if the current category has children -->
+                  {% if category.children.all %}
+                      <div class="row">
+                          {% for child in category.children.all %}
+                              <div class="col-md-6">
+                                  <div>{{ child.name }}</div>
+  
+                                  <!-- Optionally, you can include a recursive partial template here -->
+                                  {% include 'category_partial.html' with categories=child.children.all %}
+                              </div>
+                          {% endfor %}
+                      </div>
+                  {% endif %}
+              </div>
+  
+              {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                  </div><div class="row">
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+    
+    
+    
+    <!--<div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
       <div class="row py-2">
         {% for category in categories %}
         {% if category.second_level %}
@@ -63,7 +97,7 @@
         {% endif %}
         {% endfor %}
       </div>
-    </div>
+    </div>-->
     {% endcache %}
     {% cache 500 brands brands %}
     <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
@@ -93,6 +127,17 @@
       </div>
       <div class="row py-2 basket_res"></div>
     </div>
+    
+
+ 
+
+
+    
+    
+ 
+    
+    
+    
     <main class="container-fluid">
         <div class="row py-2">
           <div class="col-12">

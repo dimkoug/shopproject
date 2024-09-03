@@ -23,7 +23,7 @@ def get_context_data(request):
                  queryset=HeroItem.objects.select_related(
                     'product', 'hero'), to_attr='item_list'
                  )
-        ).filter(is_published=True)
+        ).filter(is_published=True,heroitems__isnull=False)
 
     request.session['shopping_cart_id'] = str(uuid.uuid4())
 
@@ -41,10 +41,10 @@ def get_context_data(request):
                         'target__children',
                         queryset=ChildCategory.objects.select_related(
                             'source', 'target').filter(
-                             target_id__in=third_categories).order_by('target__order'),
+                             target_id__in=third_categories).order_by('order'),
                         to_attr='third_level'
                     )
-                ).filter(target_id__in=second_categories).order_by('target__order'),
+                ).filter(target_id__in=second_categories).order_by('order'),
         to_attr='second_level'
     )
 
@@ -54,7 +54,7 @@ def get_context_data(request):
     
 
     return {
-        'categories': categories,
+        'categories': Category.objects.prefetch_related('children','targets','products').filter(targets__isnull=True),
         'tags': Tag.objects.filter(is_published=True),
         'brands': Brand.objects.prefetch_related('products').filter(is_published=True,products__price__gt=0,products__is_published=True).order_by('name').distinct(),
         'donottrack': request.META.get('HTTP_DNT') == '1',

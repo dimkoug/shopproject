@@ -1,0 +1,18 @@
+{% for category in categories %}
+    {% if category.has_products %}
+    <div class="col-md-6">
+        {% if category.children.all %}
+        <div>{{ category.name }}</div>
+
+
+        {% if category.children.all %}
+            <div class="row">
+                {% include 'category_partial.html' with categories=category.children.all %}
+            </div>
+        {% endif %}
+        {% else %}
+        <div><a href="{% url 'shop:catalog' %}?category={{category.id}}">{{ category.name }}</a></div>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endfor %}
