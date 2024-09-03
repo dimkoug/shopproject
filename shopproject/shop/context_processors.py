@@ -54,7 +54,7 @@ def get_context_data(request):
     
 
     return {
-        'categories': Category.objects.prefetch_related('children','targets','products').filter(targets__isnull=True),
+        'categories': categories,
         'tags': Tag.objects.filter(is_published=True),
         'brands': Brand.objects.prefetch_related('products').filter(is_published=True,products__price__gt=0,products__is_published=True).order_by('name').distinct(),
         'donottrack': request.META.get('HTTP_DNT') == '1',

@@ -43,25 +43,25 @@
     <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
       <div class="row">
           {% for category in categories %}
-            {% if category.has_products %}
               <div class="col-md-4">
                   <!-- Display the current category -->
                   <div>{{ category.name }}</div>
   
                   <!-- Check if the current category has children -->
-                  {% if category.children.all and category.has_products %}
+                  {% if category.second_level %}
 
                       <div class="row">
-                          {% for child in category.children.all %}
-                              {% if child.has_products %}
-                          
-                              <div class="col-md-6">
-                                  <div>{{ child.name }}</div>
+                          {% for child in category.second_level %}
+                             <div class="col-md-6">
+                                  <div>{{ child.target.name }}</div>
+                                  {% if child.target.third_level %}
+                                    {% for third in child.target.third_level  %}
+                                      <div><a href="{% url 'shop:catalog' %}?category={{third.target.id}}">{{ third.target.name }}</a></div>
+                                    {% endfor %}
+                                  {% endif %}
   
-                                  <!-- Optionally, you can include a recursive partial template here -->
-                                  {% include 'category_partial.html' with categories=child.children.all %}
+             
                               </div>
-                              {% endif %}
                           {% endfor %}
                       </div>
                   {% endif %}
@@ -70,7 +70,6 @@
               {% if forloop.counter|divisibleby:3 and not forloop.last %}
                   </div><div class="row">
               {% endif %}
-            {% endif %}
           {% endfor %}
       </div>
   </div>
