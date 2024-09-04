@@ -6,9 +6,10 @@ from core.models import Timestamped
 
 class Offer(Timestamped):
     name = models.CharField(max_length=100)
+    desc = models.TextField(null=True, blank=True)
     products = models.ManyToManyField('shop.Product', through='OfferProduct')
     start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         default_related_name = 'offers'
