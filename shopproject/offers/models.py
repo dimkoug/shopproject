@@ -5,7 +5,7 @@ from core.models import Timestamped
 
 
 class Offer(Timestamped):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=255)
     desc = models.TextField(null=True, blank=True)
     categories = models.ManyToManyField('shop.Category',related_name='categoryoffers')
     brands = models.ManyToManyField('brands.Brand',related_name='brandoffers')
