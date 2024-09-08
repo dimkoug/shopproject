@@ -5,6 +5,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Feature</th>
                     <th>Attribute</th>
                     <th></th>
                 </tr>
@@ -12,7 +13,8 @@
             <tbody>
                 {% for obj in object_list %}
                 <tr>
-                    <td>{{obj}}</td>
+                    <td>{{obj.feature}}</td>
+                    <td>{{obj|safe}}</td>
                     <td>{% get_actions obj 'cms' %} </td>
                 </tr>
                 {% endfor %}
