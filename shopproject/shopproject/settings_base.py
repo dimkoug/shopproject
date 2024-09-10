@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     'orders.orders_api',
     'api',
     'media',
+    'media.media_api',
 ]
 
 MIDDLEWARE = [

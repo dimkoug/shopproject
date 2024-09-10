@@ -45,6 +45,7 @@ urlpatterns = [
     path('addresses/', include('addresses.urls', namespace='addresses')),
     path('heroes/', include('heroes.urls', namespace='heroes')),
     path('logos/', include('logos.urls', namespace='logos')),
+    path('media/', include('media.urls', namespace='media')),
     path('api/', include('api.routers')),
     # path('api/', include('brands.brands_api.routers')),
     # path('api/', include('heroes.heroes_api.routers')),
