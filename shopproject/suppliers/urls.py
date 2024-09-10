@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from core.patterns import get_patterns
 
@@ -11,4 +11,5 @@ app_name = 'suppliers'
 urlpatterns = [
     #path('', IndexView.as_view(), name="index"),
     path('sb/', get_suppliers_for_sb, name='sb-suppliers'),
+    path('api/',include('suppliers.suppliers_api.routers')),
 ]
