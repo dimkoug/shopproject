@@ -10,11 +10,6 @@ from users.users_api.viewsets import *
 
 router = routers.DefaultRouter()
 
-router.register(r'attributes', AttributeViewSet)
-router.register(r'categories', CategoryViewSet)
-router.register(r'features', FeatureViewSet)
-router.register(r'products', ProductViewSet)
-
 router.register(r'stocks', StockViewSet)
 
 router.register(r'suppliers', SupplierViewSet)

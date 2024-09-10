@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from .views import (
     IndexView, CatalogListView,
@@ -40,4 +40,6 @@ urlpatterns = [
     path('attributes/', get_attributes, name='get_attributes'),
     path('set_attribute/', set_attribute, name='set_attributes'),
     path('delete_attribute/', delete_attribute, name='delete_attributes'),
+
+    path('api/',include('shop.shopapi.routers')),
 ]
