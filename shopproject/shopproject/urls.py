@@ -46,16 +46,11 @@ urlpatterns = [
     path('heroes/', include('heroes.urls', namespace='heroes')),
     path('logos/', include('logos.urls', namespace='logos')),
     path('media/', include('media.urls', namespace='media')),
+    path('offers/', include('offers.urls', namespace='offers')),
+    path('orders/', include('orders.urls', namespace='orders')),
+    path('shipments/', include('shipments.urls', namespace='shipments')),
     path('api/', include('api.routers')),
-    # path('api/', include('brands.brands_api.routers')),
-    # path('api/', include('heroes.heroes_api.routers')),
-    # path('api/', include('logos.logos_api.routers')),
-    # path('api/', include('shipments.shipments_api.routers')),
-    # path('api/', include('stocks.stocks_api.routers')),
-    # path('api/', include('suppliers.suppliers_api.routers')),
-    # path('api/', include('tags.tags_api.routers')),
-    # path('api/', include('warehouses.warehouses_api.routers')),
-    # path('api/', include('users.users_api.routers')),
+
     
     
     path('users/', include('users.urls')),
