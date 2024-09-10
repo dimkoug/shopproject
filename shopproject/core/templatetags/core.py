@@ -251,15 +251,6 @@ def get_list_url(context, form, app=None):
     return list_url
 
 
-@register.simple_tag(takes_context=True)
-def get_change_url(context, obj):
-    view = context["view"]
-    model = view.model
-    change_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-update",kwargs={"pk":obj.pk})
-    delete_url = reverse(f"{model._meta.app_label}:{model.__name__.lower()}-delete",kwargs={"pk":obj.pk})
-    return change_url
-
-
 
 
 @register.inclusion_tag("core/form_buttons.html",takes_context=True)

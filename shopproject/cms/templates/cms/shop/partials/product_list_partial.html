@@ -25,7 +25,12 @@
 
 
                     <td>{{obj.name}}</td>
-                    <td>{% get_actions obj 'cms' %} </td>
+                    <td>
+                        {% get_detail_url obj 'cms' %}
+                        {% get_edit_url obj 'cms' %}
+                        {% get_delete_url obj 'cms' %}
+
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
