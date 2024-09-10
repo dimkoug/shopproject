@@ -1,16 +1,12 @@
 from django.urls import path
 from rest_framework import routers
 
-from shop.shopapi.viewsets import *
-from stocks.stocks_api.viewsets import *
 from suppliers.suppliers_api.viewsets import *
 from tags.tags_api.viewsets import *
 from warehouses.warehouses_api.viewsets import *
 from users.users_api.viewsets import *
 
 router = routers.DefaultRouter()
-
-router.register(r'stocks', StockViewSet)
 
 router.register(r'suppliers', SupplierViewSet)
 router.register(r'tags', TagViewSet)

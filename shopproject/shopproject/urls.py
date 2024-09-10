@@ -49,6 +49,7 @@ urlpatterns = [
     path('offers/', include('offers.urls', namespace='offers')),
     path('orders/', include('orders.urls', namespace='orders')),
     path('shipments/', include('shipments.urls', namespace='shipments')),
+    path('stocks/', include('stocks.urls', namespace='stocks')),
     path('api/', include('api.routers')),
 
     
