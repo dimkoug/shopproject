@@ -12,7 +12,15 @@
             <tbody>
                 {% for obj in object_list %}
                 <tr>
-                    <td>{{obj.media}}</td>
+                    <td>
+                        {% if obj.image %}
+                        <img src="{{obj.image.ur}}" alt="" style="width:150px;">
+                    {% else %}
+                        <img src="{{obj.image_url}}" alt="" style="width:150px;">
+                    {% endif %}
+
+
+                    </td>
                     <td>
                         {% get_detail_url obj 'cms' %}
                         {% get_edit_url obj 'cms' %}
