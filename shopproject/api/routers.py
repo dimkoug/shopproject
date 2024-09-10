@@ -1,8 +1,6 @@
 from django.urls import path
 from rest_framework import routers
 
-from heroes.heroes_api.viewsets import *
-from logos.logos_api.viewsets import *
 from offers.offers_api.viewsets import *
 from orders.orders_api.viewsets import *
 from shipments.shipments_api.viewsets import *
@@ -15,8 +13,6 @@ from users.users_api.viewsets import *
 
 router = routers.DefaultRouter()
 
-router.register(r'heroes',HeroViewSet)
-router.register(r'logos',LogoViewSet)
 router.register(r'offers',OfferViewSet)
 router.register(r'orders',OrderViewSet)
 router.register(r'shipments',ShipmentViewSet)
