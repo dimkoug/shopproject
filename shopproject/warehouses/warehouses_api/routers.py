@@ -4,5 +4,5 @@ from rest_framework import routers
 from . import viewsets
 
 router = routers.DefaultRouter()
-router.register(r'warehouses', viewsets.WarehouseViewSet)
+router.register(r'', viewsets.WarehouseViewSet)
 urlpatterns = router.urls 

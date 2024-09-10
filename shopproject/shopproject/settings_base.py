@@ -98,7 +98,6 @@ INSTALLED_APPS = [
     'addresses.addresses_api',
     'orders',
     'orders.orders_api',
-    'api',
     'media',
     'media.media_api',
 ]
