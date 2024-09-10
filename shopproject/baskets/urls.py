@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 
 app_name = 'baskets'
@@ -19,4 +19,6 @@ urlpatterns = [
     path('remove_item_from_basket/<int:id>/', remove_item_from_basket,
          name='remove_item_from_basket'),
     path('clear/basket', clear_basket, name='clear-basket'),
+
+    path('api/',include('baskets.baskets_api.routers')),
 ]
