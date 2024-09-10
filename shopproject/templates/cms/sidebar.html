@@ -12,7 +12,73 @@
           View site
         </a>
       </li>
-      {% get_generate_sidebar %}
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-products" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Products
+        </a>
+        <div class="collapse" id="submenu-products">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'cms:category-list' %}" class="nav-link">Categories</a></li>
+                <li><a href="{% url 'cms:feature-list' %}" class="nav-link">Feature</a></li>
+                <li><a href="{% url 'cms:attribute-list' %}" class="nav-link">Attributes</a></li>
+                <li><a href="{% url 'cms:tag-list' %}" class="nav-link">Tags</a></li>
+                <li><a href="{% url 'cms:product-list' %}" class="nav-link">Products</a></li>
+                <li><a href="{% url 'cms:hero-list' %}" class="nav-link">Heroes</a></li>
+                <li><a href="{% url 'cms:offer-list' %}" class="nav-link">Offers</a></li>
+            </ul>
+        </div>
+    </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-media" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Media
+        </a>
+        <div class="collapse" id="submenu-media">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'cms:media-list' %}" class="nav-link">Media</a></li>
+                <li><a href="{% url 'cms:logo-list' %}" class="nav-link">Logos</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#submenu-warehouses" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+          Warehouses
+      </a>
+      <div class="collapse" id="submenu-warehouses">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="{% url 'cms:warehouse-list' %}" class="nav-link">Warehouses</a></li>
+              <li><a href="{% url 'cms:stock-list' %}" class="nav-link">Stocks</a></li>
+              <li><a href="{% url 'cms:shipment-list' %}" class="nav-link">Shipments</a></li>
+          </ul>
+      </div>
+  </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-orders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Orders
+        </a>
+        <div class="collapse" id="submenu-orders">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'cms:address-list' %}" class="nav-link">Addresses</a></li>
+                <li><a href="{% url 'cms:order-list' %}" class="nav-link">Orders</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-suppliers" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Suppliers
+        </a>
+        <div class="collapse" id="submenu-suppliers">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'cms:supplier-list' %}" class="nav-link">Suppliers</a></li>
+                <li><a href="{% url 'cms:brand-list' %}" class="nav-link">Brands</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li>
 
     </ul>
   </div>
