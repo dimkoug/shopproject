@@ -18,13 +18,15 @@
         <tr>
           <th>sort</th>
           <th>Name</th>
+          <th></th>
         </tr>
       </thead>
       <tbody class="order">
-        {% for obj in object.categories.all %}
+        {% for obj in object.categorylist %}
         <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
           <td><i class="bi bi-list"></i></td>
-          <td> <a href="{% get_url 'detail' obj 'cms' %}">{{obj.name}}</a> </td>
+          <td> {{obj.category}}</td>
+          <td>{% get_detail_url obj.category 'cms' %}</td>
         </tr>
         {% endfor %}
       </tbody>
