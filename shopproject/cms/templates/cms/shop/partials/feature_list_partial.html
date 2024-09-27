@@ -5,14 +5,17 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Feature</th>
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="order">
                 {% for obj in object_list %}
-                <tr>
-                    <td>{{obj.name}}</td>
+                <tr class='item' data-pk={{obj.pk}} data-model={% get_model obj %} data-app={% get_app obj %} >
+                    <td><i class="bi bi-list"></i></td>
+                    <td>{{obj}}</td>
+                    
                     <td>
                         {% get_detail_url obj 'cms' %}
                         {% get_edit_url obj 'cms' %}

@@ -1,5 +1,5 @@
 {% extends "cms/base.html" %}
-{% load cms %}
+{% load core %}
 
 {% block page_title %}
 {{page_title}}
@@ -10,5 +10,37 @@
 {% endblock %}
 
 {% block content %}
-{{object}}
+{% if object.categories.all %}
+<div class="row py-2">
+  <div class="col">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>sort</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody class="order">
+        {% for obj in object.categories.all %}
+        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
+          <td><i class="bi bi-list"></i></td>
+          <td> <a href="{% get_url 'detail' obj 'cms' %}">{{obj.name}}</a> </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+
+
+
 {% endblock %}
+
+
+
+
+
+
+
