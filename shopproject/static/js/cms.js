@@ -4,31 +4,46 @@
 
     $(".spinner-border").hide();
 
-    function create_sortable($el){
-      $el.sortable({
-        /*placeholder : "ui-state-highlight",*/
-        update  : function(event, ui)
-        {
-         var page_id_array = new Array();
-         var model_name = '';
-         var app_name = '';
-         $('.item').each(function(){
-          page_id_array.push({"pk":$(this).data("pk")});
-          model_name = $(this).data("model");
-          app_name = $(this).data("app");
-         });
-         $.ajax({
-          url:"/cms/model/order/",
-          method:"POST",
-          data:{"page_id_array":JSON.stringify(page_id_array),model_name:model_name,app_name:app_name},
-          success:function(data)
-          {
-           console.info(data);
-          }
-         });
-        }
-       });
-    }
+
+    function create_sortable($els) {
+      // Iterate over each element with the class 'order'
+      $els.each(function() {
+          var $el = $(this); // Get the current element
+  
+          // Make the current element sortable using jQuery UI
+          $el.sortable({
+              update: function(event, ui) {
+                  // Array to store the sorted items' primary keys
+                  var page_id_array = [];
+                  var model_name = '';
+                  var app_name = '';
+                  
+                  // Iterate through each item in the current sortable list
+                  $el.find('.item').each(function() {
+                      page_id_array.push({ "pk": $(this).data("pk") });
+                      model_name = $(this).data("model");
+                      app_name = $(this).data("app");
+                  });
+  
+                  // Send the sorted data to the server via AJAX
+                  $.ajax({
+                      url: "/cms/model/order/",
+                      method: "POST",
+                      data: {
+                          "page_id_array": JSON.stringify(page_id_array),
+                          model_name: model_name,
+                          app_name: app_name
+                      },
+                      success: function(data) {
+                          console.info(data); // Log the server's response
+                      }
+                  });
+              }
+          });
+      });
+  }
+
+
     create_sortable($('.order'))
 
     $("[id$='_date']").datepicker();

@@ -10,30 +10,76 @@
 {% endblock %}
 
 {% block content %}
-{% if object.categories.all %}
-<div class="row py-2">
-  <div class="col">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>sort</th>
-          <th>Name</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody class="order">
-        {% for obj in object.categorylist %}
-        <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
-          <td><i class="bi bi-list"></i></td>
-          <td> {{obj.category}}</td>
-          <td>{% get_detail_url obj.category 'cms' %}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<ul class="nav nav-pills mb-3" id="info-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="pills-categories-tab" data-bs-toggle="pill" data-bs-target="#pills-categories" type="button" role="tab" aria-controls="pills-categories" aria-selected="true">Categories</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-attributes-tab" data-bs-toggle="pill" data-bs-target="#pills-attributes" type="button" role="tab" aria-controls="pills-attributes" aria-selected="false">Attributes</button>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-categories" role="tabpanel" aria-labelledby="pills-categories-tab">info
+    {% if object.categorylist %}
+    <div class="row py-2">
+      <div class="col">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>sort</th>
+              <th>Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="order">
+            {% for obj in object.categorylist %}
+            <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
+              <td><i class="bi bi-list"></i></td>
+              <td> {{obj.category}}</td>
+              <td>{% get_detail_url obj.category 'cms' %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+  <div class="tab-pane fade show" id="pills-attributes" role="tabpanel" aria-labelledby="pills-attributes-tab">attributes
+    {% if object.attributes %}
+    <div class="row py-2">
+      <div class="col">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>sort</th>
+              <th>Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="order">
+            {% for obj in object.attributes.all %}
+            <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
+              <td><i class="bi bi-list"></i></td>
+              <td> {{obj|safe}}</td>
+              <td>{% get_detail_url obj 'cms' %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </div>
-{% endif %}
+
+
+
+
+
+
 
 
 
