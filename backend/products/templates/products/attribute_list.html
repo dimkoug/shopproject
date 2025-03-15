@@ -1,0 +1,17 @@
+{% extends "cms/base.html" %}
+{% load dynamic %}
+{% block content %}
+
+{% include 'core/partials/_title.html' %}
+{% include 'core/partials/_search_form.html' %}
+{% include 'core/partials/_add_button.html' %}
+{% include 'core/partials/_spinner.html' %}
+
+
+    <div class="res">
+        {% get_template_name as template_name %}
+        {% with template=template_name %}
+        {% include  template %}
+      {% endwith %}
+    </div>
+{% endblock content %}

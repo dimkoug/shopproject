@@ -8,17 +8,17 @@ Quick start
 
       git clone  https://github.com/dimkoug/shopproject.git
 
-2. Create a virtualenv::
+2. Create a virtualenv inside backend folder::
 
-    python3 -m venv virtualenv
+    python -m venv venv
 
-3. Activate virtualenv
+3. Activate venv
 
 4. Install packages from requirements.txt file
 
 5. Create settings_local.py with settings from settings_local_sample.py
 
-6. Run `python manage.py makemigrations addresses baskets brands heroes logos offers orders profiles shipments shop stocks suppliers tags users warehouses,media`
+6. Run `python manage.py makemigrations addresses baskets brands heroes logos media offers orders profiles products tags users`
 
 7. Run `python manage.py migrate`
 

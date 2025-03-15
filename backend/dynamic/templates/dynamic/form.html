@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load dynamic %}
+
+{% block content %}
+
+    {% get_title %}
+    
+    <div class="d-flex flex-row py-2">
+      <div class="col">
+        <form method="post" novalidate>{% csrf_token %}
+          {% include 'dynamic/form_item.html' %}
+          {% get_form_buttons form %}
+        </form>
+      </div>
+    </div>
+
+
+{% endblock %}
+

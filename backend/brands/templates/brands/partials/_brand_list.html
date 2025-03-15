@@ -1,0 +1,30 @@
+{% load core %}
+<div class="d-flex flex-row">
+    <div class="col">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in object_list %}
+                <tr>
+                    <td>{{obj.name}}</td>
+                    <td>
+                        <a href="{% get_view_url  obj %}"><i class="bi bi-info-circle-fill text-success m-2" style="font-size:1.5rem;"></i></a>
+                        <a href="{% get_change_url  obj %}"><i class="bi bi-pencil-square text-warning m-2" style="font-size:1.5rem;"></i></a>
+                        <a href="{% get_delete_url obj  %}" class="delete-tr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="d-flex flex-row">
+    <div class="col">
+      {% include 'core/partials/_pagination.html' %}
+    </div>
+  </div>

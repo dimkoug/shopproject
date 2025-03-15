@@ -1,0 +1,60 @@
+import asyncio
+from django.contrib.auth.base_user import BaseUserManager
+
+
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    async def acreate_user(self, email, password=None, **extra_fields):
+        """Creates and saves a User with the given email and password asynchronously."""
+        if not email:
+            raise ValueError('The Email field must be set')
+        
+        email = self.normalize_email(email)
+        
+        # Run the blocking create_user method in a separate thread
+        user = await asyncio.to_thread(
+            self.create_user,  # The method to run in a separate thread
+            email=email,
+            password=password,
+            **extra_fields
+        )
+        
+        return user
+
+    async def acreate_superuser(self, email, password=None, **extra_fields):
+        """Creates and saves a superuser with the given email and password asynchronously."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return await self.acreate_user(email, password, **extra_fields)
+
+    def _create_user(self, email, password, **extra_fields):
+        """
+        Creates and saves a User with the given email and password.
+        """
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
+
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)

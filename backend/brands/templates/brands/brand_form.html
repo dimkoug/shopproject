@@ -1,0 +1,70 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block page_title %}
+{{view.title}}
+{% endblock page_title %}
+
+{% block section_title %}
+  {{view.title}}
+{% endblock %}
+
+{% block content %}
+<form method="post"  enctype='multipart/form-data' novalidate>{% csrf_token %}
+      {{form.errors}}
+      <div class="row">
+        <div class="col-4">
+          <div class="form-group">
+            
+            {{ form.name.label_tag }}
+            {{form.name}}
+            {% if form.name.errors %}
+            <div class="invalid-feedback">
+              {{form.name.errors}}
+            </div>
+            {%endif%}
+            
+            
+            {% if form.name.help_text %}
+              <small class="form-text text-muted">{{ form.name.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            {{ form.image.errors }}
+            {{ form.image.label_tag }}
+            {{form.image}}
+            {% if form.image.help_text %}
+              <small class="form-text text-muted">{{ form.image.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            {{ form.is_published.errors }}
+            {{ form.is_published.label_tag }}
+            {{form.is_published}}
+            {% if form.is_published.help_text %}
+              <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          {{ form.suppliers.errors }}
+          {{ form.suppliers.label_tag }}
+          {{form.suppliers}}
+          {% if form.suppliers.help_text %}
+            <small class="form-text text-muted">{{ form.suppliers.help_text }}</small>
+          {% endif %}
+        </div>
+
+      </div>
+      {% include 'core/partials/_form_buttons.html' with form=form %}
+  
+</form>
+{% endblock %}
+
+

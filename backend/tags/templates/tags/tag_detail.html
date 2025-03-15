@@ -1,0 +1,14 @@
+{% extends "cms/base.html" %}
+{% load core %}
+{% block page_title %}
+{{view.title}}
+{% endblock page_title %}
+
+{% block section_title %}
+  {{view.title}}
+{% endblock %}
+
+
+{% block content %}
+{{object}}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load dynamic %}
+
+
+{% block content %}
+			{% get_title %}
+			<form method="post">{% csrf_token %}
+					<p>Are you sure you want to delete "{{ object }}"?</p>
+					<input type="submit" value="Confirm" class="btn btn-danger">
+					<a href="{{view.list_url}}" class="btn btn-light">Back</a>
+					
+			</form>
+{% endblock content %}

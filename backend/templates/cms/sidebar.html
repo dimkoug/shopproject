@@ -1,0 +1,93 @@
+{% load core %}
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link {% is_active request 'manage' %}" aria-current="page" href="{% url 'manage' %}">
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% is_active request 'index' %}" aria-current="page" href="{% url 'index' %}" target="_blank" rel="noopener noreferrer">
+          View site
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-addresses" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Addresses
+        </a>
+        <div class="collapse" id="submenu-addresses">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'addresses:address_list' %}" class="nav-link">Addresses</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li><!--brands-->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-brands" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Brands
+        </a>
+        <div class="collapse" id="submenu-brands">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'brands:brand_list' %}" class="nav-link">Brands</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li><!--brands-->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#submenu-tags" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+          Tags
+      </a>
+      <div class="collapse" id="submenu-tags">
+          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="{% url 'tags:tag_list' %}" class="nav-link">Tags</a></li>
+              <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+          </ul>
+      </div>
+  </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-products" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Products
+        </a>
+        <div class="collapse" id="submenu-products">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'products:category_list' %}" class="nav-link">Categories</a></li>
+                <li><a href="{% url 'products:feature_list' %}" class="nav-link">Feature</a></li>
+                <li><a href="{% url 'products:attribute_list' %}" class="nav-link">Attributes</a></li>
+                <li><a href="{% url 'products:product_list' %}" class="nav-link">Products</a></li>
+                <li><a href="{% url 'heroes:hero_list' %}" class="nav-link">Heroes</a></li>
+                <li><a href="{% url 'offers:offer_list' %}" class="nav-link">Offers</a></li>
+            </ul>
+        </div>
+    </li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-media" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Media
+        </a>
+        <div class="collapse" id="submenu-media">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'media:media_list' %}" class="nav-link">Media</a></li>
+                <li><a href="{% url 'logos:logo_list' %}" class="nav-link">Logos</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#submenu-orders" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="submenu1">
+            Orders
+        </a>
+        <div class="collapse" id="submenu-orders">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="{% url 'addresses:address_list' %}" class="nav-link">Addresses</a></li>
+                <li><a href="{% url 'orders:order_list' %}" class="nav-link">Orders</a></li>
+                <li><a href="#" class="nav-link">Submenu Item 3</a></li>
+            </ul>
+        </div>
+    </li>
+
+
+
+    </ul>
+  </div>
+</nav>

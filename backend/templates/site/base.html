@@ -1,0 +1,200 @@
+{% load static %}
+{% load cache %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block page_title %}{% endblock %}</title>
+    <link href="/static/lib/bootstrap-5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/lib/bootstrap-icons-1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/lib/swiper11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="/static/lib/jquery-ui-1.14.0/jquery-ui.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <script src="/static/js/jquery-3.7.1.min.js"></script>
+    <script src="/static/lib/jquery-ui-1.14.0/jquery-ui.js"></script>
+    <script src="{% static 'js/django_ajax.js' %}"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/lib/bootstrap-5.3.3/js/bootstrap.min.js"></script>
+<script src="/static/lib/swiper11/swiper-bundle.min.js"></script>
+    <script src="{% static 'js/site.js' %}"></script>
+    <style media="screen">
+      .ui-autocomplete {
+          max-height: 500px;
+          overflow-y: auto;
+          /* prevent horizontal scrollbar */
+          overflow-x: hidden;
+          /* add padding to account for vertical scrollbar */
+          padding-right: 20px;
+      }
+      .ui-widget{
+        max-width:100%;
+        width:100%;
+      }
+      </style>
+    {% block head %}{% endblock %}
+  </head>
+  <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}" {% block body_attrs %}{% endblock %}>
+    {% include 'site/navbar.html' %}
+    {% cache 500 categories categories %}
+    
+    <div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
+      <div class="row">
+          {% for category in categories %}
+              <div class="col-md-4">
+                  <!-- Display the current category -->
+                  <div>{{ category.name }}</div>
+  
+                  <!-- Check if the current category has children -->
+                  {% if category.second_level %}
+
+                      <div class="row">
+                          {% for child in category.second_level %}
+                             <div class="col-md-6">
+                                  <div>{{ child.target.name }}</div>
+                                  {% if child.target.third_level %}
+                                    {% for third in child.target.third_level  %}
+                                      <div><a href="{% url 'products:catalog' %}?category={{third.target.id}}">{{ third.target.name }}</a></div>
+                                    {% endfor %}
+                                  {% endif %}
+  
+             
+                              </div>
+                          {% endfor %}
+                      </div>
+                  {% endif %}
+              </div>
+  
+              {% if forloop.counter|divisibleby:3 and not forloop.last %}
+                  </div><div class="row">
+              {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+    
+    
+    
+    <!--<div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        {% for category in categories %}
+        {% if category.second_level %}
+        <div class="col-3 mb-2 g-0">
+          <div class="level-1 fs-6">{{category}}</div>
+          <hr>
+           {% for child in category.second_level %}
+            <div class="col-12 my-2 g-0">
+              <div class="level-2 fs-6" id="category-{{child.target.pk}}">{{child.target}}</div>
+            </div>
+            {% if child.target.third_level %}
+              <div class="row mb-2 g-0" id="third-{{child.target.pk}}">
+                {% for ch in child.target.third_level %}
+                <div class="col-12 my-0 g-0 fs-6" > <a href="{% url 'shop:catalog' %}?category={{ch.target.id}}" class="nav-category link">{{ch.target.name}}</a>
+                </div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            {% endfor %}
+         </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>-->
+    {% endcache %}
+    {% cache 500 brands brands %}
+    <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        {% for brand in brands %}
+        <div class="col-2 g-2"><a href="{% url 'products:catalog' %}?brand={{brand.id}}">
+          {% if brand.image %}
+            <img src="{{brand.image.url}}" alt="" class="img-fluid"/>
+          {% else %}
+          {{brand.name}}
+          {% endif %}
+        </a></div>
+      {% endfor %}
+        
+      </div>
+    </div>
+    {% endcache %}
+    <div class="container basket-container shadow p-3 mb-5 bg-white rounded">
+      <div class="row py-2">
+        <div class="col">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row py-2 basket_res"></div>
+    </div>
+    
+
+ 
+
+
+    
+    
+ 
+    
+    
+    
+    <main class="container-fluid">
+        <div class="row py-2">
+          <div class="col-12">
+              {% include 'alerts.html' %}
+          </div>
+        </div>
+        <div class="row py-2">
+          <div class="col">
+            <div class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    </main>
+    {% block content %}{% endblock %}
+    {% block body_scripts %}{% endblock %}
+
+    <script>
+      'use strict';
+      (function(w,d,$){
+        $(d).ready(function(){
+          $( "#search" ).autocomplete({
+            open: function() {
+              $("ul.ui-menu").width( $(this).innerWidth() );
+              
+            },
+            source: function(request,response){
+              $.ajax( {
+                url: "/products/search/",
+                dataType: "json",
+                data: {
+                  term: request.term
+                },
+                success: function( data ) {
+                  response( data.data );
+              },
+            });
+          },
+          minLength: 3,
+          select: function( event, ui ) {
+            window.location.href = ui.item.value;
+          }
+        }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+          return $( "<li>" )
+            .append( "<div><img src="+ item.image + " width='100px'/>" + item.label + "</div>" )
+            .appendTo( ul );
+        }; 
+      }) /* document ready */
+
+      })(window,document,jQuery)
+
+
+    </script>
+  </body>
+</html>

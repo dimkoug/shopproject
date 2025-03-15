@@ -1,0 +1,18 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block page_title %}
+{{view.title}}
+{% endblock page_title %}
+
+{% block section_title %}
+  {{view.title}}
+{% endblock %}
+
+{% block content %}
+{% include 'core/partials/_title.html' %}
+<form method="post">{% csrf_token %}
+    {% include 'core/partials/_form.html' %}
+  {% include 'core/partials/_form_buttons.html' with form=form %}
+</form>
+{% endblock %}

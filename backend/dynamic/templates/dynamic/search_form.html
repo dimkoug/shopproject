@@ -1,0 +1,21 @@
+<div class="d-flex flex-row m-2">
+	<div class="col">
+			<form action="" method="get" id="paginationForm">
+					<label for="id_search" class="form-label">Search</label>
+					<input type="text" name="search" value="{{search}}" id="id_search" class="form-control" />
+					<label for="page_size" class="form-label">Items per page:</label>
+					<select name="page_size" id="page_size" onchange="document.getElementById('paginationForm').submit();" class="form-control">
+							<option value="5" {% if request.GET.page_size == "5" %}selected{% endif %}>5</option>
+							<option value="10" {% if request.GET.page_size == "10" %}selected{% endif %}>10</option>
+							<option value="20" {% if request.GET.page_size == "20" %}selected{% endif %}>20</option>
+							<option value="50" {% if request.GET.page_size == "50" %}selected{% endif %}>50</option>
+					</select>
+					<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+							<button type="submit" class="btn btn-primary py-2 mt-2">Search</button>
+							{% if search != '' and search %}
+									<a href="{{view.list_url}}" class="btn btn-light py-2 mt-2">Remove filters</a>
+							{% endif %}
+					</div>
+			</form>
+	</div>
+</div>

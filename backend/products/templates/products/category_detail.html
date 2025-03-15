@@ -1,0 +1,113 @@
+{% extends "cms/base.html" %}
+{% load core %}
+
+{% block page_title %}
+{{view.title}}
+{% endblock page_title %}
+
+{% block section_title %}
+  {{view.title}}
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex flex-row">
+      <div class="col">
+        <h2>{{object}}</h2>
+      </div>
+    </div>
+
+
+    <div class="d-flex flex-row">
+      <div class="col">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Children</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Features</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            {% if object.children.all %}
+            <div class="row py-2">
+              <div class="col">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>sort</th>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                  <tbody class="order">
+                    {% for obj in object.children.all %}
+                    <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
+                      <td><i class="bi bi-list"></i></td>
+                      <td> <a href="{% get_view_url  obj.target  %}">{{obj.target.name}}</a> </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endif %}
+
+
+          </div>
+          <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            {% if object.featurecategories.all %}
+            <div class="row py-2">
+              <div class="col">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>sort</th>
+                      <th>Name</th>
+                    </tr>
+                  </thead>
+                  <tbody class="order">
+                    {% for obj in object.featurecategories.all %}
+                    <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
+                      <td><i class="bi bi-list"></i></td>
+                      <td>{{obj.feature.name}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {% endif %}
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div> <!--card body-->
+
+</div> <!--card-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
