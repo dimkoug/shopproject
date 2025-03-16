@@ -12,51 +12,77 @@ from products.models import (
 from baskets.models import Basket
 from heroes.models import Hero,HeroItem
 
+
 def get_context_data(request):
-    third_categories = Product.objects.filter(price__gt=0, is_published=True).values_list('category_id',flat=True).distinct()
-    second_categories = Category.objects.prefetch_related('children').filter(
-        children__in=third_categories).values_list('id',flat=True).distinct()
-    first_categories = Category.objects.prefetch_related('children').filter(
-        children__in=second_categories).values_list('id',flat=True).distinct()
+    # Fetch third-level categories (leaf categories with products)
+    third_categories = set(Product.objects.filter(
+        price__gt=0, is_published=True
+    ).values_list('category_id', flat=True))
+
+    # Fetch second-level categories (parents of third-level categories)
+    second_categories = set(Category.objects.filter(
+        children__id__in=third_categories
+    ).values_list('id', flat=True))
+
+    # Fetch first-level categories (parents of second-level categories)
+    first_categories = set(Category.objects.filter(
+        children__id__in=second_categories
+    ).values_list('id', flat=True))
+
+    # Fetch heroes with prefetching
     heroes = Hero.objects.prefetch_related(
-        Prefetch('heroitems',
-                 queryset=HeroItem.objects.select_related(
-                    'product', 'hero'), to_attr='item_list'
-                 )
-        ).filter(is_published=True,heroitems__isnull=False)
+        Prefetch(
+            'heroitems',
+            queryset=HeroItem.objects.select_related('product', 'hero'),
+            to_attr='item_list'
+        )
+    ).filter(is_published=True, heroitems__isnull=False)
 
-    request.session['shopping_cart_id'] = str(uuid.uuid4())
+    # Ensure session key exists
+    if not request.session.session_key:
+        request.session.save()
 
+    # Fetch basket count efficiently
+    basket_count = Basket.objects.filter(
+        session=request.session.session_key
+    ).count() if request.session.session_key else 0
 
-    basket_count = Basket.objects.select_related('session').filter(
-        session=request.session.session_key).count()
+    # Optimize category prefetching
+    second_level_qs = ChildCategory.objects.filter(
+        target_id__in=second_categories
+    ).select_related('source', 'target').order_by('order')
 
+    third_level_qs = ChildCategory.objects.filter(
+        target_id__in=third_categories
+    ).select_related('source', 'target').order_by('order')
 
-
-    p = Prefetch(
+    second_level_prefetch = Prefetch(
         'children',
-        queryset=ChildCategory.objects.select_related(
-                'source', 'target').prefetch_related(
-                    Prefetch(
-                        'target__children',
-                        queryset=ChildCategory.objects.select_related(
-                            'source', 'target').filter(
-                             target_id__in=third_categories).order_by('order'),
-                        to_attr='third_level'
-                    )
-                ).filter(target_id__in=second_categories).order_by('order'),
+        queryset=second_level_qs.prefetch_related(
+            Prefetch('target__children', queryset=third_level_qs, to_attr='third_level')
+        ),
         to_attr='second_level'
     )
 
+    # Fetch all categories with prefetching
+    categories = Category.objects.prefetch_related(second_level_prefetch).filter(
+        id__in=first_categories, is_published=True
+    ).order_by('order')
 
-    categories = Category.objects.prefetch_related(p).filter(
-        id__in=first_categories, is_published=True).order_by('order').distinct()
+    # Fetch published tags & brands
+    tags = Tag.objects.filter(is_published=True)
     
+    brands = Brand.objects.prefetch_related('products').filter(
+        is_published=True,
+        products__price__gt=0,
+        products__is_published=True
+    ).distinct().order_by('name')
 
+    # Return optimized context data
     return {
         'categories': categories,
-        'tags': Tag.objects.filter(is_published=True),
-        'brands': Brand.objects.prefetch_related('products').filter(is_published=True,products__price__gt=0,products__is_published=True).order_by('name').distinct(),
+        'tags': tags,
+        'brands': brands,
         'donottrack': request.META.get('HTTP_DNT') == '1',
         'basket_count': basket_count,
         'heroes': heroes,

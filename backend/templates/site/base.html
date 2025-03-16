@@ -76,31 +76,7 @@
     
     
     
-    <!--<div class="container mega-menu-container-1 shadow p-3 mb-5 bg-white rounded">
-      <div class="row py-2">
-        {% for category in categories %}
-        {% if category.second_level %}
-        <div class="col-3 mb-2 g-0">
-          <div class="level-1 fs-6">{{category}}</div>
-          <hr>
-           {% for child in category.second_level %}
-            <div class="col-12 my-2 g-0">
-              <div class="level-2 fs-6" id="category-{{child.target.pk}}">{{child.target}}</div>
-            </div>
-            {% if child.target.third_level %}
-              <div class="row mb-2 g-0" id="third-{{child.target.pk}}">
-                {% for ch in child.target.third_level %}
-                <div class="col-12 my-0 g-0 fs-6" > <a href="{% url 'shop:catalog' %}?category={{ch.target.id}}" class="nav-category link">{{ch.target.name}}</a>
-                </div>
-                {% endfor %}
-              </div>
-              {% endif %}
-            {% endfor %}
-         </div>
-        {% endif %}
-        {% endfor %}
-      </div>
-    </div>-->
+
     {% endcache %}
     {% cache 500 brands brands %}
     <div class="container mega-menu-container-2 shadow p-3 mb-5 bg-white rounded">

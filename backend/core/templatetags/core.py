@@ -1,5 +1,6 @@
 import datetime
 from decimal import Decimal
+import locale
 from django import template
 from django.db import models
 from django.urls import reverse,reverse_lazy, NoReverseMatch, resolve
@@ -9,7 +10,7 @@ from django.db.models.fields.files import ImageFieldFile, FileField
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 register = template.Library()
-
+locale.setlocale(locale.LC_ALL, 'el_GR.UTF-8')
 
 
 @register.filter(name='has_group')
@@ -22,6 +23,12 @@ def has_group(user_groups, group_name):
     """
     return user_groups.filter(name__icontains=group_name).exists()
 
+
+@register.simple_tag
+def format_currency(value):
+    return  locale.currency(abs(value), symbol=True,
+                            grouping=True,
+                            international=False)
 
 
 

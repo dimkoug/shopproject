@@ -118,12 +118,12 @@
                             <div class="">
                                 {% for tag in object.tags.all %}
                                     <a class="tag-link"
-                                       href="{% url 'shop:catalog' %}?tag={{ tag.id }}">{{ tag.name }}</a>
+                                       href="{% url 'products:catalog' %}?tag={{ tag.id }}">{{ tag.name }}</a>
                                 {% endfor %}
                             </div>
                         {% endif %}
 
-                        <a href="{% url 'shop:catalog' %}?brand={{ object.brand.pk }}" class="tag-link">
+                        <a href="{% url 'products:catalog' %}?brand={{ object.brand.pk }}" class="tag-link">
                             {% if object.brand.image %}
                                 <img src="{{ object.brand.image.url }}" alt="" class="img-fluid">
                             {% else %}
@@ -134,7 +134,7 @@
 
                         <div class="d-flex justify-content-end">
                             <a class="tag-link"
-                               href="{% url 'shop:catalog' %}?category={{ object.category.id }}">{{ object.category.name }}</a>
+                               href="{% url 'products:catalog' %}?category={{ object.category.id }}">{{ object.category.name }}</a>
                             {% if object.pdf_guide %}
                                 <a href="{{ object.pdf_guide.url }}" class="justify-content-end"><i
                                         class="bi bi-file-pdf-fill"
@@ -225,7 +225,7 @@
                                             {% endif %}
                                             <div class="card-body">
                                                 <h6 class="card-title">{{ item }}</h6>
-                                                <a href="{% url 'shop:catalog-product-detail' item.pk %}"
+                                                <a href="{% url 'products:catalog-product-detail' item.pk %}"
                                                    class="btn btn-primary">Info</a>
                                             </div>
                                         </div>

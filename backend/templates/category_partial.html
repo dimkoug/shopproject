@@ -11,7 +11,7 @@
             </div>
         {% endif %}
         {% else %}
-        <div><a href="{% url 'shop:catalog' %}?category={{category.id}}">{{ category.name }}</a></div>
+        <div><a href="{% url 'products:catalog' %}?category={{category.id}}">{{ category.name }}</a></div>
         {% endif %}
     </div>
     {% endif %}

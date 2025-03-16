@@ -432,7 +432,7 @@ class CatalogListView(PaginationMixin, ListView):
         features = [feature for feature in self.request.GET.keys()
                     if feature.startswith('feature')]
         selected_features = [f.split('-')[1] for f in features]
-        context['url'] = reverse_lazy("shop:catalog")
+        context['url'] = reverse_lazy("products:catalog")
         context['selected_features'] = selected_features
         for feature in features:
             attrs.append(self.request.GET.getlist(feature))
@@ -636,7 +636,7 @@ def search_items(request):
         for post in posts:
             print(post)
             d = {}
-            d['value'] = reverse("shop:catalog-product-detail", kwargs={"pk":post['id']})
+            d['value'] = reverse("products:catalog-product-detail", kwargs={"pk":post['id']})
             d['label'] = post['name'],
             d['image'] = request.build_absolute_uri('/media/'+ post['image'])
             data.append(d)

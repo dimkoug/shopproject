@@ -41,7 +41,7 @@
                                     {% for attr in feature.attrs %}
                                         <div class="ck-button">
                                             <label  for="attr_{{attr.id}}">
-                                            {% is_selected attr.id attrs_checked as checked %}
+                                            {% exists_in_items attr.id attrs_checked as checked %}
                                             <input type="checkbox" name="feature-{{feature.pk}}" value="{{attr.id}}" id="attr_{{attr.id}}" {% if checked %} checked {%endif%}   />
                                                 <span>{{attr|safe}}  - {{attr.product_count}}</span>
                                             </label>
@@ -59,9 +59,9 @@
                         {% endif %}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             {% if category %}
-                            <a href="{% url 'shop:catalog' %}?category={{ category.id }}" class="btn btn-light">Reset</a>
+                            <a href="{% url 'products:catalog' %}?category={{ category.id }}" class="btn btn-light">Reset</a>
                             {% else %}
-                            <a href="{% url 'shop:catalog' %}?brand={{ brand.id }}" class="btn btn-light">Reset</a>
+                            <a href="{% url 'products:catalog' %}?brand={{ brand.id }}" class="btn btn-light">Reset</a>
                             {% endif %}
                           <button type="submit" class="btn btn-primary">Search</button>
                         </div>
