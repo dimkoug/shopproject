@@ -441,6 +441,8 @@ class CatalogListView(PaginationMixin, ListView):
                 attrs_checked.append(item)
         category = self.request.GET.get('category')
         brand = self.request.GET.get('brand')
+        lowest_price = self.get_queryset().aggregate(Min('price'))['price__min']
+        max_price = self.get_queryset().aggregate(Max('price'))['price__max']
         if category:
             category_obj = Category.objects.get(id=category)
             context['category'] = category_obj
@@ -629,7 +631,7 @@ def search_items(request):
             q |= Q(category__name__icontains=item)
             q |= Q(brand__name__icontains=item)
             q |= Q(name__icontains=item)
-            q |= Q(attributes__name__icontains=item)
+            q |= Q(attributes__value__icontains=item)
             q |= Q(attributes__feature__name__icontains=item)
         posts = posts.filter(q).values('id', 'name','image').distinct()
 
