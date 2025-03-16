@@ -153,8 +153,8 @@ class Product(Timestamped,  Ordered, Published):
     price_str = models.CharField(max_length=255, null=True, blank=True)
     price = models.DecimalField(
         max_digits=18, decimal_places=2, null=True, blank=True)
-    subtitle = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    subtitle = models.CharField(max_length=255,null=True,blank=True)
+    description = models.TextField(null=True,blank=True)
 
     objects = models.Manager()
     active_products = ActiveProductManager()

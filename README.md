@@ -18,7 +18,7 @@ Quick start
 
 5. Create settings_local.py with settings from settings_local_sample.py
 
-6. Run `python manage.py makemigrations addresses baskets brands heroes logos media offers orders profiles products tags users`
+6. Run `python manage.py makemigrations addresses baskets brands heroes logos media offers orders profiles products tags users sites auth`
 
 7. Run `python manage.py migrate`
 
