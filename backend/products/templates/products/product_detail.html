@@ -1,15 +1,16 @@
 {% extends "cms/base.html" %}
-{% load cms %}
-
-{% block page_title %}
-{{page_title}}
-{% endblock page_title %}
-
-
-{% block section_title %}
-  {{page_title}}
-{% endblock %}
+{% load  dynamic %}
 
 {% block content %}
-{{object}}
+    <div class="d-flex flex-row py-2">
+      <div class="col">
+       <h2>{{object}}</h2> 
+      </div>
+    </div>
+    <div class="row py-2">
+      <div class="col">
+        {{object.content|safe}}
+      </div>
+    </div>
+
 {% endblock %}

@@ -1,91 +1,36 @@
 {% extends "cms/base.html" %}
-{% load core %}
-
-{% block page_title %}
-{{page_title}}
-{% endblock page_title %}
-
-{% block section_title %}
-  {{page_title}}
-{% endblock %}
+{% load dynamic %}
 
 {% block content %}
-<form method="post" class="shadow rounded" enctype='multipart/form-data' novalidate>{% csrf_token %}
-  <div class="card">
-    <div class="card-body">
-      {{form.errors}}
-      <div class="row">
-        <div class="col-9">
-          <div class="form-group">
-            
-            {{ form.name.label_tag }}
-            {{form.name}}
-            {% if form.name.errors %}
-            <div class="invalid-feedback">
-              {{form.name.errors}}
-            </div>
-            {%endif%}
-            {% if form.name.help_text %}
-              <small class="form-text text-muted">{{ form.name.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-2">
-          <div class="form-group">
-            {{ form.is_published.errors }}
-            {{ form.is_published.label_tag }}
-            {{form.is_published}}
-            {% if form.is_published.help_text %}
-              <small class="form-text text-muted">{{ form.is_published.help_text }}</small>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group">
-          {{ form.feature.errors }}
-          {{ form.feature.label_tag }}
-          {{form.feature}}
-          {% if form.feature.help_text %}
-            <small class="form-text text-muted">{{ form.feature.help_text }}</small>
-          {% endif %}
-        </div>
 
+    {% get_title %}
+    
+    <div class="d-flex flex-row py-2">
+      <div class="col">
+        <form method="post" novalidate>{% csrf_token %}
+          {% include 'dynamic/form_item.html' %}
+          <div class="d-flex flex-row py-2">
+            <div class="col">
+              {% if view.list_url %}
+                  <a href="{{view.list_url}}" class="btn btn-light">Back</a>
+              {% endif %}
+              
+                  {% if form.instance.pk %}
+                <a href="{% url 'products:attribute-delete' form.instance.pk %}" class="btn btn-danger">Delete</a>
+              {% endif %}
+            </div>
+            <div class="col">
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <input type="submit" class="btn btn-light me-md-2" value="{% if form.instance.pk %}Update {% else %} Create {% endif %}">
+                <input type="submit" class="btn btn-light" name="new" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Add New">
+                <input type="submit" class="btn btn-light" name="continue" value="{% if form.instance.pk %} Update {% else  %}Save {% endif %} and Continue editing">
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
-      {% get_form_buttons form 'cms' %}
     </div>
-  </div>
-  
-</form>
+
+
 {% endblock %}
 
-
-
-{% block scripts %}
-<script>
-  'use strict';
-  (function(w,d,$){
-
-    $(d).ready(function(){
-      $("select[name*='feature']" ).select2({
-        ajax: {
-          url: '/sb_data/',
-          data: function (params) {
-            var query = {
-              search: params.term,
-              app:"shop",
-              model: "feature",
-              type: 'public'
-            }
-            // Query parameters will be ?search=[term]&type=public
-            return query;
-          }
-        }
-      });
-    }) /* document ready */
-
-
-
-  })(window,document,jQuery)
-</script>
-{% endblock scripts %}

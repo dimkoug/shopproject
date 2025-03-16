@@ -1,79 +1,154 @@
 {% extends "cms/base.html" %}
-{% load core %}
-
-{% block page_title %}
-{{page_title}}
-{% endblock page_title %}
-
-{% block section_title %}
-  {{page_title}}
-{% endblock %}
+{% load  dynamic %}
 
 {% block content %}
-<ul class="nav nav-pills mb-3" id="info-tab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="pills-categories-tab" data-bs-toggle="pill" data-bs-target="#pills-categories" type="button" role="tab" aria-controls="pills-categories" aria-selected="true">Categories</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="pills-attributes-tab" data-bs-toggle="pill" data-bs-target="#pills-attributes" type="button" role="tab" aria-controls="pills-attributes" aria-selected="false">Attributes</button>
-  </li>
-</ul>
-<div class="tab-content" id="pills-tabContent">
-  <div class="tab-pane fade show active" id="pills-categories" role="tabpanel" aria-labelledby="pills-categories-tab">info
-    {% if object.categorylist %}
-    <div class="row py-2">
+
+
+
+
+
+
+
+
+
+
+    <div class="d-flex flex-row py-2">
       <div class="col">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>sort</th>
-              <th>Name</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody class="order">
-            {% for obj in object.categorylist %}
-            <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
-              <td><i class="bi bi-list"></i></td>
-              <td> {{obj.category}}</td>
-              <td>{% get_detail_url obj.category 'cms' %}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <h2>{{object}}</h2>
       </div>
     </div>
-    {% endif %}
 
-  </div>
-  <div class="tab-pane fade show" id="pills-attributes" role="tabpanel" aria-labelledby="pills-attributes-tab">attributes
-    {% if object.attributes %}
-    <div class="row py-2">
+    <div class="d-flex flex-row">
       <div class="col">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>sort</th>
-              <th>Name</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody class="order">
-            {% for obj in object.attributes.all %}
-            <tr class="item" data-pk={{obj.pk}} data-model='{% get_model obj %}' data-app='{% get_app obj %}' >
-              <td><i class="bi bi-list"></i></td>
-              <td> {{obj|safe}}</td>
-              <td>{% get_detail_url obj 'cms' %}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+          {% if object.featurecategories.all %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Categories</button>
+          </li>
+          {% endif %}
+          {% if object.products.all %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Products</button>
+          </li>
+          {% endif %}
+          {% if object.attributes.all %}
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Attributes</button>
+          </li>
+          {% endif %}
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+
+            {% if object.featurecategories.all %}
+            <div class="d-flex flex-row">
+              <div class="col">
+                <table class="table table-stripped">
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for obj in object.featurecategories.all %}
+                    <tr>
+                      <td><a href="{% url 'products:category-view' obj.category.id %}">{{obj.category}}</a></td>
+                      <td>
+          
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {% endif %}
+            
+
+
+
+
+          </div><!--categories-->
+          <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+
+
+            {% if object.products.all %}
+            <div class="d-flex flex-row">
+              <div class="col">
+                <table class="table table-stripped" id='myTable'>
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Brand</th>
+                      <th>Name</th>
+                      <th>Hero</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for obj in object.products.all %}
+                    <tr>
+                      <td><a href="{% url 'products:category-view' obj.category.id %}">{{obj.category}}</a></td>
+                      <td><a href="{% url 'brands:brand-view' obj.brand.id%}">{{obj.brand}}</a></td>
+                      <td>{{obj}}</td>
+                      <td>
+                        {% if obj.image %}
+                          <img src="{{obj.image.url}}" alt="" class="img-thumbnail" style="width:6rem;">
+                        {% endif %}
+        
+                      </td>
+                      <td>
+                    
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {% endif %}
+
+
+          </div> <!--products-->
+          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+              <a href="{% url 'products:add-feature-attribute' object.id %}">Add Attribute</a>
+
+            {% if object.attributes.all %}
+            <div class="d-flex flex-row">
+              <div class="col">
+                <table class="table table-stripped" id='myTable'>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for obj in object.attributes.all %}
+                    <tr>
+                      <td>{{obj.value|safe}}</td>
+                      <td>
+                    
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {% endif %}
+
+
+          </div> <!--attributes-->
+
+        </div>
+
+
       </div>
+
+
     </div>
-    {% endif %}
-
-  </div>
-</div>
 
 
 
@@ -83,12 +158,28 @@
 
 
 
+
+
+
+ 
 
 {% endblock %}
 
+{% block scripts %}
+
+<script>
+  'use strict';
+  (function(w,d,$){
+    $(d).ready(function(){
+      let table = new DataTable('#myTable');
 
 
+    })/*document ready */
 
 
+  })(window,document,jQuery)
+
+</script>
 
 
+{% endblock scripts %}

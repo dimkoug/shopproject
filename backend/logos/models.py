@@ -11,7 +11,7 @@ class Logo(Timestamped, Ordered, Published):
     
     image = models.ImageField(upload_to='logos/',
                               storage=OverwriteStorage(), max_length=500,null=True,blank=True)
-    image_url = models.URLField(max_length=2048, null=True,blank=True)
+    url = models.URLField(max_length=2048, null=True,blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
 
     class Meta:

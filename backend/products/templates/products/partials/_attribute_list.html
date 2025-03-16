@@ -1,34 +1,32 @@
 {% load core %}
-
-<div class="d-flex flex-row">
+<div class="d-flex flex-row py-2">
     <div class="col">
-        <table class="table table-bordered">
+          <table class="table table-stripped">
             <thead>
-                <tr>
-                    <th>Feature</th>
-                    <th>Attribute</th>
-                    <th></th>
-                </tr>
+              <tr>
+                <th></th>
+                <th>Name</th>
+                <th></th>
+              </tr>
             </thead>
-            <tbody>
-                {% for obj in object_list %}
-                <tr>
-                    <td>{{obj.feature}}</td>
-                    <td>{{obj|safe}}</td>
-                    <td>
-                        {% get_detail_url obj 'cms' %}
-                        {% get_edit_url obj 'cms' %}
-                        {% get_delete_url obj 'cms' %}
-
-                    </td>
-                </tr>
-                {% endfor %}
+            <tbody class="order">
+              {% for obj in object_list %}
+              <tr class='item' data-pk={{obj.pk}} data-model={% get_model obj %} data-app={% get_app obj %} >
+                <td><i class="bi bi-list"></i></td>
+                <td><a href="{{obj.get_view_url}}">{{obj}}</a></td>
+                <td>
+                    <a href="{% get_view_url  obj %}"><i class="bi bi-info-circle-fill text-success m-2" style="font-size:1.5rem;"></i></a>
+                    <a href="{% get_change_url  obj %}"><i class="bi bi-pencil-square text-warning m-2" style="font-size:1.5rem;"></i></a>
+                    <a href="{% get_delete_url obj  %}" class="delete-tr"><i class="bi bi-x text-danger" style="font-size:1.5rem;"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
+          </table>
     </div>
-</div>
-<div class="d-flex flex-row">
+  </div>
+  <div class="d-flex flex-row">
     <div class="col">
-      {% include 'core/pagination.html' %}
+      {% include 'core/partials/_pagination.html' %}
     </div>
   </div>

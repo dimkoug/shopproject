@@ -5,7 +5,7 @@
   <hr>
   <div class="item">
   {% for tag in tags %}
-      <a class="tag-link" href="{% url 'shop:catalog' %}?tag={{tag.id}}">{{tag.name}}</a>
+      <a class="tag-link" href="{% url 'products:catalog' %}?tag={{tag.id}}">{{tag.name}}</a>
   {% endfor %}
   </div>
 

@@ -206,7 +206,7 @@ def get_list_url(context, form, app=None):
 
 
 
-@register.inclusion_tag("partials/_form_buttons.html",takes_context=True)
+@register.inclusion_tag("core/partials/_form_buttons.html",takes_context=True)
 def get_form_buttons(context, form):
     return {"form":form, "context":context}
 

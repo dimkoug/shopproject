@@ -66,12 +66,7 @@ urlpatterns = [
 #          AddressDeleteView.as_view(), name='address_delete'),
 
 
-    path('create_attribute/<int:product_id>/', create_attribute, name='create_attribute'),
-    path('delete_attribute/', delete_attribute, name='delete_attribute'),
-
-    path('create_featurecategory/', create_featurecategory, name='create_featurecategory'),
-    path('delete_featurecategory/', delete_featurecategory, name='delete_featurecategory'),
-     
+    
      
     path('catalog/', CatalogListView.as_view(), name='catalog'),
     path('catalog/<int:pk>/', CatalogProductDetailView.as_view(),
@@ -85,12 +80,18 @@ urlpatterns = [
     path('myorders/items/', OrderListView.as_view(), name='myorders'),
     path('order/items/', OrderFormView.as_view(), name='order'),
     path('search/', search_items, name="search"),
-    path('products/sb/',get_products_for_sb, name='get_products_for_sb'),
-    path('attributes/sb/', get_attributes_for_sb, name='get_attributes_for_sb'),
-    path('categories/sb/', get_categories_for_sb, name='get_categories_for_sb'),
-    path('attributes/', get_attributes, name='get_attributes'),
-    path('set_attribute/', set_attribute, name='set_attributes'),
-    path('delete_attribute/', delete_attribute, name='delete_attributes'),
+
+     path('sb/',get_products_for_sb, name='sb-products'),
+     path('features/sb/',get_features_for_sb, name='sb-features'),
+     path('categories/sb/',get_categories_for_sb, name='sb-categories'),
+     path("delete/media/<int:product_id>/<int:media_id>/",delete_media,name='form-delete-media'),
+     path("delete/logo/<int:product_id>/<int:logo_id>/",delete_logo,name='form-delete-logo'),
+     path("delete/attribute/<int:product_id>/<int:attribute_id>/",delete_attribute,name='form-delete-attribute'),
+     path("create/attribute/<int:product_id>/",create_product_attribute,name='form-create-attribute'),
+     path("generate_pdf/<int:product_id>/",generate_pdf,name='generate-pdf'),
+
+     path("create/feature/attribute/<int:feature_id>/",create_feature_attribute, name="add-feature-attribute"),
+
 
     path('api/',include('products.productsapi.routers')),
 ]
