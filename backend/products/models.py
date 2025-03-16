@@ -95,17 +95,17 @@ class FeatureCategory(Timestamped,Ordered):
     feature = models.ForeignKey(
         Feature, on_delete=models.CASCADE, related_name='featurecategories')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    filter_display = models.BooleanField(default=False,db_index=True)
+    is_filter = models.BooleanField(default=False,db_index=True)
 
     class Meta:
         ordering = ['order']
         default_related_name = 'featurecategories'
-        unique_together = (('feature', 'category', 'filter_display'),)
+        unique_together = (('feature', 'category', 'is_filter'),)
         constraints = [
-            models.UniqueConstraint(fields=['feature', 'category', 'filter_display'], name="feature_category")
+            models.UniqueConstraint(fields=['feature', 'category', 'is_filter'], name="feature_category")
         ]
         indexes = [
-            models.Index(fields=['feature', 'category', 'filter_display']),
+            models.Index(fields=['feature', 'category', 'is_filter']),
         ]
 
 

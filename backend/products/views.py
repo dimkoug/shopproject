@@ -239,13 +239,13 @@ def create_featurecategory(request):
         feature_id = request.POST['feature']
         category_id = request.POST['category']
         filter_display = bool(request.POST.get('filter_display'))
-        product_attribute, created = FeatureCategory.objects.update_or_create(feature_id=feature_id,category_id=category_id,defaults={"filter_display":filter_display})
+        product_attribute, created = FeatureCategory.objects.update_or_create(feature_id=feature_id,category_id=category_id,defaults={"is_filter":filter_display})
         return JsonResponse({
             'id':product_attribute.id,
             'feature':product_attribute.feature_id,
             'category': product_attribute.category.name,
             'category_id': product_attribute.category_id,
-            'filter_display':product_attribute.filter_display
+            'is_filter':product_attribute.filter_display
         })
     except Exception as e:
         print(e)
@@ -477,9 +477,9 @@ class CatalogListView(PaginationMixin, ListView):
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
 
-        feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(filter_display=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
+        feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(is_filter=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
             product_count=counter), to_attr='attrs')).filter(
-            id__in=features_items, featurecategories__filter_display=True,attributes__in=attribute_items).distinct()
+            id__in=features_items, featurecategories__is_filter=True,attributes__in=attribute_items).distinct()
         context['specification_list'] = feature_list
         context['products_count'] = self.get_queryset().count()
         context['query_string'] = create_query_string(self.request)
