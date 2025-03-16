@@ -369,7 +369,7 @@ class CatalogListView(PaginationMixin, ListView):
     model = Product
     paginate_by = 12  # if pagination is desired
     template_name = 'site/product_list.html'
-    ajax_partial = 'site/partials/product_ajax_list_partial.html'
+    ajax_partial = 'products/partials/_product_ajax_list.html'
 
     # @method_decorator(cache_page(60 * 15))
     # @method_decorator(vary_on_cookie)
