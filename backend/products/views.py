@@ -367,7 +367,7 @@ class IndexView(TemplateView):
 class CatalogListView(PaginationMixin, ListView):
 
     model = Product
-    paginate_by = 10  # if pagination is desired
+    paginate_by = 12  # if pagination is desired
     template_name = 'site/product_list.html'
     ajax_partial = 'site/partials/product_ajax_list_partial.html'
 

@@ -1,46 +1,43 @@
 {% load static %}
 {% load core %}
 <div class="results">
-    <div class="d-flex flex-row py-2">
-      <div class="col">
-          {% if brand %}
-            <h2 class="text-center">{{brand.name}}</h2>
-          {% else %}
-            <h2 class="text-center">{{category.name}}</h2>
-          {% endif %}
-      </div>
-    </div>
+  <div class="row py-2">
     {% for product in product_list %}
-    <div class="d-flex flex-row py-2 border-bottom">
-      <div class="col-3 col-lg-2">
+    <div class="col-3 py-2">
+      <div>
         {% if product.image %}
-            <img src="{{ product.image.url }}" class="img-fluid rounded">
+        <img src="{{ product.image.url }}" class="img-fluid rounded">
         {% elif product.image_url %}
-          <img src="{{product.image_url}}" class="img-fluid rounded">
+        <img src="{{product.image_url}}" class="img-fluid rounded">
         {% else %}
         <img src="/static/img/default.jpg" class="img-fluid rounded">
         {% endif %}
       </div>
-      <div class="col-7 col-lg-8">
+      <div>
         <div class="">
           <a href="{% url 'products:catalog-product-detail' product.id %}" class="link">{{product.name}}</a>
         </div>
         <div class="">
-          Brand : <a href="{% url 'products:catalog' %}?brand={{product.brand_id}}" class="link">{{product.brand.name}}</a>
+          Brand : <a href="{% url 'products:catalog' %}?brand={{product.brand_id}}"
+            class="link">{{product.brand.name}}</a>
         </div>
         <div class="">
           <p>{{product.description|safe}}</p>
         </div>
       </div>
-      <div class="col-2 col-lg-2">
-        <a href="{% url 'baskets:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i class="bi bi-cart"></i> {% format_currency product.price %}</a>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  <div class="row py-2">
-    <div class="col">
-      {% include 'core/partials/_pagination.html' %}
+    <div>
+      <a href="{% url 'baskets:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i
+          class="bi bi-cart"></i> {% format_currency product.price %}</a>
     </div>
   </div>
 
+
+
+
+  {% endfor %}
+</div>
+<div class="row py-2">
+  <div class="col">
+    {% include 'core/partials/_pagination.html' %}
+  </div>
+</div>
