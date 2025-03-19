@@ -61,12 +61,17 @@ $("body").on("click", '.tag-link, .remove-filter-link, .page-link', function(e){
                $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
-           $(".res").html(resp);
+           $(".res").html(resp.html);
            $(".spinner-border").hide();
          })
 
     return false;
 })
+
+$('#modal').on('hidden.bs.modal', function () {
+  $('.modal-backdrop').remove(); // Ensure backdrop is removed after modal is hidden
+});
+
 
 $("body").on("submit", '#filters-form', function(e){
     e.preventDefault();
@@ -78,14 +83,14 @@ $("body").on("submit", '#filters-form', function(e){
              datatype: 'json',
              beforeSend: function(){
                $(".spinner-border").show();
-                 $('#exampleModal').modal('hide');
+                 $('#modal').modal('hide');
              },
              complete: function(){
                $(".spinner-border").hide();
              }
          })).then(function( resp, textStatus, jqXHR ) {
-          $('#exampleModal').modal('hide');
-           $(".products").html(resp.html);
+          $('#modal').modal('hide');
+           $(".res").html(resp.html);
            $(".spinner-border").hide();
          })
 
