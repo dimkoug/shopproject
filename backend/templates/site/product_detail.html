@@ -85,9 +85,12 @@
                 <div class="d-flex flex-row py-2">
 
                     <div class="col-4">
-                        {% if object.image and object.media.count == 0 %}
+                        {% if object.image %}
                             <img src="{{ object.image.url }}" class="img-fluid">
-                        {% else %}
+                        {% elif object.image_url %}
+                            <img src="{{ object.image_url }}" class="img-fluid">
+                        {% endif %}
+                        {% if object.media.count > 0 %}
                             <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
                                  class="swiper mySwiper2">
                                 <div class="swiper-wrapper">
@@ -109,9 +112,8 @@
                                     {% endfor %}
                                 </div>
                             </div>
-
-
                         {% endif %}
+                        
                     </div>
                     <div class="col-6 g-2">
                         {% if object.tags.all %}
