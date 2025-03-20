@@ -161,13 +161,17 @@
                 </div>
 
                     {% if  object.productlogos.all %}
-                    <div class="row">
+                    <div class="row mt-2 ">
                         {% for logo in object.productlogos.all %}
                             {% if logo.logo.image %}
-                                <div class="col-1">
-                                    <img src="{{ logo.logo.image.url }}" alt="">
+                                <div class="col-2">
+                                    <img src="{{ logo.logo.image.url }}" alt="" class="img-fluid">
 
                                 </div>
+                            {% else %}
+                            <div class="col-2">
+                                <img src="{{ logo.logo.url }}" alt="" class="img-fluid">
+                            </div>
                             {% endif %}
                         {% endfor %}
                     </div>
