@@ -45,19 +45,23 @@
           {% for category in categories %}
               <div class="col-md-4">
                   <!-- Display the current category -->
-                  <div>{{ category.name }}</div>
+                  <div class="first toggle-category">{{ category.name }}</div>
   
                   <!-- Check if the current category has children -->
                   {% if category.second_level %}
 
-                      <div class="row">
+                      <div class="row sec"  style="display: none;">
                           {% for child in category.second_level %}
                              <div class="col-md-6">
-                                  <div>{{ child.target.name }}</div>
+                                  <div class="third toggle-subcategory">{{ child.target.name }}</div>
                                   {% if child.target.third_level %}
+                                  <div class="third-level" style="display: none;"> 
                                     {% for third in child.target.third_level  %}
-                                      <div><a href="{% url 'products:catalog' %}?category={{third.target.id}}">{{ third.target.name }}</a></div>
-                                    {% endfor %}
+                                    <div><a href="{% url 'products:catalog' %}?category={{third.target.id}}">{{ third.target.name }}</a></div>
+                                  {% endfor %}
+
+                                  </div>
+          
                                   {% endif %}
   
              
@@ -171,6 +175,17 @@
       })(window,document,jQuery)
 
 
+    </script>
+    <script>
+      $(document).ready(function(){
+          $(".toggle-category").click(function(){
+              $(this).next(".sec").slideToggle();
+          });
+    
+          $(".toggle-subcategory").click(function(){
+              $(this).next(".third-level").slideToggle();
+          });
+      });
     </script>
   </body>
 </html>
