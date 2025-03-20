@@ -384,6 +384,8 @@ class CatalogListView(PaginationMixin, ListView):
     ).order_by('price')
 
     def get_queryset(self):
+        if hasattr(self,'object_list'):
+            return self.object_list
         queryset = super().get_queryset()
         attrs = []
         category = self.request.GET.get('category')
@@ -412,7 +414,8 @@ class CatalogListView(PaginationMixin, ListView):
         if self.request.GET.get('max_price'):
             queryset = queryset.filter(price__lt=self.request.GET.get('max_price'))
         # return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
-        return queryset
+        self.object_list = queryset
+        return self.object_list
 
     def get(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
@@ -428,6 +431,7 @@ class CatalogListView(PaginationMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         attrs = []
+        queryset = self.object_list
         attrs_checked = []
         features = [feature for feature in self.request.GET.keys()
                     if feature.startswith('feature')]
@@ -441,20 +445,20 @@ class CatalogListView(PaginationMixin, ListView):
                 attrs_checked.append(item)
         category = self.request.GET.get('category')
         brand = self.request.GET.get('brand')
-        lowest_price = self.get_queryset().aggregate(Min('price'))['price__min']
-        max_price = self.get_queryset().aggregate(Max('price'))['price__max']
+        lowest_price = queryset.aggregate(Min('price'))['price__min']
+        max_price = queryset.aggregate(Max('price'))['price__max']
         if category:
             category_obj = Category.objects.get(id=category)
             context['category'] = category_obj
-            products = Product.active_products.filter(category_id=category_obj.pk)
-            lowest_price = products.aggregate(Min('price'))['price__min']
-            max_price = products.aggregate(Max('price'))['price__max']
+            # products = Product.active_products.filter(category_id=category_obj.pk)
+            # lowest_price = products.aggregate(Min('price'))['price__min']
+            # max_price = products.aggregate(Max('price'))['price__max']
         if brand:
             brand = Brand.objects.get(id=brand)
             context['brand'] = brand
-            products = Product.active_products.filter(brand_id=brand.pk)
-            lowest_price = products.aggregate(Min('price'))['price__min']
-            max_price = products.aggregate(Max('price'))['price__max']
+            # products = Product.active_products.filter(brand_id=brand.pk)
+            # lowest_price = products.aggregate(Min('price'))['price__min']
+            # max_price = products.aggregate(Max('price'))['price__max']
 
         if self.request.GET.get('min_price'):
             context['selected_min_price'] = self.request.GET.get('min_price')
@@ -466,7 +470,7 @@ class CatalogListView(PaginationMixin, ListView):
         context['max_price'] = max_price
         context['attrs_checked'] = attrs_checked
         counter = Count('productattributes', filter=Q(
-            products__in=self.get_queryset()))
+            products__in=queryset))
         features_items = set()
         attribute_items = set()
         # for a in Attribute.objects.all():
@@ -474,7 +478,7 @@ class CatalogListView(PaginationMixin, ListView):
         #         a.delete()
         #     if a.name == '---':
         #         a.delete()
-        for p in self.get_queryset():
+        for p in queryset:
             for a in p.attributes.all():
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
@@ -483,7 +487,7 @@ class CatalogListView(PaginationMixin, ListView):
             product_count=counter), to_attr='attrs')).filter(
             id__in=features_items, featurecategories__is_filter=True,attributes__in=attribute_items).distinct()
         context['specification_list'] = feature_list
-        context['products_count'] = self.get_queryset().count()
+        context['products_count'] = queryset.count()
         context['query_string'] = create_query_string(self.request)
         return context
 
