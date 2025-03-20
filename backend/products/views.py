@@ -3,6 +3,7 @@ from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.urls import reverse_lazy
 from django.db.models import Min ,Max
+from django.core.cache import cache
 from django.views.decorators.cache import cache_control
 from django.views.decorators.cache import cache_page
 from django.views.decorators.cache import cache_page
@@ -482,10 +483,15 @@ class CatalogListView(PaginationMixin, ListView):
             for a in p.attributes.all():
                 features_items.add(a.feature_id)
                 attribute_items.add(a.id)
-
-        feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(is_filter=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
-            product_count=counter), to_attr='attrs')).filter(
-            id__in=features_items, featurecategories__is_filter=True,attributes__in=attribute_items).distinct()
+        
+        feature_cache_key = f'feature_list_{hash(frozenset(self.request.GET.items()))}'
+        feature_list = cache.get(feature_cache_key)
+        if not feature_list:
+            feature_list = Feature.objects.prefetch_related(Prefetch('featurecategories', queryset=FeatureCategory.objects.select_related('feature', 'category').filter(is_filter=True)), Prefetch('attributes', queryset=Attribute.objects.select_related('feature').filter(id__in=attribute_items, feature_id__in=features_items).annotate(
+                product_count=counter), to_attr='attrs')).filter(
+                id__in=features_items, featurecategories__is_filter=True,attributes__in=attribute_items).distinct()
+            cache.set(feature_cache_key, feature_list, 60 * 15)
+        
         context['specification_list'] = feature_list
         context['products_count'] = queryset.count()
         context['query_string'] = create_query_string(self.request)
