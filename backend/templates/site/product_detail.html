@@ -122,7 +122,17 @@
                         {% endfor %}
                     </div>
                 </div>
+            
+            {% elif object.image %}
+            <img src="{{ object.image.url }}" class="img-fluid">
+            {% elif object.image_url %}
+            <img src="{{object.image_url}}" class="img-fluid" >
+            {% else %}
+            <img src="/static/img/default.jpg" class="img-fluid" >
             {% endif %}
+            
+
+
                 {% if object.tags.all %}
                     <div class="">
                         {% for tag in object.tags.all %}
