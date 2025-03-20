@@ -78,41 +78,59 @@
             <div class="col-12">
                 <div class="d-flex flex-row py-2">
                     <div class="col">
-
                     </div>
                 </div>
                 <hr>
                 <div class="d-flex flex-row py-2">
 
                     <div class="col-4">
-                        {% if object.image %}
-                            <img src="{{ object.image.url }}" class="img-fluid">
-                        {% elif object.image_url %}
-                            <img src="{{ object.image_url }}" class="img-fluid">
-                        {% endif %}
-                        {% if object.media.count > 0 %}
-                            <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
-                                 class="swiper mySwiper2">
-                                <div class="swiper-wrapper">
-                                    {% for media in object.media.all %}
-                                        <div class="swiper-slide">
-                                            <img src="{{ media.image.url }}">
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
+                        <div class="row">
+                            <div class="col">
+                                {% if object.image %}
+                                <img src="{{ object.image.url }}" class="img-fluid">
+                            {% elif object.image_url %}
+                                <img src="{{ object.image_url }}" class="img-fluid">
+                            {% endif %}
                             </div>
-                            <div thumbsSlider="" class="swiper mySwiper">
-                                <div class="swiper-wrapper">
-                                    {% for media in object.media.all %}
-                                        <div class="swiper-slide">
-                                            <img src="{{ media.image.url }}">
-                                        </div>
-                                    {% endfor %}
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {% if object.productmedia.all.count > 0 %}
+                                <div style="--swiper-navigation-color: #000; --swiper-pagination-color: #000"
+                                     class="swiper mySwiper2">
+                                    <div class="swiper-wrapper">
+                                        {% for media in object.productmedia.all %}
+                                            <div class="swiper-slide">
+                                                {% if media.media.image %}
+                                                    <img src="{{ media.media.image.url }}">
+                                                {% else %}
+                                                    <img src="{{media.media.url}}" alt="">
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
                                 </div>
+                                <div thumbsSlider="" class="swiper mySwiper">
+                                    <div class="swiper-wrapper">
+                                        {% for media in object.productmedia.all %}
+                                            <div class="swiper-slide">
+                                                {% if media.media.image %}
+                                                <img src="{{ media.media.image.url }}">
+                                            {% else %}
+                                                <img src="{{media.media.url}}" alt="">
+                                            {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
                             </div>
-                        {% endif %}
+
+                        </div>
+  
+
                         
                     </div>
                     <div class="col-6 g-2">
