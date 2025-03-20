@@ -37,7 +37,13 @@
             <i class="bi bi-person-fill"></i>{{request.user}}
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+            <form action="{% url 'logout' %}" method="post" class="dropdown-item">
+              {% csrf_token %}
+              <button type="submit">Logout</button>
+            </form>
+            
+            
+
             <a class="dropdown-item" href="{% url 'products:myorders' %}">My orders</a>
             <a class="dropdown-item" href="{% url 'profile-detail' request.user.profile.pk %}">My Profile</a>
             {% if request.user.is_superuser %}

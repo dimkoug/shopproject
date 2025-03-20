@@ -44,7 +44,7 @@ def get_context_data(request):
 
     # Fetch basket count efficiently
     basket_count = Basket.objects.filter(
-        session=request.session.session_key
+        session_key=request.session.session_key
     ).count() if request.session.session_key else 0
 
     # Optimize category prefetching

@@ -47,7 +47,7 @@ class BasketView(TemplateView):
         shopping_cart_id = self.request.session.get('shopping_cart_id')
         sum = 0
         shopping_items = Basket.objects.select_related(
-            'product', 'session').filter(session=self.request.session.session_key)
+            'product').filter(session_key=self.request.session.session_key)
         for item in shopping_items:
             sum += item.product.price * item.quantity
         context['sum'] = sum

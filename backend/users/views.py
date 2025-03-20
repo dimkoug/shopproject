@@ -23,6 +23,12 @@ User = get_user_model()
 
 class UserLoginView(auth_views.LoginView):
     form_class = UserAuthenticationForm
+    def form_valid(self, form):
+        old_session_key = self.request.session.session_key  # Get old session key
+        self.request.session["old_session_key"] = old_session_key  # Store in session
+        response = super().form_valid(form)  # Call the default LoginView behavior
+        return response  # Redirects to LOGIN_REDIRECT_URL
+
 
 
 class UserLogoutView(auth_views.LogoutView):
