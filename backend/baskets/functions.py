@@ -52,8 +52,8 @@ def remove_from_basket(request, id):
         shopping_items = Basket.objects.select_related('product').get(
             session_key=request.session.session_key, product_id=id)
         if shopping_items.quantity == 1 or shopping_items.quantity <= 1:
-            Basket.objects.select_related('session', 'product').filter(
-                session=session, product_id=id).delete()
+            Basket.objects.select_related('product').filter(
+                session_key=request.session.session_key, product_id=id).delete()
         else:
             shopping_items.quantity -= 1
             shopping_items.save()
@@ -66,7 +66,6 @@ def remove_from_basket(request, id):
 
 
 def clear_basket(request):
-    session = Session.objects.get(session_key=request.session.session_key)
     Basket.objects.filter(
         session_key=request.session.session_key).delete()
     messages.success(request, 'Your basket was cleared successfully!')
