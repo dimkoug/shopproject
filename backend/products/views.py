@@ -385,37 +385,41 @@ class CatalogListView(PaginationMixin, ListView):
     ).order_by('price')
 
     def get_queryset(self):
-        if hasattr(self,'object_list'):
-            return self.object_list
-        queryset = super().get_queryset()
-        attrs = []
-        category = self.request.GET.get('category')
-        q = self.request.GET.get('q')
-        brand = self.request.GET.get('brand')
-        tag = self.request.GET.get('tag')
-        features = [feature for feature in self.request.GET.keys()
-                    if feature.startswith('feature')]
-        for feature in features:
-            attrs.append(self.request.GET.getlist(feature))
-        if category:
-            queryset = queryset.filter(category=category)
-        if brand:
-            queryset = queryset.filter(brand_id=brand)
-        if tag:
-            queryset = queryset.filter(tags__in=[tag])
-        if q and q != '':
-            queryset = queryset.filter(Q(name__icontains=q) | Q(code__icontains=q))
-        if len(attrs) > 0:
-            for attr in attrs:
-                queryset = queryset.filter(
-                    attributes__in=attr)
-        if self.request.GET.get('min_price'):
-            queryset = queryset.filter(price__gt=self.request.GET.get('min_price'))
+        object_list_cache_key = f'object_list_{hash(frozenset(self.request.GET.items()))}'
+        object_list = cache.get(object_list_cache_key)
+        if not object_list:
+            if hasattr(self,'object_list'):
+                return self.object_list
+            queryset = super().get_queryset()
+            attrs = []
+            category = self.request.GET.get('category')
+            q = self.request.GET.get('q')
+            brand = self.request.GET.get('brand')
+            tag = self.request.GET.get('tag')
+            features = [feature for feature in self.request.GET.keys()
+                        if feature.startswith('feature')]
+            for feature in features:
+                attrs.append(self.request.GET.getlist(feature))
+            if category:
+                queryset = queryset.filter(category=category)
+            if brand:
+                queryset = queryset.filter(brand_id=brand)
+            if tag:
+                queryset = queryset.filter(tags__in=[tag])
+            if q and q != '':
+                queryset = queryset.filter(Q(name__icontains=q) | Q(code__icontains=q))
+            if len(attrs) > 0:
+                for attr in attrs:
+                    queryset = queryset.filter(
+                        attributes__in=attr)
+            if self.request.GET.get('min_price'):
+                queryset = queryset.filter(price__gt=self.request.GET.get('min_price'))
 
-        if self.request.GET.get('max_price'):
-            queryset = queryset.filter(price__lt=self.request.GET.get('max_price'))
-        # return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
-        self.object_list = queryset
+            if self.request.GET.get('max_price'):
+                queryset = queryset.filter(price__lt=self.request.GET.get('max_price'))
+            # return queryset.values('id', 'name', 'brand_id', 'brand__name', 'subtitle', 'description', 'price')
+            self.object_list = queryset
+            cache.set(object_list_cache_key, self.object_list, 60 * 15)
         return self.object_list
 
     def get(self, request, *args, **kwargs):
