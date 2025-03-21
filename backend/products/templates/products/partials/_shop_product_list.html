@@ -25,6 +25,20 @@
           <div>
             <a href="{% url 'baskets:add_to_basket' product.id %}" class="btn btn-primary ajax_add_to_cart"><i
                 class="bi bi-cart"></i> {% format_currency product.price %}</a>
+              
+            
+              <form action="" method="post" class="py-2">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{product.id}}">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button type="button" class="remove"><i class="bi bi-dash-square-dotted text-danger"></i></button>
+                  <input type="number" class="form-control" style="width: 60px;" value="1" min="0" name="quantity">
+                  <button type="button" class="add"><i class="bi bi-plus-square-dotted text-success"></i></button>
+                </div>
+              </form>
+          
+          
+          
           </div>
         
         
